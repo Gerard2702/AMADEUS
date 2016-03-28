@@ -71,6 +71,7 @@ public class login extends JFrame{
         
         btnIngresar = new JButton("Iniciar Sesión");
         btnIngresar.setFont(label);
+        btnIngresar.setMnemonic('I');
         btnIngresar.setBounds(225, 200, 125, 25);
         panel.add(btnIngresar);
         
@@ -96,7 +97,7 @@ public class login extends JFrame{
     }
     
     private void formWindowOpened(WindowEvent evt){
-        //this.txtNombre.requestFocus();
+        this.txtUser.requestFocus();
     }
     
     private void Ingresar(){
