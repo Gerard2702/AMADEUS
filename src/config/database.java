@@ -12,25 +12,33 @@ import javax.swing.JOptionPane;
  */
 public class database {
     
-    private static Connection conex = null;
+    private Connection conex;
+    private String user="root";
+    private String pass="";
+    private String host="jdbc:mysql://localhost:3306/amadeus";
+    private ResultSet rs;
+    private Statement st;
     
-    public static Connection conectar(){
-        if(conex==null){
-            try{
-                Class.forName("com.mysql.jdbc.Driver");
-                conex = DriverManager.getConnection("jdbc:mysql://localhost:3306/amadeus", "root", "");
-            }
-            catch(SQLException e){
-                JOptionPane.showMessageDialog(null,"No se pudo conectar con la base de datos");
-            }
-            catch(ClassNotFoundException e){
-                throw new ClassCastException(e.getMessage());
-            }
+    public void conectar(){
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            conex = DriverManager.getConnection(host,user,pass);
         }
-        return conex;
+        catch(SQLException e){
+            JOptionPane.showMessageDialog(null,"No se pudo conectar con la Base de Datos");
+        }
+        catch(ClassNotFoundException e){
+            throw new ClassCastException(e.getMessage());
+        }
     }
     
-    public static void cerrar() throws SQLException{
+    public ResultSet query(String consulta) throws SQLException{
+        st = conex.createStatement();
+        rs = st.executeQuery(consulta);
+        return rs;
+    }   
+    
+    public void desconectar() throws SQLException{
         if(conex!=null){
             conex.close();
         }

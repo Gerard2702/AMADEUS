@@ -19,7 +19,6 @@ public class login extends JFrame{
     private JPanel panel;
     private Dimension dim;
     database db = new database();
-    Connection conec = db.conectar();
     
     public login(){
         initComponent();
@@ -122,35 +121,37 @@ public class login extends JFrame{
         
     }
     
-    private void validarLogin(String usuario,String pass){
-        String sql = "SELECT * FROM usuarios WHERE usuario='"+usuario+"' AND pass='"+pass+"'";
+    private void validarLogin(String usuario,String pass){       
         String caprol=""; 
         try {
-            Statement st = conec.createStatement();
-            ResultSet rs = st.executeQuery(sql);
+            db.conectar();
+            String sql = "SELECT * FROM usuarios WHERE usuario='"+usuario+"' AND pass='"+pass+"'";
+            ResultSet rs=db.query(sql);            
             if(rs.first()){
-                while(rs.next()){
-                    caprol=rs.getString("idrol");
-                }
+                
+                caprol=rs.getString("idrol");
+                
                 if(caprol.equals("1")){
                     JOptionPane.showMessageDialog(null,"BIENVENIDO ADMINISTRADOR");
                     this.txtUser.setText("");
                     this.txtPass.setText("");
+                    db.desconectar();
                     /*Bloque de codigo para Abrir la ventana del Administrador*/
                 }
                 else if(caprol.equals("2")){
                     JOptionPane.showMessageDialog(null,"BIENVENIDO EMPLEADO");
                     this.txtUser.setText("");
                     this.txtPass.setText("");
+                    db.desconectar();
                     /*Bloque de codigo para Abrir la ventana del Empleado*/
                 }
             }
             else{
-                JOptionPane.showMessageDialog(null,"DATOS INCORRECTOS");
+                JOptionPane.showMessageDialog(null,"Usuario o contraseña incorrecta");
                 this.txtUser.setText("");
                 this.txtUser.requestFocus();
                 this.txtPass.setText("");
-                
+                db.desconectar();                
             }
         } catch (SQLException ex) {
             Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
