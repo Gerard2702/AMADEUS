@@ -5,6 +5,7 @@
  */
 package config;
 import java.sql.*;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Gerard Orellana
@@ -20,7 +21,7 @@ public class database {
                 conex = DriverManager.getConnection("jdbc:mysql://localhost/amadeus", "root", "");
             }
             catch(SQLException e){
-                //throw new SQLException(e);
+                JOptionPane.showMessageDialog(null,"no se pudo conectar con la base de datos");
             }
             catch(ClassNotFoundException e){
                 throw new ClassCastException(e.getMessage());
