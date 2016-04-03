@@ -18,10 +18,10 @@ public class database {
         if(conex==null){
             try{
                 Class.forName("com.mysql.jdbc.Driver");
-                conex = DriverManager.getConnection("jdbc:mysql://localhost/amadeus", "root", "");
+                conex = DriverManager.getConnection("jdbc:mysql://localhost:3306/amadeus", "root", "");
             }
             catch(SQLException e){
-                JOptionPane.showMessageDialog(null,"no se pudo conectar con la base de datos");
+                JOptionPane.showMessageDialog(null,"No se pudo conectar con la base de datos");
             }
             catch(ClassNotFoundException e){
                 throw new ClassCastException(e.getMessage());
