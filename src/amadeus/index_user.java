@@ -9,7 +9,7 @@ package amadeus;
  *
  * @author Familia Aparicio
  */
-public class index {
+public class index_user {
 
     /**
      * @param args the command line arguments
