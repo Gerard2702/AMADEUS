@@ -6,46 +6,58 @@ import config.database;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.*;
 /**
  *
  * @author Gerard Orellana
  */
 public class login extends JFrame{
     
-    private JLabel lblUser,lblPass,lblWelcome;
+    private JLabel lblUser,lblPass,lblWelcome,imagen;
     private JTextField txtUser;
     private JPasswordField txtPass;
     private JButton btnIngresar;
-    private JPanel panel;
-    private Dimension dim;
+    private JPanel panel,logo;
+    private ImageIcon iconlogo=new ImageIcon(this.getClass().getResource("/config/logo.png"));
     database db = new database();
     
     public login(){
-        initComponent();
-        this.setExtendedState(MAXIMIZED_BOTH);
-        //this.setSize(1280, 720);
-        //this.setLocationRelativeTo(null);
-        this.setTitle("AMADEUS");
+        initComponent();        
+        this.setSize(500,500);
+        this.setLocationRelativeTo(null);
+        this.setTitle("AMADEUS UDB");
+        setLayout(null);
     }
     
     private void initComponent(){
         
         Container conten = getContentPane();
-        conten.setLayout(null);
-           
-        dim=super.getToolkit().getScreenSize();
-        Font titulo = new Font("Calibri", 1, 30);
+        conten.setLayout(null);        
+        
+        Font titulo = new Font("Calibri", 1, 20);
         Font label = new Font("Calibri", 1, 15);
-        //dim=conten.getSize();
+        
+        logo=new JPanel();
+        logo.setLayout(null);
+        logo.setBounds(40,30,400,70);
+        logo.setBackground(Color.WHITE);       
+        
+        imagen=new JLabel();
+        imagen.setBounds(90, 10, 263, 65);        
+        imagen.setIcon(iconlogo);
+        logo.add(imagen);
+        
+        conten.add(logo);
+        
         panel = new JPanel();
         panel.setLayout(null);
-        panel.setBounds((dim.width/2)-200, (dim.height/2)-175, 400, 250);
+        panel.setBounds(40,100,400,280);
         panel.setBackground(Color.WHITE);
         conten.add(panel);
         
         lblWelcome = new JLabel("INICIAR SESIÓN");
         lblWelcome.setFont(titulo);
-        lblWelcome.setBounds(110, 25, 200, 50);
+        lblWelcome.setBounds(30, 25, 200, 50);
         panel.add(lblWelcome);
         
         lblUser = new JLabel("Usuario: ");
@@ -115,10 +127,8 @@ public class login extends JFrame{
                 }
             }
         }
-        catch(Exception e){
-        
-        }
-        
+        catch(Exception e){        
+        }        
     }
     
     private void validarLogin(String usuario,String pass){       
@@ -160,6 +170,5 @@ public class login extends JFrame{
     
     public static void main(String[] args) {
         new login().setVisible(true);
-    }
-    
+    }    
 }
