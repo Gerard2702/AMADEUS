@@ -2,7 +2,7 @@ package amadeus;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import config.database;
+import config.*;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,15 +18,17 @@ public class login extends JFrame{
     private JPasswordField txtPass;
     private JButton btnIngresar;
     private JPanel panel,logo;
-    private ImageIcon iconlogo=new ImageIcon(this.getClass().getResource("/config/logo.png"));
+    private ImageIcon iconlogo=new ImageIcon(this.getClass().getResource("/config/logo.png"));    
     database db = new database();
     
     public login(){
         initComponent();        
-        this.setSize(500,500);
+        this.setSize(490,440);
         this.setLocationRelativeTo(null);
-        this.setTitle("AMADEUS UDB");
-        setLayout(null);
+        this.setTitle("Amadeus-UDB");
+        this.setLayout(null);
+        this.getContentPane().setBackground(new Color(168,168,168));
+        this.setResizable(false);
     }
     
     private void initComponent(){
@@ -40,7 +42,7 @@ public class login extends JFrame{
         logo=new JPanel();
         logo.setLayout(null);
         logo.setBounds(40,30,400,70);
-        logo.setBackground(Color.WHITE);       
+        logo.setBackground(new Color(230,230,230));       
         
         imagen=new JLabel();
         imagen.setBounds(90, 10, 263, 65);        
@@ -52,7 +54,7 @@ public class login extends JFrame{
         panel = new JPanel();
         panel.setLayout(null);
         panel.setBounds(40,100,400,280);
-        panel.setBackground(Color.WHITE);
+        panel.setBackground(new Color(230,230,230));
         conten.add(panel);
         
         lblWelcome = new JLabel("INICIAR SESIÓN");
@@ -141,19 +143,23 @@ public class login extends JFrame{
                 
                 caprol=rs.getString("idrol");
                 
-                if(caprol.equals("1")){
-                    JOptionPane.showMessageDialog(null,"BIENVENIDO ADMINISTRADOR");
+                if(caprol.equals("1")){                    
                     this.txtUser.setText("");
                     this.txtPass.setText("");
                     db.desconectar();
                     /*Bloque de codigo para Abrir la ventana del Administrador*/
+                    this.setVisible(false);
+                    index_admin admin=new index_admin();
+                    admin.setVisible(true);
                 }
-                else if(caprol.equals("2")){
-                    JOptionPane.showMessageDialog(null,"BIENVENIDO EMPLEADO");
+                else if(caprol.equals("2")){                    
                     this.txtUser.setText("");
                     this.txtPass.setText("");
                     db.desconectar();
                     /*Bloque de codigo para Abrir la ventana del Empleado*/
+                     this.setVisible(false);
+                    index_user user=new index_user();
+                    user.setVisible(true);
                 }
             }
             else{
