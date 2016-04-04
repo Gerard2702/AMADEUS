@@ -92,8 +92,22 @@ public class login extends JFrame{
             public void actionPerformed(ActionEvent e){
                 Ingresar();
             }
+        });        
+        txtPass.addKeyListener(new KeyListener(){   
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode()==KeyEvent.VK_ENTER){
+                    Ingresar();
+                }
+            }
+            @Override
+            public void keyTyped(KeyEvent ke) {                
+            }
+            @Override
+            public void keyReleased(KeyEvent ke) {                
+            }
         });
-        
+                
         addWindowListener(new WindowAdapter(){
            public void windowClosing(WindowEvent evt){
                exitForm(evt);
@@ -134,7 +148,8 @@ public class login extends JFrame{
     }
     
     private void validarLogin(String usuario,String pass){       
-        String caprol=""; 
+        String caprol="";
+        String nombreusuario="";
         try {
             db.conectar();
             String sql = "SELECT * FROM usuarios WHERE usuario='"+usuario+"' AND pass='"+pass+"'";
@@ -142,6 +157,7 @@ public class login extends JFrame{
             if(rs.first()){
                 
                 caprol=rs.getString("idrol");
+                nombreusuario=rs.getString("nombre");
                 
                 if(caprol.equals("1")){                    
                     this.txtUser.setText("");
@@ -149,7 +165,7 @@ public class login extends JFrame{
                     db.desconectar();
                     /*Bloque de codigo para Abrir la ventana del Administrador*/
                     this.setVisible(false);
-                    index_admin admin=new index_admin();
+                    index_admin admin=new index_admin(usuario,nombreusuario);                    
                     admin.setVisible(true);
                 }
                 else if(caprol.equals("2")){                    
@@ -158,7 +174,7 @@ public class login extends JFrame{
                     db.desconectar();
                     /*Bloque de codigo para Abrir la ventana del Empleado*/
                      this.setVisible(false);
-                    index_user user=new index_user();
+                    index_user user=new index_user(usuario,nombreusuario);                    
                     user.setVisible(true);
                 }
             }

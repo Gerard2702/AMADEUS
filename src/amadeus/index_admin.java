@@ -17,8 +17,9 @@ import javax.swing.*;
 public class index_admin extends JFrame {
     
     private JPanel indexadmin;
-    private JLabel imglogo;
+    private JLabel imglogo,nameuser;
     private JButton reserva,vuelos,usuarios;
+    private String nombreuser="",nombreuserin="";
     private ImageIcon iconlogo=new ImageIcon(this.getClass().getResource("/config/logo.png"));   
     private ImageIcon iconavion=new ImageIcon(this.getClass().getResource("/config/avion.png")); 
     private ImageIcon iconlista=new ImageIcon(this.getClass().getResource("/config/lista.png")); 
@@ -26,22 +27,24 @@ public class index_admin extends JFrame {
     /**
      * @param args the command line arguments
      */
-    public index_admin(){
+    public index_admin(String setuser,String setnombreusuario){
+        nombreuser=setnombreusuario;
+        nombreuserin=setuser;
         initComponent();        
-        this.setSize(500,480);
+        this.setSize(500,495);
         this.setLocationRelativeTo(null);
         this.setTitle("Amadeus Administrador");
         setLayout(null);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.getContentPane().setBackground(new Color(168,168,168));
-        this.setResizable(false);
+        this.setResizable(false);        
     }
     
     public void initComponent(){
         
         indexadmin=new JPanel();
         indexadmin.setBackground(new Color(230,230,230));
-        indexadmin.setBounds(40, 40, 420, 370);
+        indexadmin.setBounds(40, 40, 420, 385);
         indexadmin.setLayout(null);
         
         imglogo=new JLabel();
@@ -63,6 +66,10 @@ public class index_admin extends JFrame {
         usuarios.setIcon(iconuser);
         usuarios.setBounds(100, 255, 210, 60);
         indexadmin.add(usuarios);
+        
+        nameuser=new JLabel("Usuario: "+nombreuser);
+        nameuser.setBounds(20, 340, 400, 15);
+        indexadmin.add(nameuser);
         
         add(indexadmin);
         
