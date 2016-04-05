@@ -20,7 +20,7 @@ public class check_in extends JPanel{
     public check_in(){
         initComponent();
         setLayout(null);
-        setBounds(260,30,705,540);
+        setBounds(235,30,705,540);
         setBackground(new Color(255,255,255));  
     }
     

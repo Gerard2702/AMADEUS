@@ -20,7 +20,7 @@ public class vuelos_disponibles extends JPanel{
     public vuelos_disponibles(){
         initComponent();
         setLayout(null);
-        setBounds(260,30,705,540);
+        setBounds(235,30,705,540);
         setBackground(new Color(255,255,255));       
     }
     

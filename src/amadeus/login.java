@@ -13,35 +13,41 @@ import javax.swing.*;
  */
 public class login extends JFrame{
     
-    private JLabel lblUser,lblPass,lblWelcome,imagen;
+    private JLabel lblUser,lblPass,lblWelcome,imagen,cerrar,minimizar,avionhead;
     private JTextField txtUser;
     private JPasswordField txtPass;
     private JButton btnIngresar;
     private JPanel panel,logo;
-    private ImageIcon iconlogo=new ImageIcon(this.getClass().getResource("/config/icons/logo.png"));    
+    private ImageIcon iconlogo=new ImageIcon(this.getClass().getResource("/config/icons/logo.png"));
+    private ImageIcon cerrar1=new ImageIcon(this.getClass().getResource("/config/icons/cerrar.png"));
+    private ImageIcon cerrar2=new ImageIcon(this.getClass().getResource("/config/icons/cerrarhover.png"));
+    private ImageIcon min1=new ImageIcon(this.getClass().getResource("/config/icons/min.png"));
+    private ImageIcon min2=new ImageIcon(this.getClass().getResource("/config/icons/minhover.png"));
+    private ImageIcon iconhead=new ImageIcon(this.getClass().getResource("/config/icons/avion_head.png"));
     database db = new database();
     
     public login(){
         initComponent();        
-        this.setSize(490,440);
+        this.setSize(410,385);
         this.setLocationRelativeTo(null);
         this.setTitle("Amadeus-UDB");
         this.setLayout(null);
         this.getContentPane().setBackground(new Color(75,75,75));
         this.setResizable(false);
+        this.setIconImage(new ImageIcon(getClass().getResource("/config/icons/avion_icon.png")).getImage());
+        this.setUndecorated(true);
     }
     
     private void initComponent(){
-        
-        Container conten = getContentPane();
-        conten.setLayout(null);        
-        
+
         Font titulo = new Font("Calibri", 1, 20);
         Font label = new Font("Calibri", 1, 15);
         
+        ventana_form();
+        
         logo=new JPanel();
         logo.setLayout(null);
-        logo.setBounds(40,30,400,70);
+        logo.setBounds(5,30,400,70);
         logo.setBackground(new Color(255,255,255));       
         
         imagen=new JLabel();
@@ -49,13 +55,13 @@ public class login extends JFrame{
         imagen.setIcon(iconlogo);
         logo.add(imagen);
         
-        conten.add(logo);
+        add(logo);
         
         panel = new JPanel();
         panel.setLayout(null);
-        panel.setBounds(40,100,400,280);
+        panel.setBounds(5,100,400,280);
         panel.setBackground(new Color(255,255,255));
-        conten.add(panel);
+        add(panel);
         
         lblWelcome = new JLabel("INICIAR SESIÓN");
         lblWelcome.setFont(titulo);
@@ -85,7 +91,7 @@ public class login extends JFrame{
         btnIngresar = new JButton("Iniciar Sesión");
         btnIngresar.setFont(label);
         btnIngresar.setMnemonic('I');
-        btnIngresar.setBounds(225, 200, 125, 25);
+        btnIngresar.setBounds(225, 200, 125, 25);        
         panel.add(btnIngresar);
         
         btnIngresar.addActionListener(new ActionListener(){
@@ -108,18 +114,60 @@ public class login extends JFrame{
             }
         });
                 
-        addWindowListener(new WindowAdapter(){
-           public void windowClosing(WindowEvent evt){
-               exitForm(evt);
-           }
-           
+        addWindowListener(new WindowAdapter(){           
            public void windowOpenend(WindowEvent evt){
                formWindowOpened(evt);
            }
        });
     }
     
-    private void exitForm(WindowEvent evt){
+    private void ventana_form(){
+        
+        avionhead=new JLabel();
+        avionhead.setIcon(iconhead);
+        avionhead.setBounds(5, 5, 20, 20);
+        add(avionhead);
+                
+        minimizar=new JLabel();
+        minimizar.setIcon(min1);
+        minimizar.setBounds(348, 5, 20, 20);
+        add(minimizar);
+        minimizar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                minimizar.setIcon(min2);
+            }
+             @Override
+            public void mouseExited(MouseEvent e) {
+                minimizar.setIcon(min1);
+            }
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                setExtendedState(JFrame.CROSSHAIR_CURSOR); 
+            }
+        });       
+        
+        cerrar=new JLabel();
+        cerrar.setIcon(cerrar1);
+        cerrar.setBounds(380, 5, 20, 20);
+        add(cerrar);
+        cerrar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                cerrar.setIcon(cerrar2);
+            }
+             @Override
+            public void mouseExited(MouseEvent e) {
+                cerrar.setIcon(cerrar1);
+            }
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                exitForm();
+            }
+        });
+    } 
+    
+    private void exitForm(){
         System.exit(0);
     }
     

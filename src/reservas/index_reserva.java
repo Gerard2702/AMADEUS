@@ -24,25 +24,33 @@ public class index_reserva extends JFrame{
     private crear_reserva reserva;
     private check_in checkin;
     private JButton btnreserva,btncheckin,btnestadovuel,btnvuelosdispo;
-    private JLabel logo, pie;
+    private JLabel logo, pie,cerrar,minimizar,avionhead;
     private ImageIcon iconlogo=new ImageIcon(this.getClass().getResource("/config/icons/logo_modulos.png"));
-    private ImageIcon iconpie=new ImageIcon(this.getClass().getResource("/config/icons/pie_modulo.png"));        
+    private ImageIcon iconpie=new ImageIcon(this.getClass().getResource("/config/icons/pie_modulo.png"));
+    private ImageIcon cerrar1=new ImageIcon(this.getClass().getResource("/config/icons/cerrar.png"));
+    private ImageIcon cerrar2=new ImageIcon(this.getClass().getResource("/config/icons/cerrarhover.png"));
+    private ImageIcon min1=new ImageIcon(this.getClass().getResource("/config/icons/min.png"));
+    private ImageIcon min2=new ImageIcon(this.getClass().getResource("/config/icons/minhover.png"));
+    private ImageIcon iconhead=new ImageIcon(this.getClass().getResource("/config/icons/avion_head.png"));
     
     public index_reserva(String setuser,String setnombreusuario,Integer roluss){
         nombreuser=setnombreusuario;
         nombreuserin=setuser;
         roluser=roluss;
         initComponent();        
-        this.setSize(1000,625);
+        this.setSize(945,575);
         this.setLocationRelativeTo(null);
         this.setTitle("Amadeus - Reservas");
         setLayout(null);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.getContentPane().setBackground(new Color(75,75,75));
-        this.setResizable(false);        
+        this.setResizable(false);
+        this.setIconImage(new ImageIcon(getClass().getResource("/config/icons/avion_icon.png")).getImage());
+        this.setUndecorated(true);
     }
     
     public void initComponent(){
+        ventana_form();
         menu();        
         //EVENTO PARA NO CERRAR LA APLICACION TOTALMENTE
         addWindowListener(new WindowAdapter(){
@@ -55,7 +63,7 @@ public class index_reserva extends JFrame{
     public void menu(){
         menu=new JPanel();
         menu.setLayout(null);
-        menu.setBounds(30, 30, 229, 540);
+        menu.setBounds(5, 30, 229, 540);
         menu.setBackground(new Color(255,255,255));
         
         logo=new JLabel();
@@ -191,6 +199,52 @@ public class index_reserva extends JFrame{
         checkin=new check_in();
         getContentPane().add(checkin);
     }
+    
+    private void ventana_form(){
+        
+        avionhead=new JLabel();
+        avionhead.setIcon(iconhead);
+        avionhead.setBounds(5, 5, 20, 20);
+        add(avionhead);
+                
+        minimizar=new JLabel();
+        minimizar.setIcon(min1);
+        minimizar.setBounds(885, 5, 20, 20);
+        add(minimizar);
+        minimizar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                minimizar.setIcon(min2);
+            }
+             @Override
+            public void mouseExited(MouseEvent e) {
+                minimizar.setIcon(min1);
+            }
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                setExtendedState(JFrame.CROSSHAIR_CURSOR); 
+            }
+        });       
+        
+        cerrar=new JLabel();
+        cerrar.setIcon(cerrar1);
+        cerrar.setBounds(917, 5, 20, 20);
+        add(cerrar);
+        cerrar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                cerrar.setIcon(cerrar2);
+            }
+             @Override
+            public void mouseExited(MouseEvent e) {
+                cerrar.setIcon(cerrar1);
+            }
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                salirmodulo();
+            }
+        });
+    } 
     
     public void salirmodulo(){
         int dialogResult = JOptionPane.showConfirmDialog (rootPane, "¿Esta seguro de salir?","Mensaje",JOptionPane.YES_NO_OPTION);

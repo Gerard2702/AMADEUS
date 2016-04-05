@@ -20,7 +20,7 @@ public class crear_reserva extends JPanel{
     public crear_reserva(){
         initComponent();
         setLayout(null);
-        setBounds(260,30,705,540);
+        setBounds(235,30,705,540);
         setBackground(new Color(255,255,255));  
     }
     

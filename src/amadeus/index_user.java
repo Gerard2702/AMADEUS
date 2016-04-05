@@ -15,12 +15,17 @@ import reservas.index_reserva;
 public class index_user extends JFrame{
     
     private JPanel indexadmin;
-    private JLabel imglogo,nameuser;
+    private JLabel imglogo,nameuser,cerrar,minimizar,avionhead;
     private JButton reserva,vuelos,usuarios;
     private String nombreuser="",nombreuserin="";
     private ImageIcon iconlogo=new ImageIcon(this.getClass().getResource("/config/icons/logo.png"));   
     private ImageIcon iconavion=new ImageIcon(this.getClass().getResource("/config/icons/avion.png")); 
-    private ImageIcon iconlista=new ImageIcon(this.getClass().getResource("/config/icons/lista.png")); 
+    private ImageIcon iconlista=new ImageIcon(this.getClass().getResource("/config/icons/lista.png"));
+    private ImageIcon cerrar1=new ImageIcon(this.getClass().getResource("/config/icons/cerrar.png"));
+    private ImageIcon cerrar2=new ImageIcon(this.getClass().getResource("/config/icons/cerrarhover.png"));
+    private ImageIcon min1=new ImageIcon(this.getClass().getResource("/config/icons/min.png"));
+    private ImageIcon min2=new ImageIcon(this.getClass().getResource("/config/icons/minhover.png"));
+    private ImageIcon iconhead=new ImageIcon(this.getClass().getResource("/config/icons/avion_head.png"));
     /**
      * @param args the command line arguments
      */
@@ -28,20 +33,24 @@ public class index_user extends JFrame{
         nombreuser=setnombreusuario;
         nombreuserin=setuser;
         initComponent();        
-        this.setSize(500,400);
+        this.setSize(430,325);
         this.setLocationRelativeTo(null);
         this.setTitle("Amadeus empleado");
         setLayout(null);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.getContentPane().setBackground(new Color(75,75,75));
-        this.setResizable(false);        
+        this.setResizable(false);
+        this.setIconImage(new ImageIcon(getClass().getResource("/config/icons/avion_icon.png")).getImage());
+        this.setUndecorated(true);
     }
     
     public void initComponent(){
         
+        ventana_form();
+        
         indexadmin=new JPanel();
         indexadmin.setBackground(new Color(255,255,255));
-        indexadmin.setBounds(40, 40, 420, 290);
+        indexadmin.setBounds(5, 30, 420, 290);
         indexadmin.setLayout(null);
         
         imglogo=new JLabel();
@@ -93,6 +102,52 @@ public class index_user extends JFrame{
         index_reserva reserva=new index_reserva(nombreuserin,nombreuser,2);
         reserva.setVisible(true);
     }   
+    
+    private void ventana_form(){
+        
+        avionhead=new JLabel();
+        avionhead.setIcon(iconhead);
+        avionhead.setBounds(5, 5, 20, 20);
+        add(avionhead);
+                
+        minimizar=new JLabel();
+        minimizar.setIcon(min1);
+        minimizar.setBounds(370, 5, 20, 20);
+        add(minimizar);
+        minimizar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                minimizar.setIcon(min2);
+            }
+             @Override
+            public void mouseExited(MouseEvent e) {
+                minimizar.setIcon(min1);
+            }
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                setExtendedState(JFrame.CROSSHAIR_CURSOR); 
+            }
+        });       
+        
+        cerrar=new JLabel();
+        cerrar.setIcon(cerrar1);
+        cerrar.setBounds(402, 5, 20, 20);
+        add(cerrar);
+        cerrar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                cerrar.setIcon(cerrar2);
+            }
+             @Override
+            public void mouseExited(MouseEvent e) {
+                cerrar.setIcon(cerrar1);
+            }
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                salirmodulo();
+            }
+        });
+    }
     
     public void salirmodulo(){
         int dialogResult = JOptionPane.showConfirmDialog (rootPane, "¿Esta seguro de salir de aplicación?","Cerrar Sesión",JOptionPane.YES_NO_OPTION);
