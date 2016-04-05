@@ -18,7 +18,7 @@ public class login extends JFrame{
     private JPasswordField txtPass;
     private JButton btnIngresar;
     private JPanel panel,logo;
-    private ImageIcon iconlogo=new ImageIcon(this.getClass().getResource("/config/logo.png"));    
+    private ImageIcon iconlogo=new ImageIcon(this.getClass().getResource("/config/icons/logo.png"));    
     database db = new database();
     
     public login(){
@@ -42,7 +42,7 @@ public class login extends JFrame{
         logo=new JPanel();
         logo.setLayout(null);
         logo.setBounds(40,30,400,70);
-        logo.setBackground(new Color(230,230,230));       
+        logo.setBackground(new Color(225,165,165));       
         
         imagen=new JLabel();
         imagen.setBounds(90, 10, 263, 65);        
@@ -54,7 +54,7 @@ public class login extends JFrame{
         panel = new JPanel();
         panel.setLayout(null);
         panel.setBounds(40,100,400,280);
-        panel.setBackground(new Color(230,230,230));
+        panel.setBackground(new Color(225,165,165));
         conten.add(panel);
         
         lblWelcome = new JLabel("INICIAR SESIÓN");

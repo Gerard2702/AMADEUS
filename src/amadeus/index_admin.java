@@ -7,9 +7,7 @@ package amadeus;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import config.*;
-import java.sql.*;
-import javax.swing.*;
+import reservas.index_reserva;
 /**
  *
  * @author Familia Aparicio
@@ -20,10 +18,10 @@ public class index_admin extends JFrame {
     private JLabel imglogo,nameuser;
     private JButton reserva,vuelos,usuarios;
     private String nombreuser="",nombreuserin="";
-    private ImageIcon iconlogo=new ImageIcon(this.getClass().getResource("/config/logo.png"));   
-    private ImageIcon iconavion=new ImageIcon(this.getClass().getResource("/config/avion.png")); 
-    private ImageIcon iconlista=new ImageIcon(this.getClass().getResource("/config/lista.png")); 
-    private ImageIcon iconuser=new ImageIcon(this.getClass().getResource("/config/user.png")); 
+    private ImageIcon iconlogo=new ImageIcon(this.getClass().getResource("/config/icons/logo.png"));   
+    private ImageIcon iconavion=new ImageIcon(this.getClass().getResource("/config/icons/avion.png")); 
+    private ImageIcon iconlista=new ImageIcon(this.getClass().getResource("/config/icons/lista.png")); 
+    private ImageIcon iconuser=new ImageIcon(this.getClass().getResource("/config/icons/user.png")); 
     /**
      * @param args the command line arguments
      */
@@ -43,7 +41,7 @@ public class index_admin extends JFrame {
     public void initComponent(){
         
         indexadmin=new JPanel();
-        indexadmin.setBackground(new Color(230,230,230));
+        indexadmin.setBackground(new Color(225,165,165));
         indexadmin.setBounds(40, 40, 420, 385);
         indexadmin.setLayout(null);
         
@@ -102,6 +100,9 @@ public class index_admin extends JFrame {
     
     public void modulo_reservas(){
         //INSTANCIAR CLASE DE MODULO DE RESERVAS
+        this.setVisible(false);
+        index_reserva reserva=new index_reserva(nombreuserin,nombreuser,1);
+        reserva.setVisible(true);
     }
     
     public void modulo_usuarios(){
