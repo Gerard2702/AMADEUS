@@ -34,14 +34,14 @@ public class index_admin extends JFrame {
         this.setTitle("Amadeus Administrador");
         setLayout(null);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        this.getContentPane().setBackground(new Color(168,168,168));
+        this.getContentPane().setBackground(new Color(75,75,75));
         this.setResizable(false);        
     }
     
     public void initComponent(){
         
         indexadmin=new JPanel();
-        indexadmin.setBackground(new Color(225,165,165));
+        indexadmin.setBackground(new Color(255,255,255));
         indexadmin.setBounds(40, 40, 420, 385);
         indexadmin.setLayout(null);
         

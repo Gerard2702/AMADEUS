@@ -21,7 +21,7 @@ public class estado_vuelos extends JPanel{
         initComponent();
         setLayout(null);
         setBounds(260,30,705,540);
-        setBackground(new Color(225,165,165));  
+        setBackground(new Color(255,255,255));  
     }
     
     public void initComponent(){

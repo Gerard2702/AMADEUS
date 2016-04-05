@@ -33,14 +33,14 @@ public class index_user extends JFrame{
         this.setTitle("Amadeus empleado");
         setLayout(null);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        this.getContentPane().setBackground(new Color(168,168,168));
+        this.getContentPane().setBackground(new Color(75,75,75));
         this.setResizable(false);        
     }
     
     public void initComponent(){
         
         indexadmin=new JPanel();
-        indexadmin.setBackground(new Color(225,165,165));
+        indexadmin.setBackground(new Color(255,255,255));
         indexadmin.setBounds(40, 40, 420, 290);
         indexadmin.setLayout(null);
         

@@ -27,7 +27,7 @@ public class login extends JFrame{
         this.setLocationRelativeTo(null);
         this.setTitle("Amadeus-UDB");
         this.setLayout(null);
-        this.getContentPane().setBackground(new Color(168,168,168));
+        this.getContentPane().setBackground(new Color(75,75,75));
         this.setResizable(false);
     }
     
@@ -42,7 +42,7 @@ public class login extends JFrame{
         logo=new JPanel();
         logo.setLayout(null);
         logo.setBounds(40,30,400,70);
-        logo.setBackground(new Color(225,165,165));       
+        logo.setBackground(new Color(255,255,255));       
         
         imagen=new JLabel();
         imagen.setBounds(90, 10, 263, 65);        
@@ -54,7 +54,7 @@ public class login extends JFrame{
         panel = new JPanel();
         panel.setLayout(null);
         panel.setBounds(40,100,400,280);
-        panel.setBackground(new Color(225,165,165));
+        panel.setBackground(new Color(255,255,255));
         conten.add(panel);
         
         lblWelcome = new JLabel("INICIAR SESIÓN");

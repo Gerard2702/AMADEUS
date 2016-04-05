@@ -38,7 +38,7 @@ public class index_reserva extends JFrame{
         this.setTitle("Amadeus - Reservas");
         setLayout(null);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        this.getContentPane().setBackground(new Color(168,168,168));
+        this.getContentPane().setBackground(new Color(75,75,75));
         this.setResizable(false);        
     }
     
@@ -56,7 +56,7 @@ public class index_reserva extends JFrame{
         menu=new JPanel();
         menu.setLayout(null);
         menu.setBounds(30, 30, 229, 540);
-        menu.setBackground(new Color(225,165,165));
+        menu.setBackground(new Color(255,255,255));
         
         logo=new JLabel();
         logo.setIcon(iconlogo);
