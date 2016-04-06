@@ -18,7 +18,7 @@ public class index_reserva extends JFrame{
     
     private String nombreuser="",nombreuserin="";
     private Integer roluser;
-    private JPanel menu;
+    private JPanel menu,jframe=new JPanel(),bordenegro;
     private vuelos_disponibles vuelos;
     private estado_vuelos estado;
     private crear_reserva reserva;
@@ -50,14 +50,16 @@ public class index_reserva extends JFrame{
     }
     
     public void initComponent(){
+        
+        jframe.setBounds(0,0,945,575);
+        jframe.setBorder(BorderFactory.createLineBorder(new Color(220,220,220), 1));
+        jframe.setLayout(null);
+        jframe.setBackground(new Color(255,255,255)); 
+        
         ventana_form();
-        menu();        
-        //EVENTO PARA NO CERRAR LA APLICACION TOTALMENTE
-        addWindowListener(new WindowAdapter(){
-           public void windowClosing(WindowEvent evt){
-               salirmodulo();
-           }          
-        });
+        menu();
+        
+        add(jframe);
     }
     
     public void menu(){
@@ -65,6 +67,12 @@ public class index_reserva extends JFrame{
         menu.setLayout(null);
         menu.setBounds(5, 30, 229, 540);
         menu.setBackground(new Color(255,255,255));
+        
+        bordenegro=new JPanel();
+        bordenegro.setLayout(null);
+        bordenegro.setBounds(234,30,1,540);
+        bordenegro.setBackground(new Color(220,220,220));
+        jframe.add(bordenegro);
         
         logo=new JLabel();
         logo.setIcon(iconlogo);
@@ -112,92 +120,92 @@ public class index_reserva extends JFrame{
         pie.setBounds(19, 500, 190, 25);
         menu.add(pie);
         
-        getContentPane().add(menu);    
+        jframe.add(menu);    
         vuelosdisp_Component();
     }
     
     public void vuelosdisp_Component(){
         if(vuelos!=null){
-            getContentPane().remove(vuelos);
+            jframe.remove(vuelos);
             repaint();
         }
         if(estado!=null){
-            getContentPane().remove(estado);
+            jframe.remove(estado);
             repaint();
         }
         if(reserva!=null){
-            getContentPane().remove(reserva);
+            jframe.remove(reserva);
             repaint();
         }
         if(checkin!=null){
-            getContentPane().remove(checkin);
+            jframe.remove(checkin);
             repaint();
         }
         vuelos=new vuelos_disponibles();
-        getContentPane().add(vuelos);
+        jframe.add(vuelos);
     }
     
     public void estadovuelos_Component(){
         if(vuelos!=null){
-            getContentPane().remove(vuelos);
+            jframe.remove(vuelos);
             repaint();
         }
         if(estado!=null){
-            getContentPane().remove(estado);
+            jframe.remove(estado);
             repaint();
         }
         if(reserva!=null){
-            getContentPane().remove(reserva);
+            jframe.remove(reserva);
             repaint();
         }
         if(checkin!=null){
-            getContentPane().remove(checkin);
+            jframe.remove(checkin);
             repaint();
         }
         estado=new estado_vuelos();
-        getContentPane().add(estado);        
+        jframe.add(estado);        
     }
     
     public void crearreserva_Component(){
         if(vuelos!=null){
-            getContentPane().remove(vuelos);
+            jframe.remove(vuelos);
             repaint();
         }
         if(estado!=null){
-            getContentPane().remove(estado);
+            jframe.remove(estado);
             repaint();
         }
         if(reserva!=null){
-            getContentPane().remove(reserva);
+            jframe.remove(reserva);
             repaint();
         }
         if(checkin!=null){
-            getContentPane().remove(checkin);
+            jframe.remove(checkin);
             repaint();
         }
         reserva=new crear_reserva();
-        getContentPane().add(reserva);
+        jframe.add(reserva);
     }
     
     public void checkin_Component(){
         if(vuelos!=null){
-            getContentPane().remove(vuelos);
+            jframe.remove(vuelos);
             repaint();
         }
         if(estado!=null){
-            getContentPane().remove(estado);
+            jframe.remove(estado);
             repaint();
         }
         if(reserva!=null){
-            getContentPane().remove(reserva);
+            jframe.remove(reserva);
             repaint();
         }
         if(checkin!=null){
-            getContentPane().remove(checkin);
+            jframe.remove(checkin);
             repaint();
         }
         checkin=new check_in();
-        getContentPane().add(checkin);
+        jframe.add(checkin);
     }
     
     private void ventana_form(){
@@ -205,12 +213,12 @@ public class index_reserva extends JFrame{
         avionhead=new JLabel();
         avionhead.setIcon(iconhead);
         avionhead.setBounds(5, 5, 20, 20);
-        add(avionhead);
+        jframe.add(avionhead);
                 
         minimizar=new JLabel();
         minimizar.setIcon(min1);
         minimizar.setBounds(885, 5, 20, 20);
-        add(minimizar);
+        jframe.add(minimizar);
         minimizar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent me) {
@@ -229,7 +237,7 @@ public class index_reserva extends JFrame{
         cerrar=new JLabel();
         cerrar.setIcon(cerrar1);
         cerrar.setBounds(917, 5, 20, 20);
-        add(cerrar);
+        jframe.add(cerrar);
         cerrar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent me) {

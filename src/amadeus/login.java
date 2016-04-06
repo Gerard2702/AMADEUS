@@ -17,7 +17,7 @@ public class login extends JFrame{
     private JTextField txtUser;
     private JPasswordField txtPass;
     private JButton btnIngresar;
-    private JPanel panel,logo;
+    private JPanel panel,logo,jframe=new JPanel();
     private ImageIcon iconlogo=new ImageIcon(this.getClass().getResource("/config/icons/logo.png"));
     private ImageIcon cerrar1=new ImageIcon(this.getClass().getResource("/config/icons/cerrar.png"));
     private ImageIcon cerrar2=new ImageIcon(this.getClass().getResource("/config/icons/cerrarhover.png"));
@@ -32,16 +32,21 @@ public class login extends JFrame{
         this.setLocationRelativeTo(null);
         this.setTitle("Amadeus-UDB");
         this.setLayout(null);
-        this.getContentPane().setBackground(new Color(75,75,75));
+        this.getContentPane().setBackground(new Color(255,255,255));
         this.setResizable(false);
         this.setIconImage(new ImageIcon(getClass().getResource("/config/icons/avion_icon.png")).getImage());
-        this.setUndecorated(true);
+        this.setUndecorated(true);        
     }
     
     private void initComponent(){
 
-        Font titulo = new Font("Calibri", 1, 20);
-        Font label = new Font("Calibri", 1, 15);
+        Font titulo = new Font("Calibri", 1, 19);
+        Font label = new Font("Calibri", 1, 15);        
+        
+        jframe.setBounds(0,0,410,385);
+        jframe.setBorder(BorderFactory.createLineBorder(new Color(220,220,220), 1));
+        jframe.setLayout(null);
+        jframe.setBackground(new Color(255,255,255)); 
         
         ventana_form();
         
@@ -55,17 +60,17 @@ public class login extends JFrame{
         imagen.setIcon(iconlogo);
         logo.add(imagen);
         
-        add(logo);
+        jframe.add(logo);
         
         panel = new JPanel();
         panel.setLayout(null);
         panel.setBounds(5,100,400,280);
         panel.setBackground(new Color(255,255,255));
-        add(panel);
         
-        lblWelcome = new JLabel("INICIAR SESIÓN");
+        
+        lblWelcome = new JLabel("INICIAR SESION");
         lblWelcome.setFont(titulo);
-        lblWelcome.setBounds(30, 25, 200, 50);
+        lblWelcome.setBounds(130, 25, 200, 50);
         panel.add(lblWelcome);
         
         lblUser = new JLabel("Usuario: ");
@@ -93,6 +98,10 @@ public class login extends JFrame{
         btnIngresar.setMnemonic('I');
         btnIngresar.setBounds(225, 200, 125, 25);        
         panel.add(btnIngresar);
+        
+        jframe.add(panel);
+        
+        add(jframe);
         
         btnIngresar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
@@ -126,12 +135,12 @@ public class login extends JFrame{
         avionhead=new JLabel();
         avionhead.setIcon(iconhead);
         avionhead.setBounds(5, 5, 20, 20);
-        add(avionhead);
+        jframe.add(avionhead);
                 
         minimizar=new JLabel();
         minimizar.setIcon(min1);
         minimizar.setBounds(348, 5, 20, 20);
-        add(minimizar);
+        jframe.add(minimizar);
         minimizar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent me) {
@@ -150,7 +159,7 @@ public class login extends JFrame{
         cerrar=new JLabel();
         cerrar.setIcon(cerrar1);
         cerrar.setBounds(380, 5, 20, 20);
-        add(cerrar);
+        jframe.add(cerrar);
         cerrar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent me) {

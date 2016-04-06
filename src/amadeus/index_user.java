@@ -14,7 +14,7 @@ import reservas.index_reserva;
  */
 public class index_user extends JFrame{
     
-    private JPanel indexadmin;
+    private JPanel indexadmin,jframe=new JPanel();
     private JLabel imglogo,nameuser,cerrar,minimizar,avionhead;
     private JButton reserva,vuelos,usuarios;
     private String nombreuser="",nombreuserin="";
@@ -46,6 +46,11 @@ public class index_user extends JFrame{
     
     public void initComponent(){
         
+        jframe.setBounds(0,0,430,420);
+        jframe.setBorder(BorderFactory.createLineBorder(new Color(220,220,220), 1));
+        jframe.setLayout(null);
+        jframe.setBackground(new Color(255,255,255)); 
+        
         ventana_form();
         
         indexadmin=new JPanel();
@@ -54,7 +59,7 @@ public class index_user extends JFrame{
         indexadmin.setLayout(null);
         
         imglogo=new JLabel();
-        imglogo.setBounds(10, 10, 263, 65);
+        imglogo.setBounds(85, 10, 263, 65);
         imglogo.setIcon(iconlogo);
         indexadmin.add(imglogo);
         
@@ -72,7 +77,9 @@ public class index_user extends JFrame{
         nameuser.setBounds(20, 255, 400, 15);
         indexadmin.add(nameuser);
         
-        add(indexadmin);
+        jframe.add(indexadmin);
+        
+        add(jframe);
         
         vuelos.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
@@ -108,12 +115,12 @@ public class index_user extends JFrame{
         avionhead=new JLabel();
         avionhead.setIcon(iconhead);
         avionhead.setBounds(5, 5, 20, 20);
-        add(avionhead);
+        jframe.add(avionhead);
                 
         minimizar=new JLabel();
         minimizar.setIcon(min1);
         minimizar.setBounds(370, 5, 20, 20);
-        add(minimizar);
+        jframe.add(minimizar);
         minimizar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent me) {
@@ -132,7 +139,7 @@ public class index_user extends JFrame{
         cerrar=new JLabel();
         cerrar.setIcon(cerrar1);
         cerrar.setBounds(402, 5, 20, 20);
-        add(cerrar);
+        jframe.add(cerrar);
         cerrar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent me) {
