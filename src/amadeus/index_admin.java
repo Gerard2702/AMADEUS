@@ -48,7 +48,7 @@ public class index_admin extends JFrame {
     public void initComponent(){
         
         jframe.setBounds(0,0,430,420);
-        jframe.setBorder(BorderFactory.createLineBorder(new Color(220,220,220), 1));
+        jframe.setBorder(BorderFactory.createLineBorder(new Color(190,190,190), 1));
         jframe.setLayout(null);
         jframe.setBackground(new Color(255,255,255)); 
         
@@ -67,16 +67,52 @@ public class index_admin extends JFrame {
         vuelos=new JButton("Gestión de Vuelos");
         vuelos.setIcon(iconavion);
         vuelos.setBounds(100, 95, 210, 60);
+        vuelos.setBackground(new Color(158,203,242));
+        vuelos.setBorderPainted(false);
+        vuelos.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                vuelos.setBackground(new Color(200,200,200));
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                vuelos.setBackground(new Color(158,203,242));
+            }            
+        });       
         indexadmin.add(vuelos);
         
         reserva=new JButton("Gestión de Reservas");
         reserva.setIcon(iconlista);
         reserva.setBounds(100, 175, 210, 60);
+        reserva.setBackground(new Color(158,203,242));
+        reserva.setBorderPainted(false);
+        reserva.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                reserva.setBackground(new Color(200,200,200));
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                reserva.setBackground(new Color(158,203,242));
+            }            
+        });               
         indexadmin.add(reserva);
         
         usuarios=new JButton("Gestión de Usuarios");
         usuarios.setIcon(iconuser);
         usuarios.setBounds(100, 255, 210, 60);
+        usuarios.setBackground(new Color(158,203,242));
+        usuarios.setBorderPainted(false);
+        usuarios.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                usuarios.setBackground(new Color(200,200,200));
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                usuarios.setBackground(new Color(158,203,242));
+            }            
+        });       
         indexadmin.add(usuarios);
         
         nameuser=new JLabel("Usuario: "+nombreuser);

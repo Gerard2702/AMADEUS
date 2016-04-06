@@ -66,11 +66,35 @@ public class index_user extends JFrame{
         vuelos=new JButton("Gestión de Vuelos");
         vuelos.setIcon(iconavion);
         vuelos.setBounds(100, 95, 210, 60);
+        vuelos.setBackground(new Color(158,203,242));
+        vuelos.setBorderPainted(false);
+        vuelos.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                vuelos.setBackground(new Color(200,200,200));
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                vuelos.setBackground(new Color(158,203,242));
+            }            
+        });       
         indexadmin.add(vuelos);
         
         reserva=new JButton("Gestión de Reservas");
         reserva.setIcon(iconlista);
         reserva.setBounds(100, 175, 210, 60);
+        reserva.setBackground(new Color(158,203,242));
+        reserva.setBorderPainted(false);
+        reserva.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                reserva.setBackground(new Color(200,200,200));
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                reserva.setBackground(new Color(158,203,242));
+            }            
+        });       
         indexadmin.add(reserva);
         
         nameuser=new JLabel("Usuario: "+nombreuser);

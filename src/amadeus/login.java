@@ -41,10 +41,10 @@ public class login extends JFrame{
     private void initComponent(){
 
         Font titulo = new Font("Calibri", 1, 19);
-        Font label = new Font("Calibri", 1, 15);        
+        Font label = new Font("Calibri", 1, 15);         
         
         jframe.setBounds(0,0,410,385);
-        jframe.setBorder(BorderFactory.createLineBorder(new Color(220,220,220), 1));
+        jframe.setBorder(BorderFactory.createLineBorder(new Color(190,190,190), 1));
         jframe.setLayout(null);
         jframe.setBackground(new Color(255,255,255)); 
         
@@ -65,8 +65,7 @@ public class login extends JFrame{
         panel = new JPanel();
         panel.setLayout(null);
         panel.setBounds(5,100,400,280);
-        panel.setBackground(new Color(255,255,255));
-        
+        panel.setBackground(new Color(255,255,255));        
         
         lblWelcome = new JLabel("INICIAR SESION");
         lblWelcome.setFont(titulo);
@@ -96,7 +95,19 @@ public class login extends JFrame{
         btnIngresar = new JButton("Iniciar Sesión");
         btnIngresar.setFont(label);
         btnIngresar.setMnemonic('I');
-        btnIngresar.setBounds(225, 200, 125, 25);        
+        btnIngresar.setBounds(225, 200, 125, 30);   
+        btnIngresar.setBackground(new Color(158,203,242));
+        btnIngresar.setBorderPainted(false);
+        btnIngresar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                btnIngresar.setBackground(new Color(200,200,200));
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                btnIngresar.setBackground(new Color(158,203,242));
+            }            
+        });       
         panel.add(btnIngresar);
         
         jframe.add(panel);

@@ -24,7 +24,7 @@ public class index_reserva extends JFrame{
     private crear_reserva reserva;
     private check_in checkin;
     private JButton btnreserva,btncheckin,btnestadovuel,btnvuelosdispo;
-    private JLabel logo, pie,cerrar,minimizar,avionhead;
+    private JLabel logo, pie,cerrar,minimizar,avionhead,separ1,separ2,separ3;
     private ImageIcon iconlogo=new ImageIcon(this.getClass().getResource("/config/icons/logo_modulos.png"));
     private ImageIcon iconpie=new ImageIcon(this.getClass().getResource("/config/icons/pie_modulo.png"));
     private ImageIcon cerrar1=new ImageIcon(this.getClass().getResource("/config/icons/cerrar.png"));
@@ -32,6 +32,9 @@ public class index_reserva extends JFrame{
     private ImageIcon min1=new ImageIcon(this.getClass().getResource("/config/icons/min.png"));
     private ImageIcon min2=new ImageIcon(this.getClass().getResource("/config/icons/minhover.png"));
     private ImageIcon iconhead=new ImageIcon(this.getClass().getResource("/config/icons/avion_head.png"));
+    private ImageIcon iconcheckin=new ImageIcon(this.getClass().getResource("/config/icons/checkin_icon.png"));
+    private ImageIcon iconavionestado=new ImageIcon(this.getClass().getResource("/config/icons/avion_estado_vuelo.png"));
+    private ImageIcon iconreserva=new ImageIcon(this.getClass().getResource("/config/icons/reserva_icon.png"));
     
     public index_reserva(String setuser,String setnombreusuario,Integer roluss){
         nombreuser=setnombreusuario;
@@ -80,7 +83,20 @@ public class index_reserva extends JFrame{
         menu.add(logo); 
         
         btnvuelosdispo =new JButton("Vuelos Disponibles");
-        btnvuelosdispo.setBounds(14, 80, 200, 50);
+        btnvuelosdispo.setIcon(iconavionestado);
+        btnvuelosdispo.setBounds(14, 80, 200, 50);        
+        btnvuelosdispo.setBackground(new Color(158,203,242));
+        btnvuelosdispo.setBorderPainted(false);
+        btnvuelosdispo.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                btnvuelosdispo.setBackground(new Color(200,200,200));
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                btnvuelosdispo.setBackground(new Color(158,203,242));
+            }            
+        });       
         menu.add(btnvuelosdispo);
         btnvuelosdispo.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent evt){
@@ -88,8 +104,26 @@ public class index_reserva extends JFrame{
             }
         });
         
-        btnestadovuel=new JButton("Estado Vuelos");
-        btnestadovuel.setBounds(14, 140, 200, 50);
+        separ1=new JLabel();
+        separ1.setBackground(new Color(220,220,220));
+        separ1.setBounds(14, 130, 200, 1);
+        menu.add(separ1);
+        
+        btnestadovuel=new JButton("Estado Vuelos         ");
+        btnestadovuel.setIcon(iconavionestado);
+        btnestadovuel.setBounds(14, 131, 200, 50);
+        btnestadovuel.setBackground(new Color(158,203,242));
+        btnestadovuel.setBorderPainted(false);
+        btnestadovuel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                btnestadovuel.setBackground(new Color(200,200,200));
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                btnestadovuel.setBackground(new Color(158,203,242));
+            }            
+        });       
         menu.add(btnestadovuel);
         btnestadovuel.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent evt){
@@ -97,8 +131,26 @@ public class index_reserva extends JFrame{
             }
         });
         
-        btnreserva=new JButton("Reservaciones");
-        btnreserva.setBounds(14,200,200,50);
+        separ2=new JLabel();
+        separ2.setBackground(new Color(220,220,220));
+        separ2.setBounds(14, 180, 200, 1);
+        menu.add(separ2);
+        
+        btnreserva=new JButton("Reservaciones         ");
+        btnreserva.setIcon(iconreserva);
+        btnreserva.setBounds(14,182,200,50);
+        btnreserva.setBackground(new Color(158,203,242));
+        btnreserva.setBorderPainted(false);
+        btnreserva.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                btnreserva.setBackground(new Color(200,200,200));
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                btnreserva.setBackground(new Color(158,203,242));
+            }            
+        });       
         menu.add(btnreserva);
         btnreserva.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent evt){
@@ -106,8 +158,26 @@ public class index_reserva extends JFrame{
             }
         });
         
-        btncheckin=new JButton("Check-In");
-        btncheckin.setBounds(14,260,200,50);
+        separ3=new JLabel();
+        separ3.setBackground(new Color(220,220,220));
+        separ3.setBounds(14, 230, 200, 1);
+        menu.add(separ3);
+        
+        btncheckin=new JButton("Check-In                  ");
+        btncheckin.setIcon(iconcheckin);
+        btncheckin.setBounds(14,233,200,50);
+        btncheckin.setBackground(new Color(158,203,242));
+        btncheckin.setBorderPainted(false);
+        btncheckin.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                btncheckin.setBackground(new Color(200,200,200));
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                btncheckin.setBackground(new Color(158,203,242));
+            }            
+        });       
         menu.add(btncheckin);
         btncheckin.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent evt){
