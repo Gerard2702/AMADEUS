@@ -42,7 +42,7 @@ public class index_admin extends JFrame {
         this.getContentPane().setBackground(new Color(75,75,75));
         this.setResizable(false);
         this.setIconImage(new ImageIcon(getClass().getResource("/config/icons/avion_icon.png")).getImage());
-        this.setUndecorated(true);
+        this.setUndecorated(true);        
     }
     
     public void initComponent(){
@@ -207,7 +207,7 @@ public class index_admin extends JFrame {
         });
     } 
     
-    public void salirmodulo(){
+    public void salirmodulo(){        
         int dialogResult = JOptionPane.showConfirmDialog (rootPane, "¿Esta seguro de salir de aplicación?","Cerrar Sesión",JOptionPane.YES_NO_OPTION);
         if(dialogResult == JOptionPane.YES_OPTION){
             this.setVisible(false);

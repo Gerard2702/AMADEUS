@@ -41,7 +41,7 @@ public class index_user extends JFrame{
         this.getContentPane().setBackground(new Color(75,75,75));
         this.setResizable(false);
         this.setIconImage(new ImageIcon(getClass().getResource("/config/icons/avion_icon.png")).getImage());
-        this.setUndecorated(true);
+        this.setUndecorated(true);        
     }
     
     public void initComponent(){

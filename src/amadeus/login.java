@@ -35,7 +35,10 @@ public class login extends JFrame{
         this.getContentPane().setBackground(new Color(255,255,255));
         this.setResizable(false);
         this.setIconImage(new ImageIcon(getClass().getResource("/config/icons/avion_icon.png")).getImage());
-        this.setUndecorated(true);        
+        this.setUndecorated(true);
+        UIManager UI=new UIManager();
+        UI.put("OptionPane.background",Color.WHITE);
+        UI.put("Panel.background",Color.WHITE);
     }
     
     private void initComponent(){
