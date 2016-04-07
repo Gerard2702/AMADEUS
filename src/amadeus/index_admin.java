@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import reservas.index_reserva;
+import vuelos.index_vuelo;
 /**
  *
  * @author Familia Aparicio
@@ -148,6 +149,9 @@ public class index_admin extends JFrame {
     
     public void modulo_vuelos(){
         //INSTANCIAR CLASE DE MODULO DE VUELOS
+        this.setVisible(false);
+        index_vuelo vuelo = new index_vuelo(nombreuserin, nombreuser, 1);
+        vuelo.setVisible(true);
     }
     
     public void modulo_reservas(){
