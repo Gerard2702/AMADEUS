@@ -15,9 +15,10 @@ import java.sql.*;
  */
 public class crear_vuelo extends JPanel
 {
-    private JLabel hora, hora2, fecha, asientos, maletas, ruta;
+    private JLabel hora, hora2, fecha, asientos, maletas, ruta, title, avion;
     private JTextField time, time2, fec, numasi, mal;
-    private JComboBox ini, fin;
+    private JComboBox ini, fin, avi;
+    private JButton limpiar, crear;
     
     public crear_vuelo(){
         initComponent();
@@ -27,56 +28,82 @@ public class crear_vuelo extends JPanel
     }
     
     public void initComponent(){
+        
+        title = new JLabel("CREACIÓN DE VUELOS");
+        title.setBounds(200,20,300,40);
+        title.setFont(new Font("TImes New Roman", Font.BOLD,25));
+        add(title);
+        
         hora = new JLabel("Hora Inicio: ");
-        hora.setBounds(150, 30, 100, 20);
+        hora.setBounds(150, 100, 100, 20);
         add(hora);
         
         time = new JTextField();
-        time.setBounds(280, 30, 250, 20);
+        time.setBounds(280, 100, 250, 20);
         add(time);
         
         hora2 = new JLabel("Hora LLegada: ");
-        hora2.setBounds(150, 100, 100, 20);
+        hora2.setBounds(150, 145, 100, 20);
         add(hora2);
         
         time2 = new JTextField();
-        time2.setBounds(280, 100, 250, 20);
+        time2.setBounds(280, 145, 250, 20);
         add(time2);
         
         fecha = new JLabel("Fecha: ");
-        fecha.setBounds(150, 170, 100, 20);
+        fecha.setBounds(150, 190, 100, 20);
         add(fecha);
         
         fec = new JTextField();
-        fec.setBounds(280,170,250,20);
+        fec.setBounds(280,190,250,20);
         add(fec);
         
         asientos = new JLabel("Asientos: ");
-        asientos.setBounds(150,240,100,20);
+        asientos.setBounds(150,235,100,20);
         add(asientos);
         
         numasi = new JTextField();
-        numasi.setBounds(280,240,250,20);
+        numasi.setBounds(280,235,250,20);
         add(numasi);
         
         maletas = new JLabel("Maletas: ");
-        maletas.setBounds(150,310,100,20);
+        maletas.setBounds(150,280,100,20);
         add(maletas);
         
         mal = new JTextField();
-        mal.setBounds(280,310,250,20);
+        mal.setBounds(280,280,250,20);
         add(mal);
         
+        avion = new JLabel("Avión: ");
+        avion.setBounds(150,325,100,20);
+        add(avion);
+        
+        avi = new JComboBox();
+        avi.setBounds(280,325,250,20);
+        add(avi);
+        
         ruta = new JLabel("Ruta: ");
-        ruta.setBounds(150,380,100,20);
+        ruta.setBounds(150,370,100,20);
         add(ruta);
         
         ini = new JComboBox();
-        ini.setBounds(280,380,110,20);
+        ini.setBounds(280,370,110,20);
         add(ini);
         
         fin = new JComboBox();
-        fin.setBounds(420,380,110,20);
+        fin.setBounds(420,370,110,20);
         add(fin);
+        
+        crear = new JButton("Crear Vuelo");
+        crear.setBounds(150,450,170,20);
+        crear.setBackground(new Color(158,203,242));        
+        crear.setBorderPainted(false);
+        add(crear);
+        
+        limpiar = new JButton("Limpiar");
+        limpiar.setBounds(360,450,170,20);
+        limpiar.setBackground(new Color(158,203,242));        
+        limpiar.setBorderPainted(false);
+        add(limpiar);
     }    
 }
