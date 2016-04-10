@@ -23,7 +23,6 @@ public class index_vuelo extends JFrame
     private modificar_vuelo modificar;
     private borrar_vuelo borrar;
     private agregar_avion agregar;
-    private asignar_avion asignar;
     private JButton btnborrar,btnagregaavion,btnmodvuelo,btncrearvuelo,btnasignar;
     private JLabel logo, pie,cerrar,minimizar,avionhead,separ1,separ2,separ3,separ4;
     private ImageIcon iconlogo=new ImageIcon(this.getClass().getResource("/config/icons/logo_modulos.png"));
@@ -102,12 +101,7 @@ public class index_vuelo extends JFrame
             public void actionPerformed(ActionEvent evt){
                 crearvuelo_Component();
             }
-        });
-        
-        separ1=new JLabel();
-        separ1.setBackground(new Color(220,220,220));
-        separ1.setBounds(14, 139, 200, 1);
-        menu.add(separ1);
+        });        
         
         btnmodvuelo=new JButton("Modifcar Vuelos");
         btnmodvuelo.setBounds(14, 140, 200, 50);
@@ -131,10 +125,6 @@ public class index_vuelo extends JFrame
             }
         });
         
-        separ2=new JLabel();
-        separ2.setBackground(new Color(220,220,220));
-        separ2.setBounds(14, 199, 200, 1);
-        menu.add(separ2);
         
         btnborrar=new JButton("Borrar Vuelos");
         btnborrar.setBounds(14,200,200,50);
@@ -158,11 +148,6 @@ public class index_vuelo extends JFrame
             }
         });
         
-        separ3=new JLabel();
-        separ3.setBackground(new Color(220,220,220));
-        separ3.setBounds(14, 259, 200, 1);
-        menu.add(separ3);
-        
         btnagregaavion=new JButton("Agregar Avion");
         btnagregaavion.setBounds(14,260,200,50);
         btnagregaavion.setIcon(iconavionestado);
@@ -182,33 +167,6 @@ public class index_vuelo extends JFrame
         btnagregaavion.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent evt){
                 agregaravion_Component();
-            }
-        });
-        
-        separ4=new JLabel();
-        separ4.setBackground(new Color(220,220,220));
-        separ4.setBounds(14, 319, 200, 1);
-        menu.add(separ4);
-        
-        btnasignar =new JButton("Asignar Avion");
-        btnasignar.setBounds(14, 320, 200, 50);
-        btnasignar.setIcon(iconavionestado);
-        btnasignar.setBackground(new Color(158,203,242));        
-        btnasignar.setBorderPainted(false);
-        btnasignar.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent me) {
-                btnasignar.setBackground(new Color(200,200,200));
-            }
-            @Override
-            public void mouseExited(MouseEvent e) {
-                btnasignar.setBackground(new Color(158,203,242));
-            }            
-        }); 
-        menu.add(btnasignar);
-        btnasignar.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent evt){
-                asignaravion_Component();
             }
         });
         
@@ -238,11 +196,6 @@ public class index_vuelo extends JFrame
             jframe.remove(agregar);
             repaint();
         }
-        if(asignar!=null)
-        {
-            jframe.remove(asignar);
-            repaint();
-        }
         crear=new crear_vuelo();
         jframe.add(crear);
     }
@@ -262,11 +215,6 @@ public class index_vuelo extends JFrame
         }
         if(agregar!=null){
             jframe.remove(agregar);
-            repaint();
-        }
-        if(asignar!=null)
-        {
-            jframe.remove(asignar);
             repaint();
         }
         modificar=new modificar_vuelo();
@@ -290,11 +238,6 @@ public class index_vuelo extends JFrame
             jframe.remove(agregar);
             repaint();
         }
-        if(asignar!=null)
-        {
-            jframe.remove(asignar);
-            repaint();
-        }
         borrar=new borrar_vuelo();
         jframe.add(borrar);
     }
@@ -316,39 +259,8 @@ public class index_vuelo extends JFrame
             jframe.remove(agregar);
             repaint();
         }
-        if(asignar!=null)
-        {
-            jframe.remove(asignar);
-            repaint();
-        }
         agregar=new agregar_avion();
         jframe.add(agregar);
-    }
-    
-    public void asignaravion_Component(){
-        if(crear!=null){
-            jframe.remove(crear);
-            repaint();
-        }
-        if(modificar!=null){
-            jframe.remove(modificar);
-            repaint();
-        }
-        if(borrar!=null){
-            jframe.remove(borrar);
-            repaint();
-        }
-        if(agregar!=null){
-            jframe.remove(agregar);
-            repaint();
-        }
-        if(asignar!=null)
-        {
-            jframe.remove(asignar);
-            repaint();
-        }
-        asignar=new asignar_avion();
-        jframe.add(asignar);        
     }
     
     private void ventana_form(){
