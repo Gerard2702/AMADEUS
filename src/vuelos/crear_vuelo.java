@@ -162,11 +162,25 @@ public class crear_vuelo extends JPanel
         
         cbxIni = new JComboBox();
         cbxIni.setBounds(280,300,110,25);
-        cbxIni.addItem("El Salvador");
-        cbxIni.addItem("Costa Rica");
-        cbxIni.addItem("España");
-        cbxIni.addItem("México");
-        cbxIni.addItem("Brasil");
+        try{
+        db.conectar();
+        String sql="SELECT * FROM aeropuertos";
+        ResultSet rs = db.query(sql);
+        rs.last(); 
+        if(rs.getRow()==0){
+            cbxIni.addItem("NO HAY AEROPUERTOS AGREGADOS");
+        }
+        else{
+            rs.beforeFirst();
+            while(rs.next()){
+            String cid=rs.getString("ciudad");
+            cbxIni.addItem(cid);
+            }
+        }
+         db.desconectar();
+        }catch (SQLException ex) {
+            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
+        }
         add(cbxIni);
         
         cbxFin = new JComboBox();
