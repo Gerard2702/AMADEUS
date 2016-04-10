@@ -217,8 +217,9 @@ public class crear_vuelo extends JPanel
         });
         
         campos = new JLabel("Requerido Todos Los Campos");
-        campos.setBounds(200,400,170,20);
+        campos.setBounds(200,420,170,20);
         campos.setVisible(false);
+        campos.setForeground(Color.red);
         campos.setFont(error);
         add(campos);
     }  

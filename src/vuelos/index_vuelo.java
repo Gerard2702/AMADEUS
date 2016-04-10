@@ -23,7 +23,6 @@ public class index_vuelo extends JFrame
     private modificar_vuelo modificar;
     private borrar_vuelo borrar;
     private agregar_avion agregar;
-    private asignar_avion asignar;
     private JButton btnborrar,btnagregaavion,btnmodvuelo,btncrearvuelo,btnasignar;
     private JLabel logo, pie,cerrar,minimizar,avionhead,separ1,separ2,separ3,separ4;
     private ImageIcon iconlogo=new ImageIcon(this.getClass().getResource("/config/icons/logo_modulos.png"));
@@ -197,11 +196,6 @@ public class index_vuelo extends JFrame
             jframe.remove(agregar);
             repaint();
         }
-        if(asignar!=null)
-        {
-            jframe.remove(asignar);
-            repaint();
-        }
         crear=new crear_vuelo();
         jframe.add(crear);
     }
@@ -221,11 +215,6 @@ public class index_vuelo extends JFrame
         }
         if(agregar!=null){
             jframe.remove(agregar);
-            repaint();
-        }
-        if(asignar!=null)
-        {
-            jframe.remove(asignar);
             repaint();
         }
         modificar=new modificar_vuelo();
@@ -249,11 +238,6 @@ public class index_vuelo extends JFrame
             jframe.remove(agregar);
             repaint();
         }
-        if(asignar!=null)
-        {
-            jframe.remove(asignar);
-            repaint();
-        }
         borrar=new borrar_vuelo();
         jframe.add(borrar);
     }
@@ -273,11 +257,6 @@ public class index_vuelo extends JFrame
         }
         if(agregar!=null){
             jframe.remove(agregar);
-            repaint();
-        }
-        if(asignar!=null)
-        {
-            jframe.remove(asignar);
             repaint();
         }
         agregar=new agregar_avion();
