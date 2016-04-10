@@ -36,7 +36,12 @@ public class database {
         st = conex.createStatement();
         rs = st.executeQuery(consulta);
         return rs;
-    }   
+    }
+    
+    public void queryUpdate(String consulta) throws SQLException{
+        st = conex.createStatement();
+        st.executeUpdate(consulta);
+    }
     
     public void desconectar() throws SQLException{
         if(conex!=null){
