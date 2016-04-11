@@ -28,10 +28,11 @@ public class crear_vuelo extends JPanel
 {
     private JLabel hora, hora2, fecha, ruta, title, avion;
     private JComboBox cbxIni, cbxFin, cbxAvi;
-    private JButton limpiar, crear;
+    private JButton limpiar, crear, newavion;
     private JFormattedTextField txtFec, txtTime, txtTime2;
     private JLabel errorfec, errorhora1, errorhora2, campos;
     private JSeparator sep;
+    private index_vuelo agregar;
     database db = new database();
     
     public crear_vuelo(){
@@ -134,7 +135,7 @@ public class crear_vuelo extends JPanel
         cbxAvi.setBounds(280,250,250,25);
         try{
         db.conectar();
-        String sql="SELECT * FROM avion";
+        String sql="SELECT avion.idavion FROM avion WHERE idavion NOT IN (SELECT idavion FROM vuelos WHERE avion.idavion = vuelos.avion_idavion) ORDER BY idavion";
         ResultSet rs = db.query(sql);
         rs.last(); 
         if(rs.getRow()==0){
@@ -154,13 +155,62 @@ public class crear_vuelo extends JPanel
         }
         add(cbxAvi);
         
+        newavion = new JButton("Agregar Avion");
+        newavion.setBounds(390,280,130,20);
+        newavion.setBackground(new Color(158,203,242));        
+        newavion.setBorderPainted(false);
+        newavion.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                newavion.setBackground(new Color(200,200,200));
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                newavion.setBackground(new Color(158,203,242));
+            }            
+        });
+        add(newavion);
+         newavion.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent evt){                
+                try{
+                    int asientos = Integer.parseInt(JOptionPane.showInputDialog("Cantidad de Asientos: "));
+                    int maletas = Integer.parseInt(JOptionPane.showInputDialog("Cantidd de Maletas: "));                    
+                    JComboBox combomodelo = new JComboBox();
+                    db.conectar();                    
+                    String sql1="SELECT * FROM modelo";
+                    ResultSet rs = db.query(sql1);
+                    rs.last(); 
+                    if(rs.getRow()==0){
+                        combomodelo.addItem("NO HAY MODELOS AGREGADOS");
+                    }
+                    else{
+                        rs.beforeFirst();
+                        while(rs.next()){
+                        String modelo=rs.getString("modelo");
+                        combomodelo.addItem(modelo);
+                    }
+                    combomodelo.setEditable(true);
+                    JOptionPane.showMessageDialog(null, combomodelo, "Modelo",JOptionPane.QUESTION_MESSAGE);
+                    String model = combomodelo.getSelectedItem().toString();
+                    String sqlidestino = "SELECT * FROM modelo WHERE modelo='"+model+"';";
+                    ResultSet iddesti = db.query(sqlidestino);
+                    iddesti.first();                    
+                    int idmodelo = iddesti.getInt("idmodelo");
+                    String sqlinsert = "INSERT INTO avion (asientos, maletas, modelo_idmodelo) VALUES('"+asientos+"','"+maletas+"','"+idmodelo+"')";
+                    db.queryUpdate(sqlinsert);
+                    db.desconectar();
+                }
+            }catch(Exception e){}                
+            }
+        });
+        
         ruta = new JLabel("Ruta: ");
-        ruta.setBounds(150,300,100,25);
+        ruta.setBounds(150,320,100,25);
         ruta.setFont(label);
         add(ruta);
         
         cbxIni = new JComboBox();
-        cbxIni.setBounds(280,300,110,25);
+        cbxIni.setBounds(280,320,110,25);
         try{
         db.conectar();
         String sql="SELECT * FROM aeropuertos";
@@ -183,7 +233,7 @@ public class crear_vuelo extends JPanel
         add(cbxIni);
         
         cbxFin = new JComboBox();
-        cbxFin.setBounds(420,300,110,25);
+        cbxFin.setBounds(420,320,110,25);
         try{
         db.conectar();
         String sql="SELECT * FROM aeropuertos";
@@ -209,11 +259,21 @@ public class crear_vuelo extends JPanel
         crear.setBounds(150,370,170,25);
         crear.setBackground(new Color(158,203,242));        
         crear.setBorderPainted(false);
+        crear.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                crear.setBackground(new Color(200,200,200));
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                crear.setBackground(new Color(158,203,242));
+            }            
+        });
         add(crear);
         
         crear.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent evt){
-                crear_vuelo(evt);
+                crear_vuelo();
             }
         });
         
@@ -221,6 +281,16 @@ public class crear_vuelo extends JPanel
         limpiar.setBounds(360,370,170,25);
         limpiar.setBackground(new Color(158,203,242));        
         limpiar.setBorderPainted(false);
+        limpiar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                limpiar.setBackground(new Color(200,200,200));
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                limpiar.setBackground(new Color(158,203,242));
+            }            
+        });
         add(limpiar);
         
         limpiar.addActionListener(new ActionListener(){
@@ -250,8 +320,9 @@ public class crear_vuelo extends JPanel
          this.errorhora2.setVisible(false);
      }
      
-     private void crear_vuelo(ActionEvent e)
+     private void crear_vuelo()
      {
+         try{
          String fecha, horainicio, horafin, avion, rutaorigen, rutadestino;
          int maletas, asientos;
          
@@ -338,6 +409,9 @@ public class crear_vuelo extends JPanel
          {
             this.campos.setVisible(true);
          }
+        }catch(Exception e)
+        {
+        }
      }
      public static boolean isFechaValida(String fecha) {
         try {
