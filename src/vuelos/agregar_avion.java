@@ -50,7 +50,7 @@ public class agregar_avion extends JPanel
         sep.setForeground(new Color(220,220,220));
         add(sep);
              
-        lblasientos = new JLabel("Numero de Asiendos: ");
+        lblasientos = new JLabel("Numero de Asientos: ");
         lblasientos.setFont(label);
         lblasientos.setBounds(10, 100, 200, 25);
         add(lblasientos);
@@ -265,11 +265,37 @@ public class agregar_avion extends JPanel
                     String sqlinsert="INSERT INTO avion (codigo,asientos,maletas,modelo_idmodelo) VALUES ('"+codigo+"','"+asientos+"','"+maletas+"','"+idmodelo+"')";
                     db.queryUpdate(sqlinsert);
                     
+                    String sqlcodf="SELECT * FROM avion ORDER BY idavion";
+                    ResultSet rscodf= db.query(sqlcodf);
+                    rscodf.last();
+                    int idavi = rscodf.getInt("idavion");                    
+                    int turista = (int)(asientos * 0.5);
+                    int bussines = (int)(asientos * 0.3);
+                    int firtclass = (int)(asientos * 0.2);                    
+		    String nomb;
+                    for(int i=0; i < turista; i++)
+                    {
+			nomb = "TR-"+(i+1);
+                        String sqlasi1 = "INSERT INTO asientos (nombre_asiento, estado, avion_idavion) VALUES ('"+nomb+"','"+0+"','"+idavi+"')";
+                        db.queryUpdate(sqlasi1);
+                    }
+                    for(int j=0; j < bussines; j++)
+                    {
+			nomb = "BS-"+(j+1);
+                        String sqlasi2 = "INSERT INTO asientos (nombre_asiento, estado, avion_idavion) VALUES ('"+nomb+"','"+0+"','"+idavi+"')";
+                        db.queryUpdate(sqlasi2);
+                    }
+                    for(int k=0; k < firtclass; k++)
+                    {
+			nomb = "FC-"+(k+1);
+                        String sqlasi3 = "INSERT INTO asientos (nombre_asiento, estado, avion_idavion) VALUES ('"+nomb+"','"+0+"','"+idavi+"')";
+                        db.queryUpdate(sqlasi3);
+                    }                    
+                    db.desconectar();
                     JOptionPane.showMessageDialog(null,"REGISTRO EXITOSO");
                     txtasientos.setText("");
                     txtmaletas.setText("");
                     combomodelos.setSelectedIndex(0);
-                    db.desconectar();
                 }catch (SQLException ex) {
                 Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
                 }    

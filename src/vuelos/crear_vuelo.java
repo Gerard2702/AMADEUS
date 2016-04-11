@@ -27,8 +27,8 @@ import javax.swing.text.MaskFormatter;
 public class crear_vuelo extends JPanel
 {
     private JLabel hora, hora2, fecha, ruta, title, avion;
-    private JComboBox cbxIni, cbxFin, cbxAvi;
-    private JButton limpiar, crear, newavion;
+    private JComboBox  cbxruta, cbxAvi;
+    private JButton limpiar, crear;
     private JFormattedTextField txtFec, txtTime, txtTime2;
     private JLabel errorfec, errorhora1, errorhora2, campos;
     private JSeparator sep;
@@ -135,7 +135,7 @@ public class crear_vuelo extends JPanel
         cbxAvi.setBounds(280,250,250,25);
         try{
         db.conectar();
-        String sql="SELECT avion.idavion FROM avion WHERE idavion NOT IN (SELECT idavion FROM vuelos WHERE avion.idavion = vuelos.avion_idavion) ORDER BY idavion";
+        String sql="SELECT avion.codigo FROM avion WHERE idavion NOT IN (SELECT idavion FROM vuelos WHERE avion.idavion = vuelos.avion_idavion) ORDER BY idavion";
         ResultSet rs = db.query(sql);
         rs.last(); 
         if(rs.getRow()==0){
@@ -144,7 +144,7 @@ public class crear_vuelo extends JPanel
         else{
             rs.beforeFirst();
             while(rs.next()){
-            String idavion=rs.getString("idavion");
+            String idavion=rs.getString("codigo");
             cbxAvi.addItem(idavion);
             }
         }
@@ -155,105 +155,33 @@ public class crear_vuelo extends JPanel
         }
         add(cbxAvi);
         
-        newavion = new JButton("Agregar Avion");
-        newavion.setBounds(390,280,130,20);
-        newavion.setBackground(new Color(158,203,242));        
-        newavion.setBorderPainted(false);
-        newavion.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent me) {
-                newavion.setBackground(new Color(200,200,200));
-            }
-            @Override
-            public void mouseExited(MouseEvent e) {
-                newavion.setBackground(new Color(158,203,242));
-            }            
-        });
-        add(newavion);
-         newavion.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent evt){                
-                try{
-                    int asientos = Integer.parseInt(JOptionPane.showInputDialog("Cantidad de Asientos: "));
-                    int maletas = Integer.parseInt(JOptionPane.showInputDialog("Cantidd de Maletas: "));                    
-                    JComboBox combomodelo = new JComboBox();
-                    db.conectar();                    
-                    String sql1="SELECT * FROM modelo";
-                    ResultSet rs = db.query(sql1);
-                    rs.last(); 
-                    if(rs.getRow()==0){
-                        combomodelo.addItem("NO HAY MODELOS AGREGADOS");
-                    }
-                    else{
-                        rs.beforeFirst();
-                        while(rs.next()){
-                        String modelo=rs.getString("modelo");
-                        combomodelo.addItem(modelo);
-                    }
-                    combomodelo.setEditable(true);
-                    JOptionPane.showMessageDialog(null, combomodelo, "Modelo",JOptionPane.QUESTION_MESSAGE);
-                    String model = combomodelo.getSelectedItem().toString();
-                    String sqlidestino = "SELECT * FROM modelo WHERE modelo='"+model+"';";
-                    ResultSet iddesti = db.query(sqlidestino);
-                    iddesti.first();                    
-                    int idmodelo = iddesti.getInt("idmodelo");
-                    String sqlinsert = "INSERT INTO avion (asientos, maletas, modelo_idmodelo) VALUES('"+asientos+"','"+maletas+"','"+idmodelo+"')";
-                    db.queryUpdate(sqlinsert);
-                    db.desconectar();
-                }
-            }catch(Exception e){}                
-            }
-        });
-        
-        ruta = new JLabel("Ruta: ");
-        ruta.setBounds(150,320,100,25);
+        ruta = new JLabel("Ruta : ");
+        ruta.setBounds(150,300,100,25);
         ruta.setFont(label);
         add(ruta);
         
-        cbxIni = new JComboBox();
-        cbxIni.setBounds(280,320,110,25);
+        cbxruta = new JComboBox();
+        cbxruta.setBounds(280,300,250,25);
         try{
         db.conectar();
         String sql="SELECT * FROM aeropuertos";
         ResultSet rs = db.query(sql);
         rs.last(); 
         if(rs.getRow()==0){
-            cbxIni.addItem("NO HAY AEROPUERTOS AGREGADOS");
+            cbxruta.addItem("NO HAY RUTAS AGREGADOS");
         }
         else{
             rs.beforeFirst();
             while(rs.next()){
             String cid=rs.getString("ciudad");
-            cbxIni.addItem(cid);
+            cbxruta.addItem("San Salvador - "+cid);
             }
         }
          db.desconectar();
         }catch (SQLException ex) {
             Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
         }
-        add(cbxIni);
-        
-        cbxFin = new JComboBox();
-        cbxFin.setBounds(420,320,110,25);
-        try{
-        db.conectar();
-        String sql="SELECT * FROM aeropuertos";
-        ResultSet rs = db.query(sql);
-        rs.last(); 
-        if(rs.getRow()==0){
-            cbxFin.addItem("NO HAY AEROPUERTOS AGREGADOS");
-        }
-        else{
-            rs.beforeFirst();
-            while(rs.next()){
-            String cid=rs.getString("ciudad");
-            cbxFin.addItem(cid);
-            }
-        }
-         db.desconectar();
-        }catch (SQLException ex) {
-            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        add(cbxFin);
+        add(cbxruta);
         
         crear = new JButton("Crear Vuelo");
         crear.setBounds(150,370,170,25);
@@ -313,8 +241,7 @@ public class crear_vuelo extends JPanel
          this.txtTime2.setText("");
          this.txtFec.setText(""); 
          this.cbxAvi.setSelectedIndex(0);
-         this.cbxFin.setSelectedIndex(0);
-         this.cbxIni.setSelectedIndex(0);
+         this.cbxruta.setSelectedIndex(0);
          this.errorfec.setVisible(false);
          this.errorhora1.setVisible(false);
          this.errorhora2.setVisible(false);
@@ -323,18 +250,19 @@ public class crear_vuelo extends JPanel
      private void crear_vuelo()
      {
          try{
-         String fecha, horainicio, horafin, avion, rutaorigen, rutadestino;
+         String fecha, horainicio, horafin, avion, rutaorigen, rutadestino, rutadestinoop;
          int maletas, asientos;
          
-         if(!txtFec.getText().trim().equals("") && !txtTime.getText().trim().equals("") && !txtTime2.getText().trim().equals("") && !cbxAvi.getSelectedItem().equals("NO HAY AVIONES AGREGADOS") && !cbxFin.getSelectedItem().equals("NO HAY AEROPUERTOS AGREGADOS"))
+         if(!txtFec.getText().trim().equals("") && !txtTime.getText().trim().equals("") && !txtTime2.getText().trim().equals("") && !cbxAvi.getSelectedItem().equals("NO HAY AVIONES AGREGADOS") && !cbxruta.getSelectedItem().equals("NO HAY RUTAS AGREGADOS"))
          {
             this.campos.setVisible(false); 
             fecha = this.txtFec.getText().toString();
             horainicio = this.txtTime.getText().toString();
             horafin = this.txtTime2.getText().toString();
             avion = this.cbxAvi.getSelectedItem().toString();
-            rutaorigen = this.cbxIni.getSelectedItem().toString();
-            rutadestino = this.cbxFin.getSelectedItem().toString();
+            rutaorigen = "SAL";
+            rutadestinoop = this.cbxruta.getSelectedItem().toString();
+            rutadestino = rutadestinoop.substring(15);
             int idestado = 1;
 
             if(!isHoraValida(horainicio))
@@ -372,32 +300,28 @@ public class crear_vuelo extends JPanel
                     String sqlidestino = "SELECT * FROM aeropuertos WHERE ciudad='"+rutadestino+"';";
                     ResultSet iddesti = db.query(sqlidestino);
                     iddesti.first();                    
-                    int idru = iddesti.getInt("idaeropuertos");
-                    
-                    
-                    String sqlinsert2="INSERT INTO ruta (origen,destino) VALUES ('"+rutaorigen+"','"+idru+"')";
-                    db.queryUpdate(sqlinsert2);
+                    String idru = iddesti.getString("idaeropuertos");                    
                     
                     String sqlid="SELECT * FROM ruta WHERE origen='"+rutaorigen+"' AND destino='"+idru+"';";
                     ResultSet rsid = db.query(sqlid);
                     rsid.first();
                     int idruta = rsid.getInt("idruta");
                     
-                    String sqlmale ="SELECT * FROM avion WHERE idavion='"+avion+"';";
+                    String sqlmale ="SELECT * FROM avion WHERE codigo='"+avion+"';";
                     ResultSet mal = db.query(sqlmale);
                     mal.first();
                     String maletasdis = mal.getString("maletas");
                     String asientosdis = mal.getString("asientos");
+                    int idmod = mal.getInt("modelo_idmodelo");
+                    int idavion = mal.getInt("idavion");
                     
-                    
-                    String sqlinsert="INSERT INTO vuelos (hora_inicio,hora_fin,fecha,asientos_disponibles,maletas_disponibles,avion_idavion,ruta_idruta,estado_idestado) VALUES ('"+horainicio+"','"+horafin+"','"+fecha+"','"+asientosdis+"','"+maletasdis+"','"+avion+"','"+idruta+"','"+idestado+"')";
+                    String sqlinsert="INSERT INTO vuelos (hora_inicio,hora_fin,fecha,asientos_disponibles,maletas_disponibles,avion_idavion,ruta_idruta,estado_idestado,avion_modelo_idmodelo) VALUES ('"+horainicio+"','"+horafin+"','"+fecha+"','"+asientosdis+"','"+maletasdis+"','"+idavion+"','"+idruta+"','"+idestado+"','"+idmod+"')";
                     db.queryUpdate(sqlinsert);
                     this.txtFec.setText(""); 
                     this.txtTime.setText("");
                     this.txtTime2.setText("");
                     this.cbxAvi.setSelectedIndex(0);
-                    this.cbxFin.setSelectedIndex(0);
-                    this.cbxIni.setSelectedIndex(0);
+                    this.cbxruta.setSelectedIndex(0);
                     JOptionPane.showMessageDialog(null,"REGISTRO EXITOSO");
                     db.desconectar();
                     }catch (SQLException ex) {
