@@ -12,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
  */
 public class md5 {
     //CONVERSION A HEXADECIMAL
-    private static String toHexadecimal(byte[] digest){
+    private String toHexadecimal(byte[] digest){
         String hash = "";
         for(byte aux : digest) {
             int b = aux & 0xff;
@@ -22,7 +22,7 @@ public class md5 {
         return hash;
     }
     //MD5 ENCODE STRING
-    public static String md5_encode(String message){
+    public String md5_encode(String message){
         byte[] digest = null;
         byte[] buffer = message.getBytes();
         try {

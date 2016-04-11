@@ -221,13 +221,14 @@ public class login extends JFrame{
     private void validarLogin(String usuario,String pass){       
         String caprol="";
         String nombreusuario="";
+        md5 cifrar=new md5();       
         try {
             db.conectar();
-            String sql = "SELECT * FROM usuarios WHERE usuario='"+usuario+"' AND pass='"+pass+"'";
+            String sql = "SELECT * FROM usuarios WHERE usuario='"+usuario+"' AND pass='"+cifrar.md5_encode(pass)+"'";
             ResultSet rs=db.query(sql);            
             if(rs.first()){
                 
-                caprol=rs.getString("idrol");
+                caprol=rs.getString("rol_idrol");
                 nombreusuario=rs.getString("nombre");
                 
                 if(caprol.equals("1")){                    
