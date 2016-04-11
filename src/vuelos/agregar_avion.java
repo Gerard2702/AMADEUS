@@ -49,15 +49,15 @@ public class agregar_avion extends JPanel
         sep.setBounds(10, 50, 685, 5);
         sep.setForeground(new Color(220,220,220));
         add(sep);
-        
-        lblasientos = new JLabel("Asiendos: ");
+             
+        lblasientos = new JLabel("Numero de Asiendos: ");
         lblasientos.setFont(label);
         lblasientos.setBounds(10, 100, 200, 25);
         add(lblasientos);
         
         txtasientos = new JTextField();
         txtasientos.setFont(label);
-        txtasientos.setBounds(125, 100, 300, 25);
+        txtasientos.setBounds(175, 100, 300, 25);
         add(txtasientos);
         
         txtasientos.addKeyListener(new KeyAdapter(){
@@ -74,18 +74,18 @@ public class agregar_avion extends JPanel
         
         lblvalasientos = new JLabel("");
         lblvalasientos.setFont(error);
-        lblvalasientos.setBounds(125, 122, 300, 25);
+        lblvalasientos.setBounds(175, 122, 300, 25);
         lblvalasientos.setForeground(Color.red);
         add(lblvalasientos);
         
-        lblmaletas = new JLabel("Maletas");
+        lblmaletas = new JLabel("Numero de Maletas");
         lblmaletas.setFont(label);
         lblmaletas.setBounds(10, 150, 200, 25);
         add(lblmaletas);
         
         txtmaletas = new JTextField();
         txtmaletas.setFont(label);
-        txtmaletas.setBounds(125, 150, 300, 25);
+        txtmaletas.setBounds(175, 150, 300, 25);
         add(txtmaletas);
         txtmaletas.addKeyListener(new KeyAdapter(){
             public void keyTyped(KeyEvent e){
@@ -101,7 +101,7 @@ public class agregar_avion extends JPanel
         
         lblvalmaletaslblmaletas = new JLabel("");
         lblvalmaletaslblmaletas.setFont(error);
-        lblvalmaletaslblmaletas.setBounds(125, 172, 300, 25);
+        lblvalmaletaslblmaletas.setBounds(175, 172, 300, 25);
         lblvalmaletaslblmaletas.setForeground(Color.red);
         add(lblvalmaletaslblmaletas);
         
@@ -112,14 +112,14 @@ public class agregar_avion extends JPanel
         
         lblvalmodelo = new JLabel("");
         lblvalmodelo.setFont(error);
-        lblvalmodelo.setBounds(125, 222, 300, 25);
+        lblvalmodelo.setBounds(175, 222, 300, 25);
         lblvalmodelo.setForeground(Color.red);
         add(lblvalmodelo);
         
         
         combomodelos = new JComboBox();
         combomodelos.setFont(label);
-        combomodelos.setBounds(125, 200, 300, 25);  
+        combomodelos.setBounds(175, 200, 300, 25);  
         try{
         db.conectar();
         String sql="SELECT * FROM modelo";
@@ -143,7 +143,7 @@ public class agregar_avion extends JPanel
         add(combomodelos);
         
         btnAgregar = new JButton("Agregar Nuevo");
-        btnAgregar.setBounds(300, 230, 125, 20);
+        btnAgregar.setBounds(350, 230, 125, 20);
         btnAgregar.setBackground(new Color(158,203,242));        
         btnAgregar.setBorderPainted(false);
         btnAgregar.addMouseListener(new MouseAdapter() {
@@ -161,13 +161,16 @@ public class agregar_avion extends JPanel
             public void actionPerformed(ActionEvent evt){
                 
                 try{
-                    String modelo = JOptionPane.showInputDialog("Ingrese el nombre de Modelo" );
+                    String modelo = JOptionPane.showInputDialog("Ingrese el nuevo modelo" );
+                    if(modelo.trim().equals("")){}
+                    else{
                     db.conectar();
                     String sql="INSERT INTO modelo (modelo) VALUES('"+modelo+"')";
                     db.queryUpdate(sql);
                     db.desconectar();
                     combomodelos.addItem(modelo);
                     combomodelos.setSelectedItem(modelo);
+                    }
                 }
                 catch(Exception e){}
             }
@@ -210,10 +213,23 @@ public class agregar_avion extends JPanel
             }            
         });
         add(btnLimpiar);
+        add(btnLimpiar);
+        btnLimpiar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                LimpiarTextos();
+            }
+        });
         
         
     }
+    private void LimpiarTextos(){
     
+        
+        txtasientos.setText("");
+        txtmaletas.setText("");
+        combomodelos.setSelectedIndex(0);
+        
+    }
     private void IngresarVuelo(){
         try{
             if(txtasientos.getText().trim().equals("")){
@@ -238,13 +254,21 @@ public class agregar_avion extends JPanel
                     rsid.first();
                     String idmodelo = rsid.getString("idmodelo");
                     
-                    String sqlinsert="INSERT INTO avion (asientos,maletas,modelo_idmodelo) VALUES ('"+asientos+"','"+maletas+"','"+idmodelo+"')";
+                    String sqlcod="SELECT * FROM avion ORDER BY idavion";
+                    ResultSet rscod= db.query(sqlcod);
+                    rscod.last();
+                    int idlast;
+                    if(rscod.getRow()==0){idlast=0;}
+                    else{ idlast = Integer.parseInt(rscod.getString("idavion"));}
+                    
+                    String codigo = "AM-ARL-"+(idlast+1);
+                    String sqlinsert="INSERT INTO avion (codigo,asientos,maletas,modelo_idmodelo) VALUES ('"+codigo+"','"+asientos+"','"+maletas+"','"+idmodelo+"')";
                     db.queryUpdate(sqlinsert);
                     
                     JOptionPane.showMessageDialog(null,"REGISTRO EXITOSO");
                     txtasientos.setText("");
                     txtmaletas.setText("");
-                    combomodelos.setSelectedIndex(1);
+                    combomodelos.setSelectedIndex(0);
                     db.desconectar();
                 }catch (SQLException ex) {
                 Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
@@ -254,6 +278,11 @@ public class agregar_avion extends JPanel
             
         }
         catch(Exception e){}
+    }
+    private String generarCodigo(){
+        String cod="";
+            
+        return cod;
     }
     
 }
