@@ -49,7 +49,7 @@ public class agregar_avion extends JPanel
         sep.setBounds(10, 50, 685, 5);
         sep.setForeground(new Color(220,220,220));
         add(sep);
-        
+             
         lblasientos = new JLabel("Asiendos: ");
         lblasientos.setFont(label);
         lblasientos.setBounds(10, 100, 200, 25);
@@ -161,13 +161,16 @@ public class agregar_avion extends JPanel
             public void actionPerformed(ActionEvent evt){
                 
                 try{
-                    String modelo = JOptionPane.showInputDialog("Ingrese el nombre de Modelo" );
+                    String modelo = JOptionPane.showInputDialog("Ingrese el nuevo modelo" );
+                    if(modelo.trim().equals("")){}
+                    else{
                     db.conectar();
                     String sql="INSERT INTO modelo (modelo) VALUES('"+modelo+"')";
                     db.queryUpdate(sql);
                     db.desconectar();
                     combomodelos.addItem(modelo);
                     combomodelos.setSelectedItem(modelo);
+                    }
                 }
                 catch(Exception e){}
             }
@@ -210,10 +213,23 @@ public class agregar_avion extends JPanel
             }            
         });
         add(btnLimpiar);
+        add(btnLimpiar);
+        btnLimpiar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                LimpiarTextos();
+            }
+        });
         
         
     }
+    private void LimpiarTextos(){
     
+        
+        txtasientos.setText("");
+        txtmaletas.setText("");
+        combomodelos.setSelectedIndex(0);
+        
+    }
     private void IngresarVuelo(){
         try{
             if(txtasientos.getText().trim().equals("")){
@@ -238,13 +254,21 @@ public class agregar_avion extends JPanel
                     rsid.first();
                     String idmodelo = rsid.getString("idmodelo");
                     
-                    String sqlinsert="INSERT INTO avion (asientos,maletas,modelo_idmodelo) VALUES ('"+asientos+"','"+maletas+"','"+idmodelo+"')";
+                    String sqlcod="SELECT * FROM avion ORDER BY idavion";
+                    ResultSet rscod= db.query(sqlcod);
+                    rscod.last();
+                    int idlast;
+                    if(rscod.getRow()==0){idlast=0;}
+                    else{ idlast = Integer.parseInt(rscod.getString("idavion"));}
+                    
+                    String codigo = "AM-ARL-"+(idlast+1);
+                    String sqlinsert="INSERT INTO avion (codigo,asientos,maletas,modelo_idmodelo) VALUES ('"+codigo+"','"+asientos+"','"+maletas+"','"+idmodelo+"')";
                     db.queryUpdate(sqlinsert);
                     
                     JOptionPane.showMessageDialog(null,"REGISTRO EXITOSO");
                     txtasientos.setText("");
                     txtmaletas.setText("");
-                    combomodelos.setSelectedIndex(1);
+                    combomodelos.setSelectedIndex(0);
                     db.desconectar();
                 }catch (SQLException ex) {
                 Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
@@ -254,6 +278,11 @@ public class agregar_avion extends JPanel
             
         }
         catch(Exception e){}
+    }
+    private String generarCodigo(){
+        String cod="";
+            
+        return cod;
     }
     
 }
