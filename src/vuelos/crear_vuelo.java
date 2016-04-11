@@ -39,14 +39,14 @@ public class crear_vuelo extends JPanel
         initComponent();
         setLayout(null);
         setBounds(235,30,705,540);
-        setBackground(new Color(255,255,255));          
+        setBackground(new Color(255,255,255));
     }
     
     public void initComponent(){
         
         Font titulo = new Font("Calibri", 1, 19);
         Font label = new Font("Calibri",0,15);
-        Font error = new Font("Calibri",0,12);
+        Font error = new Font("Calibri",0,12);        
         
         title = new JLabel("CREACIÓN DE VUELOS");
         title.setBounds(200,10,300,50);
@@ -129,11 +129,12 @@ public class crear_vuelo extends JPanel
         avion = new JLabel("Avión: ");
         avion.setBounds(150,250,100,25);
         avion.setFont(label);
-        add(avion);
+        add(avion);                
         
         cbxAvi = new JComboBox();
         cbxAvi.setBounds(280,250,250,25);
         try{
+        cbxAvi.removeAllItems();
         db.conectar();
         String sql="SELECT avion.codigo FROM avion WHERE idavion NOT IN (SELECT idavion FROM vuelos WHERE avion.idavion = vuelos.avion_idavion) ORDER BY idavion";
         ResultSet rs = db.query(sql);
@@ -163,6 +164,7 @@ public class crear_vuelo extends JPanel
         cbxruta = new JComboBox();
         cbxruta.setBounds(280,300,250,25);
         try{
+        cbxruta.removeAll();
         db.conectar();
         String sql="SELECT * FROM aeropuertos";
         ResultSet rs = db.query(sql);
@@ -313,7 +315,7 @@ public class crear_vuelo extends JPanel
                     String maletasdis = mal.getString("maletas");
                     String asientosdis = mal.getString("asientos");
                     int idmod = mal.getInt("modelo_idmodelo");
-                    int idavion = mal.getInt("idavion");
+                    int idavion = mal.getInt("idavion");                    
                     
                     String sqlinsert="INSERT INTO vuelos (hora_inicio,hora_fin,fecha,asientos_disponibles,maletas_disponibles,avion_idavion,ruta_idruta,estado_idestado,avion_modelo_idmodelo) VALUES ('"+horainicio+"','"+horafin+"','"+fecha+"','"+asientosdis+"','"+maletasdis+"','"+idavion+"','"+idruta+"','"+idestado+"','"+idmod+"')";
                     db.queryUpdate(sqlinsert);
@@ -323,6 +325,20 @@ public class crear_vuelo extends JPanel
                     this.cbxAvi.setSelectedIndex(0);
                     this.cbxruta.setSelectedIndex(0);
                     JOptionPane.showMessageDialog(null,"REGISTRO EXITOSO");
+                    this.cbxAvi.removeAllItems();
+                    String sqlx="SELECT avion.codigo FROM avion WHERE idavion NOT IN (SELECT idavion FROM vuelos WHERE avion.idavion = vuelos.avion_idavion) ORDER BY idavion";
+                    ResultSet rsx = db.query(sqlx);
+                    rsx.last(); 
+                    if(rsx.getRow()==0){
+                        cbxAvi.addItem("NO HAY AVIONES AGREGADOS");
+                    }
+                    else{
+                        rsx.beforeFirst();
+                        while(rsx.next()){
+                        String avicod=rsx.getString("codigo");
+                        cbxAvi.addItem(avicod);
+                        }
+                    }
                     db.desconectar();
                     }catch (SQLException ex) {
                         Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
