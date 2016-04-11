@@ -50,14 +50,14 @@ public class agregar_avion extends JPanel
         sep.setForeground(new Color(220,220,220));
         add(sep);
              
-        lblasientos = new JLabel("Asiendos: ");
+        lblasientos = new JLabel("Numero de Asiendos: ");
         lblasientos.setFont(label);
         lblasientos.setBounds(10, 100, 200, 25);
         add(lblasientos);
         
         txtasientos = new JTextField();
         txtasientos.setFont(label);
-        txtasientos.setBounds(125, 100, 300, 25);
+        txtasientos.setBounds(175, 100, 300, 25);
         add(txtasientos);
         
         txtasientos.addKeyListener(new KeyAdapter(){
@@ -74,18 +74,18 @@ public class agregar_avion extends JPanel
         
         lblvalasientos = new JLabel("");
         lblvalasientos.setFont(error);
-        lblvalasientos.setBounds(125, 122, 300, 25);
+        lblvalasientos.setBounds(175, 122, 300, 25);
         lblvalasientos.setForeground(Color.red);
         add(lblvalasientos);
         
-        lblmaletas = new JLabel("Maletas");
+        lblmaletas = new JLabel("Numero de Maletas");
         lblmaletas.setFont(label);
         lblmaletas.setBounds(10, 150, 200, 25);
         add(lblmaletas);
         
         txtmaletas = new JTextField();
         txtmaletas.setFont(label);
-        txtmaletas.setBounds(125, 150, 300, 25);
+        txtmaletas.setBounds(175, 150, 300, 25);
         add(txtmaletas);
         txtmaletas.addKeyListener(new KeyAdapter(){
             public void keyTyped(KeyEvent e){
@@ -101,7 +101,7 @@ public class agregar_avion extends JPanel
         
         lblvalmaletaslblmaletas = new JLabel("");
         lblvalmaletaslblmaletas.setFont(error);
-        lblvalmaletaslblmaletas.setBounds(125, 172, 300, 25);
+        lblvalmaletaslblmaletas.setBounds(175, 172, 300, 25);
         lblvalmaletaslblmaletas.setForeground(Color.red);
         add(lblvalmaletaslblmaletas);
         
@@ -112,14 +112,14 @@ public class agregar_avion extends JPanel
         
         lblvalmodelo = new JLabel("");
         lblvalmodelo.setFont(error);
-        lblvalmodelo.setBounds(125, 222, 300, 25);
+        lblvalmodelo.setBounds(175, 222, 300, 25);
         lblvalmodelo.setForeground(Color.red);
         add(lblvalmodelo);
         
         
         combomodelos = new JComboBox();
         combomodelos.setFont(label);
-        combomodelos.setBounds(125, 200, 300, 25);  
+        combomodelos.setBounds(175, 200, 300, 25);  
         try{
         db.conectar();
         String sql="SELECT * FROM modelo";
@@ -143,7 +143,7 @@ public class agregar_avion extends JPanel
         add(combomodelos);
         
         btnAgregar = new JButton("Agregar Nuevo");
-        btnAgregar.setBounds(300, 230, 125, 20);
+        btnAgregar.setBounds(350, 230, 125, 20);
         btnAgregar.setBackground(new Color(158,203,242));        
         btnAgregar.setBorderPainted(false);
         btnAgregar.addMouseListener(new MouseAdapter() {
