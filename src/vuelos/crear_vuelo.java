@@ -71,9 +71,8 @@ public class crear_vuelo extends JPanel
         txtTime = new JFormattedTextField(mascara2);
         txtTime.setBounds(280, 100, 250, 25);
         txtTime.setHorizontalAlignment(SwingConstants.CENTER);
-
         add(txtTime);
-        
+    
         errorhora1 = new JLabel("Hora Incorrecta");
         errorhora1.setBounds(350,120,200,25);
         errorhora1.setForeground(Color.red);
