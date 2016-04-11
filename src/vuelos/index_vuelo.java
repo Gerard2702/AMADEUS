@@ -103,7 +103,7 @@ public class index_vuelo extends JFrame
             }
         });        
         
-        btnmodvuelo=new JButton("Modifcar Vuelos");
+        btnmodvuelo=new JButton("Administrar Vuelos");
         btnmodvuelo.setBounds(14, 140, 200, 50);
         btnmodvuelo.setIcon(iconmodif);
         btnmodvuelo.setBackground(new Color(158,203,242));        
