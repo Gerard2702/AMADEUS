@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import reservas.index_reserva;
+import vuelos.index_vuelo;
 /**
  *
  * @author Familia Aparicio
@@ -15,7 +16,7 @@ import reservas.index_reserva;
 public class index_user extends JFrame{
     
     private JPanel indexadmin,jframe=new JPanel();
-    private JLabel imglogo,nameuser,cerrar,minimizar,avionhead;
+    private JLabel imglogo,nameuser,cerrar,minimizar,avionhead,lbloader;
     private JButton reserva,vuelos,usuarios;
     private String nombreuser="",nombreuserin="";
     private ImageIcon iconlogo=new ImageIcon(this.getClass().getResource("/config/icons/logo.png"));   
@@ -26,6 +27,7 @@ public class index_user extends JFrame{
     private ImageIcon min1=new ImageIcon(this.getClass().getResource("/config/icons/min.png"));
     private ImageIcon min2=new ImageIcon(this.getClass().getResource("/config/icons/minhover.png"));
     private ImageIcon iconhead=new ImageIcon(this.getClass().getResource("/config/icons/avion_head.png"));
+    private ImageIcon iconloader=new ImageIcon(this.getClass().getResource("/config/icons/loader.gif"));
     /**
      * @param args the command line arguments
      */
@@ -33,7 +35,7 @@ public class index_user extends JFrame{
         nombreuser=setnombreusuario;
         nombreuserin=setuser;
         initComponent();        
-        this.setSize(430,325);
+        this.setSize(430,350);
         this.setLocationRelativeTo(null);
         this.setTitle("Amadeus empleado");
         setLayout(null);
@@ -46,7 +48,7 @@ public class index_user extends JFrame{
     
     public void initComponent(){
         
-        jframe.setBounds(0,0,430,420);
+        jframe.setBounds(0,0,430,350);
         jframe.setBorder(BorderFactory.createLineBorder(new Color(220,220,220), 1));
         jframe.setLayout(null);
         jframe.setBackground(new Color(255,255,255)); 
@@ -55,7 +57,7 @@ public class index_user extends JFrame{
         
         indexadmin=new JPanel();
         indexadmin.setBackground(new Color(255,255,255));
-        indexadmin.setBounds(5, 30, 420, 290);
+        indexadmin.setBounds(5, 30, 420, 340);
         indexadmin.setLayout(null);
         
         imglogo=new JLabel();
@@ -98,8 +100,13 @@ public class index_user extends JFrame{
         indexadmin.add(reserva);
         
         nameuser=new JLabel("Usuario: "+nombreuser);
-        nameuser.setBounds(20, 255, 400, 15);
+        nameuser.setBounds(20, 275, 295, 27);
         indexadmin.add(nameuser);
+        lbloader=new JLabel("Cargando...");
+        lbloader.setIcon(iconloader);
+        lbloader.setBounds(315,275,100,27);
+        lbloader.setVisible(false);
+        indexadmin.add(lbloader);
         
         jframe.add(indexadmin);
         
@@ -125,12 +132,19 @@ public class index_user extends JFrame{
     
     public void modulo_vuelos(){
         //INSTANCIAR CLASE DE MODULO DE VUELOS
+        lbloader.setVisible(true);
+        index_vuelo vuelo = new index_vuelo(nombreuserin, nombreuser, 1);
+        lbloader.setVisible(false);
+        this.setVisible(false);
+        vuelo.setVisible(true);
     }
     
     public void modulo_reservas(){
         //INSTANCIAR CLASE DE MODULO DE RESERVAS
-        this.setVisible(false);
+        lbloader.setVisible(true);        
         index_reserva reserva=new index_reserva(nombreuserin,nombreuser,2);
+        lbloader.setVisible(false);
+        this.setVisible(false);
         reserva.setVisible(true);
     }   
     
