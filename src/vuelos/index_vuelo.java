@@ -22,7 +22,8 @@ public class index_vuelo extends JFrame
     private crear_vuelo crear;
     private modificar_vuelo modificar;
     private agregar_avion agregar;
-    private JButton btnborrar,btnagregaavion,btnmodvuelo,btncrearvuelo,btnasignar;
+    private modificar_avion modificarav;
+    private JButton btnborrar,btnagregaavion,btnmodvuelo,btncrearvuelo,btnmodavion;
     private JLabel logo, pie,cerrar,minimizar,avionhead,separ1,separ2,separ3;
     private ImageIcon iconlogo=new ImageIcon(this.getClass().getResource("/config/icons/logo_modulos.png"));
     private ImageIcon iconpie=new ImageIcon(this.getClass().getResource("/config/icons/pie_modulo.png"));
@@ -156,6 +157,28 @@ public class index_vuelo extends JFrame
             }
         });
         
+        btnmodavion=new JButton("Aviones Agregados");
+        btnmodavion.setBounds(14, 233, 200, 50);
+        btnmodavion.setIcon(iconmodif);
+        btnmodavion.setBackground(new Color(158,203,242));        
+        btnmodavion.setBorderPainted(false);
+        btnmodavion.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                btnmodavion.setBackground(new Color(200,200,200));
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                btnmodavion.setBackground(new Color(158,203,242));
+            }            
+        }); 
+        menu.add(btnmodavion);
+        btnmodavion.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent evt){
+                modificaravion_Component();
+            }
+        });
+        
         pie=new JLabel();
         pie.setIcon(iconpie);
         pie.setBounds(19, 500, 190, 25);
@@ -178,6 +201,10 @@ public class index_vuelo extends JFrame
             jframe.remove(agregar);
             repaint();
         }
+        if(modificarav!=null){
+            jframe.remove(modificarav);
+            repaint();
+        }
         crear=new crear_vuelo();
         jframe.add(crear);
     }
@@ -193,6 +220,10 @@ public class index_vuelo extends JFrame
         }
         if(agregar!=null){
             jframe.remove(agregar);
+            repaint();
+        }
+        if(modificarav!=null){
+            jframe.remove(modificarav);
             repaint();
         }
         modificar=new modificar_vuelo();
@@ -212,8 +243,33 @@ public class index_vuelo extends JFrame
             jframe.remove(agregar);
             repaint();
         }
+        if(modificarav!=null){
+            jframe.remove(modificarav);
+            repaint();
+        }
         agregar=new agregar_avion();
         jframe.add(agregar);
+    }
+    
+    public void modificaravion_Component(){
+        if(crear!=null){
+            jframe.remove(crear);
+            repaint();
+        }
+        if(modificar!=null){
+            jframe.remove(modificar);
+            repaint();
+        }
+        if(agregar!=null){
+            jframe.remove(agregar);
+            repaint();
+        }
+        if(modificarav!=null){
+            jframe.remove(modificarav);
+            repaint();
+        }
+        modificarav=new modificar_avion();
+        jframe.add(modificarav);        
     }
     
     private void ventana_form(){

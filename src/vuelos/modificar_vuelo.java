@@ -12,11 +12,8 @@ import config.*;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.text.MaskFormatter;
@@ -47,10 +44,10 @@ public class modificar_vuelo extends JPanel
     
     public void initComponent(){
         Font titulo = new Font("Calibri", 1, 19);
-        Font label = new Font("Calibri",0,15);
-        Font error = new Font("Calibri",0,12);
+        Font label = new Font("Calibri",1,15);
+        Font error = new Font("Calibri",1,12);
         
-        lblTitulo = new JLabel("ADMINISTRAR VUELOS");
+        lblTitulo = new JLabel("ADMINISTRAR VUELOS DISPONIBLES");
         lblTitulo.setFont(titulo);
         lblTitulo.setBounds(10,10,300,50);
         add(lblTitulo);
@@ -63,6 +60,7 @@ public class modificar_vuelo extends JPanel
             
         jScrollPane1 = new JScrollPane();
         jTable = new JTable();
+        jTable.setRowHeight(20);
         
         jScrollPane1.setViewportView(jTable);
         jScrollPane1.setBounds(10, 75, 685, 450);
@@ -326,6 +324,7 @@ public class modificar_vuelo extends JPanel
                             db.desconectar();
                             jScrollPane1.remove(jTable);
                             jTable = new JTable();
+                            jTable.setRowHeight(20);
                             setTabla();
                             jScrollPane1.setViewportView(jTable);
                         }           
@@ -339,9 +338,7 @@ public class modificar_vuelo extends JPanel
                     //JOptionPane.showMessageDialog(null, "Seleccionada la fila " + fila +"Columna "+columna + sb.toString());
                     int dialogResult = JOptionPane.showConfirmDialog (null, "¿Esta seguro que desea Modificar el vuelo "+sb.toString()+" ?","Mensaje",JOptionPane.YES_NO_OPTION);
                         if(dialogResult == JOptionPane.YES_OPTION){
-                            remove(lblTitulo);
-                            remove(sep);
-                            remove(jScrollPane1);
+                            removeAll();
                             repaint();
                             initEditForm(sb.toString());
                         }  
@@ -412,7 +409,7 @@ public class modificar_vuelo extends JPanel
                     
                     String sqlupdate="UPDATE vuelos SET hora_inicio='"+horainicio+"', hora_fin='"+horafin+"',fecha='"+fecha+"',asientos_disponibles='"+asientosdis+"',maletas_disponibles='"+maletasdis+"',avion_idavion='"+idavion+"',avion_modelo_idmodelo='"+idmod+"',ruta_idruta='"+idruta+"'WHERE idvuelos='"+idvl+"';";
                     db.queryUpdate(sqlupdate);
-                    JOptionPane.showMessageDialog(null,"REGISTRO EXITOSO");                    
+                    JOptionPane.showMessageDialog(null,"MODIFICACIÓN EXITOSA");                    
                     db.desconectar();
                     
                     removeAll();

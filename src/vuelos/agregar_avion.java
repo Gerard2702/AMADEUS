@@ -36,8 +36,8 @@ public class agregar_avion extends JPanel
     
     public void initComponent(){
         Font titulo = new Font("Calibri", 1, 19);
-        Font label = new Font("Calibri",0,15);
-        Font error = new Font("Calibri",0,12);
+        Font label = new Font("Calibri",1,15);
+        Font error = new Font("Calibri",1,12);
         
         lbltitulo = new JLabel("AGREGAR AVIÓN");
         lbltitulo.setFont(titulo);
