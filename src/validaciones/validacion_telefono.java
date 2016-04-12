@@ -24,7 +24,7 @@ public class validacion_telefono extends JTextField {
      */
     public validacion_telefono() {
         super();
-        String regEx = "[0-9]{8}";
+        String regEx = "[0-9]{4}-[0-9]{4}";
 
         this.defaultBorder = this.getBorder();
         this.setColumns(15);
@@ -34,8 +34,7 @@ public class validacion_telefono extends JTextField {
             @Override
             public void keyTyped(KeyEvent e) {
                 char caracter = e.getKeyChar();
-                if (((caracter < '0') || (caracter > '9'))
-                        && (caracter != '\b' /*corresponde a BACK_SPACE*/)) {
+                if (((caracter < '0') || (caracter > '9')) & (caracter != '\b' /*corresponde a BACK_SPACE*/) & (caracter != e.VK_MINUS)) {
                     e.consume();  // ignorar el evento de teclado
                 }
                 if (maxLength()) {
@@ -65,18 +64,18 @@ public class validacion_telefono extends JTextField {
     }
 
     private boolean maxLength() {
-        if (this.getText().length() >= 8) {
+        if (this.getText().length() >= 9) {
             return true;
         } else {
             return false;
         }
     }
 
-    public boolean valido(){
+    public boolean valido() {
         Matcher matcher = pattern.matcher(this.getText());
         if (!matcher.matches()) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }

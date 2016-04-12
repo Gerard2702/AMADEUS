@@ -31,6 +31,7 @@ public class usuarios extends JPanel {
     private JLabel lblCorreo;
     private JLabel lblUsuario;
     private JLabel lblPassword;
+    private JLabel lblCPassword;
     private JLabel lblTelefono;
     private JLabel lblPasaporte;
     private JLabel lblTarjetaCredito;
@@ -39,9 +40,11 @@ public class usuarios extends JPanel {
     private validacion_correo txtCorreo;
     private JTextField txtUsuario;
     private JPasswordField txtPassword;
+    private JPasswordField txtCPassword;
     private validacion_telefono txtTelefono;
     private JTextField txtPasaporte;
     private validacion_tarjeta_credito txtTarjetaCredito;
+    private JComboBox txtEstado;
 
     private JButton btnGuardarCambios;
 
@@ -89,6 +92,7 @@ public class usuarios extends JPanel {
         ScrollPane.setBounds(10, 110, 670, 400);
 
         Table = new JTable();
+        
         ScrollPane.setViewportView(Table);
 
         this.add(ScrollPane);
@@ -101,6 +105,7 @@ public class usuarios extends JPanel {
         lblCorreo = new JLabel("Correo:");
         lblUsuario = new JLabel("Usuario");
         lblPassword = new JLabel("Contraseña");
+        lblCPassword = new JLabel("Nueva Contraseña");
         lblTelefono = new JLabel("Telefono");
         lblPasaporte = new JLabel("Pasaporte");
         lblTarjetaCredito = new JLabel("Tarjeta de Credito");
@@ -109,9 +114,13 @@ public class usuarios extends JPanel {
         txtCorreo = new validacion_correo();
         txtUsuario = new JTextField();
         txtPassword = new JPasswordField();
+        txtCPassword = new JPasswordField();
         txtTelefono = new validacion_telefono();
         txtPasaporte = new JTextField();
         txtTarjetaCredito = new validacion_tarjeta_credito();
+        txtEstado = new JComboBox();
+        txtEstado.addItem("Activo");
+        txtEstado.addItem("Inactivo");
 
         btnGuardarCambios = new JButton("Guardar Cambios");
 
@@ -119,25 +128,29 @@ public class usuarios extends JPanel {
         lblCorreo.setBounds(100, 140, 250, 30);
         lblUsuario.setBounds(100, 180, 250, 30);
         lblPassword.setBounds(100, 220, 250, 30);
-        lblTelefono.setBounds(100, 260, 250, 30);
-        lblPasaporte.setBounds(100, 300, 250, 30);
-        lblTarjetaCredito.setBounds(100, 340, 250, 30);
+        lblCPassword.setBounds(100, 260, 250, 30);
+        lblTelefono.setBounds(100, 300, 250, 30);
+        lblPasaporte.setBounds(100, 340, 250, 30);
+        lblTarjetaCredito.setBounds(100, 380, 250, 30);
 
         txtNombre.setBounds(370, 100, 250, 30);
         txtCorreo.setBounds(370, 140, 250, 30);
         txtUsuario.setBounds(370, 180, 250, 30);
         txtPassword.setBounds(370, 220, 250, 30);
-        txtTelefono.setBounds(370, 260, 250, 30);
-        txtPasaporte.setBounds(370, 300, 250, 30);
-        txtTarjetaCredito.setBounds(370, 340, 250, 30);
+        txtCPassword.setBounds(370, 260, 250, 30);
+        txtTelefono.setBounds(370, 300, 250, 30);
+        txtPasaporte.setBounds(370, 340, 250, 30);
+        txtTarjetaCredito.setBounds(370, 380, 250, 30);
+        txtEstado.setBounds(370, 420, 250, 30);
 
-        btnGuardarCambios.setBounds(470, 380, 150, 30);
+        btnGuardarCambios.setBounds(470, 460, 150, 30);
 
         Font fontLabel = new Font("Dialog", Font.BOLD, 15);
         lblNombre.setFont(fontLabel);
         lblCorreo.setFont(fontLabel);
         lblUsuario.setFont(fontLabel);
         lblPassword.setFont(fontLabel);
+        lblCPassword.setFont(fontLabel);
         lblTelefono.setFont(fontLabel);
         lblPasaporte.setFont(fontLabel);
         lblTarjetaCredito.setFont(fontLabel);
@@ -176,6 +189,7 @@ public class usuarios extends JPanel {
         this.add(lblCorreo);
         this.add(lblUsuario);
         this.add(lblPassword);
+        this.add(lblCPassword);
         this.add(lblTelefono);
         this.add(lblPasaporte);
         this.add(lblTarjetaCredito);
@@ -184,9 +198,11 @@ public class usuarios extends JPanel {
         this.add(txtCorreo);
         this.add(txtUsuario);
         this.add(txtPassword);
+        this.add(txtCPassword);
         this.add(txtTelefono);
         this.add(txtPasaporte);
         this.add(txtTarjetaCredito);
+        this.add(txtEstado);
 
         this.add(btnGuardarCambios);
     }
@@ -223,32 +239,8 @@ public class usuarios extends JPanel {
                 txtNombre.setText(rs.getString("nombre"));
                 txtCorreo.setText(rs.getString("correo"));
                 txtUsuario.setText(rs.getString("usuario"));
-                txtPassword.setText(rs.getString("pass"));
                 txtTelefono.setText(rs.getString("telefono"));
                 txtPasaporte.setText(rs.getString("pasaporte"));
-                txtTarjetaCredito.setText(rs.getString("tarjeta_credito"));
-            }
-            conn.desconectar();
-
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Erro al cargar los usuarios." + ex);
-        }
-    }
-
-    private void guardarCambiosUsuario(String usuario_selecto) throws SQLException {
-        try {
-            database conn = new database();
-            conn.conectar();
-            ResultSet rs = conn.query("SELECT nombre, correo, usuario, pass, telefono, pasaporte, tarjeta_credito FROM usuarios WHERE usuario = '" + usuario_selecto + "'");
-
-            while (rs.next()) {
-                txtNombre.setText(rs.getString("nombre"));
-                txtCorreo.setText(rs.getString("correo"));
-                txtUsuario.setText(rs.getString("usuario"));
-                txtPassword.setText(rs.getString("pass"));
-                txtTelefono.setText(rs.getString("telefono"));
-                txtPasaporte.setText(rs.getString("pasaporte"));
-                txtTarjetaCredito.setText(rs.getString("tarjeta_credito"));
             }
             conn.desconectar();
 
@@ -275,9 +267,27 @@ public class usuarios extends JPanel {
         Connection conn = null;
         Statement stmt = null;
         
-        char[] arrayPassword = txtPassword.getPassword(); 
+        md5 cifra = new md5();
+        
+        char[] arrayPassword = txtPassword.getPassword();
         String password = new String(arrayPassword);
-        if(password.length() > 0 & txtCorreo.valido() & txtTelefono.valido() & txtTarjetaCredito.valido()){ //Si se cumplen todas las validaciones
+        password = cifra.md5_encode(password);
+        
+        char[] arrayCPassword = txtCPassword.getPassword();
+        String cpassword = new String(arrayCPassword);
+        cpassword = cifra.md5_encode(cpassword);
+        
+        database conn1 = new database();
+        conn1.conectar();
+        ResultSet rs1 = conn1.query("SELECT pass FROM usuarios WHERE pass = '" + password + "' AND usuario = '" + txtUsuario.getText() + "'");
+        int rowCount = 0;
+
+        while (rs1.next()) {
+            rowCount++;
+        }
+        conn1.desconectar();
+        
+        if(password.length() > 0 & cpassword.length() > 0 & rowCount > 0 & txtCorreo.valido() & txtTelefono.valido() & txtTarjetaCredito.valido()){ //Si se cumplen todas las validaciones
             try {
                 Class.forName("com.mysql.jdbc.Driver");
                 conn = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -288,8 +298,10 @@ public class usuarios extends JPanel {
                 
                 String telefono = txtTelefono.getText();
                 String tarjetaCredito = txtTarjetaCredito.getText();
+                tarjetaCredito = cifra.md5_encode(tarjetaCredito);
+                String estado = (String) txtEstado.getSelectedItem();
 
-                String sql = "UPDATE usuarios SET correo = '" + correo + "', pass = '" + password + "', telefono = '" + telefono + "', tarjeta_credito = '" + tarjetaCredito + "' WHERE nombre = '" + nombre + "'";
+                String sql = "UPDATE usuarios SET estado = '" + estado + "' , correo = '" + correo + "', pass = '" + cpassword + "', telefono = '" + telefono + "', tarjeta_credito = '" + tarjetaCredito + "' WHERE nombre = '" + nombre + "'";
                 if (stmt.executeUpdate(sql) > 0) {
                     JOptionPane.showMessageDialog(null, "Datos modificados correctamente.");
                 }
@@ -326,6 +338,8 @@ public class usuarios extends JPanel {
                 mensaje += "\n-Campo 'Telefono' invalido.";
             if(!txtTarjetaCredito.valido())
                 mensaje += "\n-Campo 'Tarjeta' invalido.";
+            if(rowCount <= 0)
+                mensaje += "\n-Campo 'Contraseña' incorrecto.";
             JOptionPane.showMessageDialog(null, mensaje);
         }
         

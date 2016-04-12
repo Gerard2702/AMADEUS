@@ -9,6 +9,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import config.*;
 import java.sql.*;
+import java.util.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.text.MaskFormatter;
@@ -27,13 +28,20 @@ public class crear_reserva extends JPanel{
     private JFormattedTextField busqfecha;
     private JButton btnuser,btnfecha,btncrear,btnlimpiar;
     private JComboBox cBxrutavuelo,cBxclasevuelo;
+    private String idusuario="",idvuelo="",idclasevuelo="",codigoreserva="";
     final Class[] tiposcolumnaUser = new Class[]{
         String.class,
         String.class,
         String.class,
-        String.class,
-        String.class,        
+        String.class,          
         JButton.class
+    };
+    String[] colUser = new String[]{
+        "Id",
+        "Nombre",
+        "Correo",
+        "Telefono",
+        "Seleccionar"
     };
     final Class[] tiposcolumnaVuelos = new Class[]{
         String.class,
@@ -44,6 +52,16 @@ public class crear_reserva extends JPanel{
         String.class,        
         JButton.class
     };
+    String[] colVuelo = new String[]{
+        "Id",
+        "Destino",
+        "Fecha",
+        "Salida",
+        "LLegada",        
+        "Asientos",
+        "Seleccionar"
+    };
+    database db = new database();
     
     public crear_reserva(){
         initComponent();
@@ -93,10 +111,27 @@ public class crear_reserva extends JPanel{
                 btnuser.setBackground(new Color(158,203,242));
             }            
         });
+        btnuser.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent evt){
+                buscar_usuario();
+            }
+        });
         add(btnuser);        
         jScrolluser = new JScrollPane();
-        jTuser = new JTable();
+        DefaultTableModel datosdb1= new DefaultTableModel(null,colUser);
+        jTuser = new JTable(datosdb1);        
         jTuser.setRowHeight(20);
+        jTuser.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int fila = jTuser.rowAtPoint(e.getPoint());
+                int columna = jTuser.columnAtPoint(e.getPoint());
+                lbloader.setVisible(true);  
+                idusuario=String.valueOf(jTuser.getValueAt(fila,0));
+                JOptionPane.showMessageDialog(null, "Seleccionado usuario con Id: "+idusuario);
+                lbloader.setVisible(false);  
+            }
+        });
         jScrolluser.setViewportView(jTuser);
         jScrolluser.setBounds(10, 100, 690, 120);
         add(jScrolluser);
@@ -107,6 +142,7 @@ public class crear_reserva extends JPanel{
         add(lbbusqfecha);
         cBxrutavuelo=new JComboBox();
         cBxrutavuelo.setBounds(165, 240, 125, 25);
+        rutas_disponibles();
         add(cBxrutavuelo);
         MaskFormatter mascara =null;
         try{
@@ -131,10 +167,27 @@ public class crear_reserva extends JPanel{
                 btnfecha.setBackground(new Color(158,203,242));
             }            
         });
+        btnfecha.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent evt){
+                buscar_vuelo();
+            }
+        });
         add(btnfecha);
         jScrollvuelos = new JScrollPane();
-        jTvuelos = new JTable();
+        DefaultTableModel datosdb2= new DefaultTableModel(null,colVuelo);
+        jTvuelos = new JTable(datosdb2);
         jTvuelos.setRowHeight(20);
+        jTvuelos.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int fila = jTvuelos.rowAtPoint(e.getPoint());
+                int columna = jTvuelos.columnAtPoint(e.getPoint());
+                lbloader.setVisible(true);  
+                idvuelo=String.valueOf(jTvuelos.getValueAt(fila,0));
+                JOptionPane.showMessageDialog(null, "Seleccionado vuelo con Id: "+idvuelo);
+                lbloader.setVisible(false);  
+            }
+        });        
         jScrollvuelos.setViewportView(jTvuelos);
         jScrollvuelos.setBounds(10, 275, 690, 120);
         add(jScrollvuelos);
@@ -144,7 +197,8 @@ public class crear_reserva extends JPanel{
         lbclasevuelo.setBounds(10, 415, 150, 25);
         add(lbclasevuelo);
         cBxclasevuelo=new JComboBox();
-        cBxclasevuelo.setBounds(170, 415, 120, 25);
+        cBxclasevuelo.setBounds(170, 415, 160, 25);
+        clases_disponibles();
         add(cBxclasevuelo);
         
         //ACCIONES DE RESERVACION
@@ -162,6 +216,11 @@ public class crear_reserva extends JPanel{
                 btncrear.setBackground(new Color(158,203,242));
             }            
         });
+        btncrear.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent evt){
+                guardar_reserva();
+            }
+        });
         add(btncrear);
         btnlimpiar=new JButton("Limpiar");
         btnlimpiar.setBounds(362,475,150,30);
@@ -177,6 +236,192 @@ public class crear_reserva extends JPanel{
                 btnlimpiar.setBackground(new Color(158,203,242));
             }            
         });
+        btnlimpiar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent evt){
+                limpiar_reserva();
+            }
+        });
         add(btnlimpiar);
-    }    
+    }
+    
+    public void guardar_reserva(){
+        if(!idusuario.equals("") && !idvuelo.equals("")){
+            String[] partes;
+            String vuelostring=cBxclasevuelo.getSelectedItem().toString();
+            partes=vuelostring.split("-");
+            idclasevuelo=partes[0];
+            codigoreserva=generar_codigo();
+            try{
+                lbloader.setVisible(true);
+                db.conectar();
+                String sqlupdate="INSERT INTO usuarios_has_vuelos (usuarios_idusuarios,vuelos_idvuelos,clase_vuelo_idclase_vuelo,checkin,codigo) VALUES('"+idusuario+"','"+idvuelo+"','"+idclasevuelo+"','0','"+codigoreserva+"')";
+                db.queryUpdate(sqlupdate);                                
+                db.desconectar();                
+                JOptionPane.showMessageDialog(null, "Se ha creado la Resevacion");
+                PDF_create pdf=new PDF_create(codigoreserva);
+                limpiar_reserva();
+                lbloader.setVisible(false);
+                
+            }
+            catch(Exception e){
+                JOptionPane.showMessageDialog(null, "Error creacion de Reserva . . .");
+                lbloader.setVisible(false);
+            }            
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Debe seleccionar un Usuario y un Vuelo");
+        }
+    }
+    
+    public String generar_codigo(){
+        String codigo="";
+        String[] letras={"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
+        Random r = new Random();
+        int v1;
+        for(int i=0;i<8;i++){
+            v1 = r.nextInt(26);        
+            codigo=codigo+letras[v1];
+        }        
+        return codigo;
+    }
+    
+    public void limpiar_reserva(){
+        idusuario="";
+        idvuelo="";
+        idclasevuelo="";
+        codigoreserva="";       
+    }
+    
+    public void buscar_usuario(){
+        if(!busquser.getText().equals("")){
+            try{
+                db.conectar();
+                String sql="SELECT usuarios.idusuarios,usuarios.nombre,usuarios.correo,usuarios.telefono FROM usuarios WHERE usuarios.nombre LIKE '%"+busquser.getText()+"%' AND usuarios.rol_idrol=3";
+                ResultSet rs = db.query(sql);
+                rs.last();
+                int numrows = rs.getRow();
+                Object [][]datos = new Object[numrows][5];
+                rs.beforeFirst();
+                int i = 0;
+                while(rs.next()){
+                    datos[i][0]=rs.getString("idusuarios");
+                    datos[i][1]=rs.getString("nombre");
+                    datos[i][2]=rs.getString("correo");
+                    datos[i][3]=rs.getString("telefono");                    
+                    datos[i][4]=new JButton("Seleccionar");
+                    i++;
+                }
+                db.desconectar();
+                jTuser.setModel(new DefaultTableModel(datos,colUser){
+                Class[] tipos = tiposcolumnaUser;
+                @Override
+                public Class getColumnClass(int columnIndex) {
+                    return tipos[columnIndex];
+                }
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    this.getColumnClass(column).equals(String.class);
+                    return !(this.getColumnClass(column).equals(String.class));
+                }            
+                });
+
+                jTuser.setDefaultRenderer(JButton.class, new TableCellRenderer() {
+                    @Override
+                    public Component getTableCellRendererComponent(JTable jtable, Object objeto, boolean estaSeleccionado, boolean tieneElFoco, int fila, int columna) {
+                        return (Component) objeto;
+                    }
+                });            
+            }
+            catch(Exception e){
+                JOptionPane.showMessageDialog(null, "Error en busqueda de usuario . . .");
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Debe escribir un nombre de cliente");
+        }
+    }
+    
+    public void buscar_vuelo(){
+        if(!busqfecha.getText().equals("    -  -  ") && !cBxrutavuelo.getSelectedItem().equals("")){
+            try{
+                String[] partes;
+                String selectvuelo=cBxrutavuelo.getSelectedItem().toString();
+                partes=selectvuelo.split("-");                
+                db.conectar();
+                String sql="SELECT vuelos.idvuelos,vuelos.fecha,vuelos.hora_inicio,vuelos.hora_fin,vuelos.asientos_disponibles,CONCAT(ruta.origen,\"-\",ruta.destino) AS ruta FROM vuelos,ruta WHERE vuelos.ruta_idruta=ruta.idruta AND vuelos.fecha='"+busqfecha.getText()+"' AND vuelos.ruta_idruta='"+partes[0]+"'";
+                ResultSet rs = db.query(sql);
+                rs.last();
+                int numrows = rs.getRow();
+                Object [][]datos = new Object[numrows][7];
+                rs.beforeFirst();
+                int i = 0;
+                while(rs.next()){
+                    datos[i][0]=rs.getString("idvuelos");
+                    datos[i][1]=rs.getString("asientos_disponibles");
+                    datos[i][2]=rs.getString("fecha");
+                    datos[i][3]=rs.getString("hora_inicio");
+                    datos[i][4]=rs.getString("hora_fin");                              
+                    datos[i][5]=rs.getString("ruta");          
+                    datos[i][6]=new JButton("Seleccionar");
+                    i++;
+                }
+                db.desconectar();
+                jTvuelos.setModel(new DefaultTableModel(datos,colVuelo){
+                Class[] tipos = tiposcolumnaVuelos;
+                @Override
+                public Class getColumnClass(int columnIndex) {
+                    return tipos[columnIndex];
+                }
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    this.getColumnClass(column).equals(String.class);
+                    return !(this.getColumnClass(column).equals(String.class));
+                }            
+                });
+
+                jTvuelos.setDefaultRenderer(JButton.class, new TableCellRenderer() {
+                    @Override
+                    public Component getTableCellRendererComponent(JTable jtable, Object objeto, boolean estaSeleccionado, boolean tieneElFoco, int fila, int columna) {
+                        return (Component) objeto;
+                    }
+                });            
+            }
+            catch(Exception e){
+                JOptionPane.showMessageDialog(null, "Error en busqueda de vuelo . . .");
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Debe Seleccionar ruta y escribir Fecha");
+        }
+    }
+    
+    public void clases_disponibles(){
+        try{
+            db.conectar();
+            String sql="SELECT CONCAT(clase_vuelo.idclase_vuelo,\"-\",clase_vuelo.clase,\"-$\",clase_vuelo.precio) AS clase FROM clase_vuelo";
+            ResultSet rs = db.query(sql);
+            while(rs.next()){
+                cBxclasevuelo.addItem(rs.getString("clase"));                 
+            }
+            db.desconectar();
+        }
+        catch(Exception e){
+           JOptionPane.showMessageDialog(null,"Error en Clases de vuelo . . ."); 
+        }    
+    }
+    
+    public void rutas_disponibles(){
+        try{
+            db.conectar();
+            String sql="SELECT CONCAT(ruta.idruta,\"-\",ruta.origen,\"-\",ruta.destino) AS ruta FROM ruta";
+            ResultSet rs = db.query(sql);
+            while(rs.next()){
+                cBxrutavuelo.addItem(rs.getString("ruta"));                 
+            }
+            db.desconectar();
+        }
+        catch(Exception e){
+           JOptionPane.showMessageDialog(null, "Error en Rutas de vuelo . . ."); 
+        }    
+    }
 }

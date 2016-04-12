@@ -179,15 +179,17 @@ public class nuevo_usuario extends JPanel{
                 Class.forName("com.mysql.jdbc.Driver");
                 conn = DriverManager.getConnection(DB_URL, USER, PASS);
                 stmt = conn.createStatement();
-
+                
+                md5 cifra = new md5();
 
                 String nombre = txtNombre.getText();
                 String correo = txtCorreo.getText();
                 String usuario = txtUsuario.getText();
-                //String password = new String(arrayPassword);
+                password = cifra.md5_encode(password);
                 String telefono = txtTelefono.getText();
                 String pasaporte = txtPasaporte.getText();
                 String tarjetaCredito = txtTarjetaCredito.getText();
+                tarjetaCredito = cifra.md5_encode(tarjetaCredito);
                 String tipoUsuario = (String) txtTipoUsuario.getSelectedItem();
                 int tipoUser = 0;
                 if(tipoUsuario == "Admnistrador")
@@ -195,7 +197,7 @@ public class nuevo_usuario extends JPanel{
                 else if(tipoUsuario == "Empleado")
                     tipoUser = 2;
 
-                String sql = "INSERT INTO usuarios (idrol, nombre, correo, usuario, pass, telefono, pasaporte, tarjeta_credito) VALUES ('" + tipoUser + "', '" + nombre + "', '" + correo + "', '" + usuario + "', '" + password + "', '" + telefono + "', '" + pasaporte + "', '" + tarjetaCredito + "')";
+                String sql = "INSERT INTO usuarios (idrol, estado, nombre, correo, usuario, pass, telefono, pasaporte, tarjeta_credito) VALUES ('" + tipoUser + "', 'Activo', '" + nombre + "', '" + correo + "', '" + usuario + "', '" + password + "', '" + telefono + "', '" + pasaporte + "', '" + tarjetaCredito + "')";
                 if (stmt.executeUpdate(sql) > 0) {
                     JOptionPane.showMessageDialog(null, "Usuario Registrado correctamente.");
                     limpiarTextField();
@@ -233,9 +235,13 @@ public class nuevo_usuario extends JPanel{
             if(!txtPasaporte.valido())
                 mensaje += "\n-Campo 'Pasaporte' invalido.";
             if(!txtTelefono.valido())
-                    mensaje += "\n-Campo 'Telefono' invalido.";
+                mensaje += "\n-Campo 'Telefono' invalido.";
             if(!txtTarjetaCredito.valido())
-                    mensaje += "\n-Campo 'Tarjeta de Crédito' invalida.";
+                mensaje += "\n-Campo 'Tarjeta de Crédito' invalida.";
+            if(txtNombre.repetido())
+                mensaje += "\n-Campo 'Nombre' ya existe, ingrese un 'Nombre' diferente.";
+            if(txtUsuario.repetido())
+                mensaje += "\n-Campo 'Usuario' ya existe, ingrese un 'Usuario' diferente.";
             JOptionPane.showMessageDialog(null, mensaje);
         }     
     }

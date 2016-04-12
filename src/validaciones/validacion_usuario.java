@@ -1,12 +1,16 @@
 package validaciones;
 
+import config.database;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
@@ -71,12 +75,34 @@ public class validacion_usuario extends JTextField {
         }
     }
     
-    public boolean valido(){
+    public boolean valido() throws SQLException{
         Matcher matcher = pattern.matcher(this.getText());
         if (!matcher.matches()) {
             return false;
         }else{
-            return true;
+            if(repetido()){
+                return false;
+            }else{
+                return true;
+            }
         }
+    }
+    
+    public boolean repetido() throws SQLException{
+        String usuario = this.getText();
+        
+        database conn = new database();
+        conn.conectar();
+        ResultSet rs = conn.query("SELECT usuario FROM usuarios WHERE usuario = '" + usuario + "'");
+        int count = 0;
+        while (rs.next()) {
+            count++;
+        }
+        if(count > 0){
+            return true;
+        }else{
+            return false;
+        }
+        //conn.desconectar();
     }
 }

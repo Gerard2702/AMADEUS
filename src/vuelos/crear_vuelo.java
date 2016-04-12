@@ -49,7 +49,7 @@ public class crear_vuelo extends JPanel
         Font error = new Font("Calibri",0,12);        
         
         title = new JLabel("CREACIÓN DE VUELOS");
-        title.setBounds(200,10,300,50);
+        title.setBounds(10,10,300,50);
         title.setFont(titulo);
         add(title);
         

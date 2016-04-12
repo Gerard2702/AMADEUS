@@ -24,7 +24,7 @@ public class validacion_pasaporte extends JTextField {
      */
     public validacion_pasaporte() {
         super();
-        String regEx = "[A-Z]{1}[0-9]{6,9}";
+        String regEx = "[a-zA-Z]{1}[0-9]{6,9}";
 
         this.defaultBorder = this.getBorder();
         this.setColumns(15);
