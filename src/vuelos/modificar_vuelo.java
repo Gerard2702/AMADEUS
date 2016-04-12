@@ -414,6 +414,11 @@ public class modificar_vuelo extends JPanel
                     db.queryUpdate(sqlupdate);
                     JOptionPane.showMessageDialog(null,"REGISTRO EXITOSO");                    
                     db.desconectar();
+                    
+                    removeAll();
+                    repaint();
+                    initComponent();
+                    setTabla();
                     }catch (SQLException ex) {
                         Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
                     } 
