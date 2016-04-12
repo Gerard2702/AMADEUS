@@ -9,6 +9,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import reservas.index_reserva;
 import usuarios.index_usuarios;
+import vuelos.index_vuelo;
+
 /**
  *
  * @author Familia Aparicio
@@ -16,7 +18,7 @@ import usuarios.index_usuarios;
 public class index_admin extends JFrame {
     
     private JPanel indexadmin,jframe=new JPanel();
-    private JLabel imglogo,nameuser,cerrar,minimizar,avionhead;
+    private JLabel imglogo,nameuser,cerrar,minimizar,avionhead,lbloader;
     private JButton reserva,vuelos,usuarios;
     private String nombreuser="",nombreuserin="";
     private ImageIcon iconlogo=new ImageIcon(this.getClass().getResource("/config/icons/logo.png"));   
@@ -28,6 +30,7 @@ public class index_admin extends JFrame {
     private ImageIcon min1=new ImageIcon(this.getClass().getResource("/config/icons/min.png"));
     private ImageIcon min2=new ImageIcon(this.getClass().getResource("/config/icons/minhover.png"));
     private ImageIcon iconhead=new ImageIcon(this.getClass().getResource("/config/icons/avion_head.png"));
+    private ImageIcon iconloader=new ImageIcon(this.getClass().getResource("/config/icons/loader.gif"));
     /**
      * @param args the command line arguments
      */
@@ -43,7 +46,7 @@ public class index_admin extends JFrame {
         this.getContentPane().setBackground(new Color(75,75,75));
         this.setResizable(false);
         this.setIconImage(new ImageIcon(getClass().getResource("/config/icons/avion_icon.png")).getImage());
-        this.setUndecorated(true);
+        this.setUndecorated(true);        
     }
     
     public void initComponent(){
@@ -117,8 +120,13 @@ public class index_admin extends JFrame {
         indexadmin.add(usuarios);
         
         nameuser=new JLabel("Usuario: "+nombreuser);
-        nameuser.setBounds(20, 340, 400, 15);
+        nameuser.setBounds(20, 340, 295, 27);
         indexadmin.add(nameuser);
+        lbloader=new JLabel("Cargando...");
+        lbloader.setIcon(iconloader);
+        lbloader.setBounds(315,340,100,27);
+        lbloader.setVisible(false);
+        indexadmin.add(lbloader);
         
         jframe.add(indexadmin);
         
@@ -149,12 +157,19 @@ public class index_admin extends JFrame {
     
     public void modulo_vuelos(){
         //INSTANCIAR CLASE DE MODULO DE VUELOS
+        lbloader.setVisible(true);        
+        index_vuelo vuelo = new index_vuelo(nombreuserin, nombreuser, 1);
+        lbloader.setVisible(false);
+        this.setVisible(false);
+        vuelo.setVisible(true);
     }
     
     public void modulo_reservas(){
         //INSTANCIAR CLASE DE MODULO DE RESERVAS
-        this.setVisible(false);
+        lbloader.setVisible(true);        
         index_reserva reserva=new index_reserva(nombreuserin,nombreuser,1);
+        lbloader.setVisible(false);
+        this.setVisible(false);
         reserva.setVisible(true);
     }
     
@@ -211,7 +226,7 @@ public class index_admin extends JFrame {
         });
     } 
     
-    public void salirmodulo(){
+    public void salirmodulo(){        
         int dialogResult = JOptionPane.showConfirmDialog (rootPane, "¿Esta seguro de salir de aplicación?","Cerrar Sesión",JOptionPane.YES_NO_OPTION);
         if(dialogResult == JOptionPane.YES_OPTION){
             this.setVisible(false);
