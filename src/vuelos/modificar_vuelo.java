@@ -375,6 +375,18 @@ public class modificar_vuelo extends JPanel
         String rutadestinoop = this.cbxRuta.getSelectedItem().toString();
         String rutadestino = rutadestinoop.substring(15);
         int idvl = Integer.parseInt(idvuelo);
+        if(!isFechaValida(fecha))
+        {
+            JOptionPane.showMessageDialog(null, "Fecha Invalida");
+        }
+        if(!isHoraValida(horainicio))
+        {
+            JOptionPane.showMessageDialog(null, "Hora Inicio Invalida");
+        }
+        if(!isHoraValida(horafin))
+        {
+            JOptionPane.showMessageDialog(null, "Hora Llegada Invalida");
+        }
         if(isFechaValida(fecha) && isHoraValida(horainicio) && isHoraValida(horafin))
         {
             try{
