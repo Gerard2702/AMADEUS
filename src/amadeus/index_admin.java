@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import reservas.index_reserva;
+import usuarios.index_usuarios;
 /**
  *
  * @author Familia Aparicio
@@ -159,6 +160,9 @@ public class index_admin extends JFrame {
     
     public void modulo_usuarios(){
         //INSTANCIAR CLASE DE MODULO DE USUARIOS
+        this.setVisible(false);
+        index_usuarios usuario=new index_usuarios(nombreuserin,nombreuser,1);
+        usuario.setVisible(true);
     }
     
     private void ventana_form(){
