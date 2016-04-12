@@ -41,10 +41,6 @@ public class check_in extends JPanel {
         prueba.setBounds(10, 10, 100, 50);
         add(prueba);
 
-        prueba = new JLabel("Check in");
-        prueba.setBounds(10, 10, 100, 50);
-        add(prueba);
-
         jlbcod_reserva = new JLabel("Codigo de Reserva:");
         jlbcod_reserva.setBounds(30, 80, 114, 14);
         add(jlbcod_reserva);
@@ -56,15 +52,16 @@ public class check_in extends JPanel {
         jbtnconsultar = new JButton("Consultar");
         jbtnconsultar.setBounds(270, 80, 100, 20);
         add(jbtnconsultar);
-        
+
         jbtnconsultar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
+
                 if ("".equals(jtfcod_reserva.getText())) {
                     JOptionPane.showMessageDialog(null, "Campo vacio, Favor ingrese un codigo de reserva");
                 } else {
                     try {
                         db.conectar();
-                        String sql = "SELECT usuarios.nombre, usuarios.pasaporte, vuelos.hora_inicio, vuelos.hora_fin, ruta.origen, ruta.destino, clase_vuelo.clase\n"
+                        String sql = "SELECT usuarios_has_vuelos.checkin, usuarios.nombre, usuarios.pasaporte, vuelos.hora_inicio, vuelos.hora_fin, ruta.origen, ruta.destino, clase_vuelo.clase\n"
                                 + "FROM usuarios usuarios\n"
                                 + "INNER JOIN usuarios_has_vuelos usuarios_has_vuelos ON usuarios.idusuarios = usuarios_has_vuelos.usuarios_idusuarios\n"
                                 + "INNER JOIN vuelos vuelos ON usuarios_has_vuelos.vuelos_idvuelos = vuelos.idvuelos\n"
@@ -73,15 +70,21 @@ public class check_in extends JPanel {
                                 + "WHERE usuarios_has_vuelos.codigo = '" + jtfcod_reserva.getText() + "';";
                         ResultSet rs = db.query(sql);
                         if (rs.first()) {
-                            jtfcod_reserva.setEnabled(false);
-                            jtfnombre.setText(rs.getString("usuarios.nombre"));
-                            jlbpasaporte.setText(rs.getString("usuarios.pasaporte"));
-                            jtforigen.setText(rs.getString("ruta.origen"));
-                            jtfhora_inicio.setText(rs.getString("vuelos.hora_inicio"));
-                            jlbdestino.setText(rs.getString("ruta.destino"));
-                            jtfhora_fin.setText(rs.getString("vuelos.hora_fin"));
-                            jtfclase.setText(rs.getString("clase_vuelo.clase"));
-                            
+                            if (Integer.parseInt(rs.getString("usuarios_has_vuelos.checkin")) == 1) {
+                                JOptionPane.showMessageDialog(null, "La reserva se encuentra confirmada");
+                            } else {
+
+                                jtfcod_reserva.setEnabled(false);
+                                jtfnombre.setText(rs.getString("usuarios.nombre"));
+                                jtfnombre.setEnabled(true);
+                                jlbpasaporte.setText(rs.getString("usuarios.pasaporte"));
+                                jlbpasaporte.setEnabled(true);
+                                jtforigen.setText(rs.getString("ruta.origen"));
+                                jtfhora_inicio.setText(rs.getString("vuelos.hora_inicio"));
+                                jlbdestino.setText(rs.getString("ruta.destino"));
+                                jtfhora_fin.setText(rs.getString("vuelos.hora_fin"));
+                                jtfclase.setText(rs.getString("clase_vuelo.clase"));
+                            }
                         } else {
                             JOptionPane.showMessageDialog(null, "No se encontro el codigo de reserva digitado");
                         }
@@ -99,7 +102,18 @@ public class check_in extends JPanel {
 
         jtfnombre = new JTextField();
         jtfnombre.setBounds(295, 130, 300, 20);
+        jtfnombre.setEnabled(false);
         add(jtfnombre);
+        jtfnombre.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                if (!Character.isLetter(e.getKeyChar()) && !Character.isWhitespace(e.getKeyChar())) {
+                    e.consume();
+                    JOptionPane.showMessageDialog(null, "Ingrese solo numeros");
+                } else {
+
+                }
+            }
+        });
 
         jlbpasaporte = new JLabel("Numero de pasaporte:");
         jlbpasaporte.setBounds(150, 180, 200, 20);
@@ -107,6 +121,7 @@ public class check_in extends JPanel {
 
         jtfpasaporte = new JTextField();
         jtfpasaporte.setBounds(295, 180, 145, 20);
+        jtfpasaporte.setEnabled(false);
         add(jtfpasaporte);
 
         jlborigen = new JLabel("Origen:");
@@ -147,10 +162,12 @@ public class check_in extends JPanel {
 
         jlbclase = new JLabel("Clase:");
         jlbclase.setBounds(150, 330, 60, 20);
+
         add(jlbclase);
 
         jtfclase = new JTextField();
         jtfclase.setBounds(210, 330, 120, 20);
+        jtfclase.setEnabled(false);
         add(jtfclase);
 
         checkin = new JCheckBox("Confirmar Reserva");
@@ -164,19 +181,53 @@ public class check_in extends JPanel {
             public void actionPerformed(ActionEvent evt) {
 
                 try {
-                    db.conectar();
-                    String sqlupdate = "UPDATE usuarios_has_vuelos SET checkin=1 WHERE codigo='" + jlbcod_reserva.getText() + "';";
-                    db.queryUpdate(sqlupdate);
-                    db.desconectar();
-                    JOptionPane.showMessageDialog(null, "Cambio de estado: Check-In Realizado");
+                    if (checkin.isSelected() == false || "".equals(jtfnombre.getText()) || "".equals(jtfpasaporte.getText()) || "".equals(jtfcod_reserva.getText())) {
+                        JOptionPane.showMessageDialog(null, "Favor validar campos, campos vacios");
+                    } else {
+                        db.conectar();
+                        String sqlupdate = "UPDATE usuarios_has_vuelos usuarios_has_vuelos \n"
+                                + "INNER JOIN usuarios usuarios\n"
+                                + "ON\n"
+                                + "usuarios.idusuarios = usuarios_has_vuelos.usuarios_idusuarios\n"
+                                + "\n"
+                                + "SET usuarios_has_vuelos.checkin=1, usuarios.nombres='"+jtfnombre.getText()+"', usuarios.pasaporte= '"+jtfpasaporte.getText()+"' WHERE suarios_has_vuelos.codigo" + jlbcod_reserva.getText() + "';";
+                        db.queryUpdate(sqlupdate);
+                        db.desconectar();
+                        JOptionPane.showMessageDialog(null, "Check-In Realizado");
+                        jtfcod_reserva.setEnabled(true);
+                        jtfcod_reserva.setText("");
+                        jtfnombre.setText("");
+                        jtfnombre.setEnabled(false);
+                        jlbpasaporte.setText("");
+                        jtfpasaporte.setEnabled(false);
+                        jtforigen.setText("");
+                        jtfhora_inicio.setText("");
+                        jlbdestino.setText("");
+                        jtfhora_fin.setText("");
+                        jtfclase.setText("");
+                    }
+
                 } catch (Exception e) {
                 }
             }
         });
 
-        jbtncancelar = new JButton("Cancelar");
+        jbtncancelar = new JButton("Limpiar");
         jbtncancelar.setBounds(340, 430, 100, 20);
         add(jbtncancelar);
+        jbtncancelar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                jtfcod_reserva.setEnabled(true);
+                jtfcod_reserva.setText("");
+                jtfnombre.setText("");
+                jlbpasaporte.setText("");
+                jtforigen.setText("");
+                jtfhora_inicio.setText("");
+                jlbdestino.setText("");
+                jtfhora_fin.setText("");
+                jtfclase.setText("");
+            }
+        });
 
     }
 }
