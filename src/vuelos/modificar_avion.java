@@ -24,13 +24,14 @@ import javax.swing.text.MaskFormatter;
  */
 public class modificar_avion extends JPanel{
     
-    private JLabel lblTitulo, lblhora1, lblhora2, lblruta, lblavion, lblfecha, x;
+    private JLabel lblTitulo, lblhora1, lblhora2, lblruta, lblavion, lblfecha, x,lbloader;
     private JComboBox cbxRuta, cbxAvion;
     private JFormattedTextField txtHora1, txtHora2, txtFecha;
     private JButton btnModificar;
     private JSeparator sep;
     private JScrollPane jScrollPane1;
     private JTable jTable;
+    private ImageIcon iconloader=new ImageIcon(this.getClass().getResource("/config/icons/loader.gif"));
     database db = new database();
     
     public modificar_avion(){
@@ -50,6 +51,12 @@ public class modificar_avion extends JPanel{
         lblTitulo.setFont(titulo);
         lblTitulo.setBounds(10,10,300,50);
         add(lblTitulo);
+        
+        lbloader=new JLabel("Cargando...");
+        lbloader.setIcon(iconloader);
+        lbloader.setBounds(585,15,100,27);
+        lbloader.setVisible(false);
+        add(lbloader);
         
         sep = new JSeparator(SwingConstants.HORIZONTAL);
         sep.setFont(label);

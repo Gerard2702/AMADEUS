@@ -17,7 +17,9 @@ import java.sql.*;
  */
 public class check_in extends JPanel {
 
-    private JLabel prueba;
+    private JLabel lblTitulo,lbloader,lbselasiento;
+    private JSeparator sep,sep2,sep3;
+    private ImageIcon iconloader=new ImageIcon(this.getClass().getResource("/config/icons/loader.gif"));
 
     private JLabel jlbcod_reserva, jlbnombre, jlbpasaporte, jlbclase;
     private JTextField jtfcod_reserva, jtfnombre, jtfpasaporte, jtfclase;
@@ -25,7 +27,9 @@ public class check_in extends JPanel {
     private JLabel jlborigen, jlbdestino, jlbhora_inicio, jlbhora_fin;
     private JTextField jtforigen, jtfdestino, jtfhora_inicio, jtfhora_fin;
     private JButton jbtnconsultar, jbtnaceptar, jbtncancelar;
-
+    private JComboBox Cbxasientos;
+    private String iduser,idavion;
+    
     private JCheckBox checkin;
     database db = new database();
 
@@ -37,20 +41,47 @@ public class check_in extends JPanel {
     }
 
     public void initComponent() {
-        prueba = new JLabel("Check in");
-        prueba.setBounds(10, 10, 100, 50);
-        add(prueba);
+        
+        Font titulo = new Font("Calibri", 1, 19);
+        
+        lblTitulo = new JLabel("CHECK-IN");        
+        lblTitulo.setBounds(10,10,300,50);
+        lblTitulo.setFont(titulo);
+        add(lblTitulo);
+        
+        lbloader=new JLabel("Cargando...");
+        lbloader.setIcon(iconloader);
+        lbloader.setBounds(585,15,100,27);
+        lbloader.setVisible(false);
+        add(lbloader);
+        
+        sep = new JSeparator(SwingConstants.HORIZONTAL);
+        sep.setBounds(10, 50, 685, 5);
+        sep.setForeground(new Color(220,220,220));
+        add(sep);
 
         jlbcod_reserva = new JLabel("Codigo de Reserva:");
         jlbcod_reserva.setBounds(30, 80, 114, 14);
         add(jlbcod_reserva);
 
         jtfcod_reserva = new JTextField();
-        jtfcod_reserva.setBounds(150, 80, 100, 20);
+        jtfcod_reserva.setBounds(150, 80, 100, 25);
         add(jtfcod_reserva);
 
         jbtnconsultar = new JButton("Consultar");
         jbtnconsultar.setBounds(270, 80, 100, 20);
+        jbtnconsultar.setBackground(new Color(158,203,242));
+        jbtnconsultar.setBorderPainted(false);
+        jbtnconsultar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                jbtnconsultar.setBackground(new Color(200,200,200));
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                jbtnconsultar.setBackground(new Color(158,203,242));
+            }            
+        });
         add(jbtnconsultar);
 
         jbtnconsultar.addActionListener(new ActionListener() {
@@ -77,25 +108,38 @@ public class check_in extends JPanel {
                                 jtfcod_reserva.setEnabled(false);
                                 jtfnombre.setText(rs.getString("usuarios.nombre"));
                                 jtfnombre.setEnabled(true);
-                                jlbpasaporte.setText(rs.getString("usuarios.pasaporte"));
+                                jtfpasaporte.setText(rs.getString("usuarios.pasaporte"));
                                 jlbpasaporte.setEnabled(true);
                                 jtforigen.setText(rs.getString("ruta.origen"));
                                 jtfhora_inicio.setText(rs.getString("vuelos.hora_inicio"));
-                                jlbdestino.setText(rs.getString("ruta.destino"));
+                                jtfdestino.setText(rs.getString("ruta.destino"));
                                 jtfhora_fin.setText(rs.getString("vuelos.hora_fin"));
                                 jtfclase.setText(rs.getString("clase_vuelo.clase"));
+                                
+                                String query11="SELECT vuelos.avion_idavion, usuarios_has_vuelos.usuarios_idusuarios FROM vuelos,usuarios_has_vuelos WHERE usuarios_has_vuelos.codigo='"+ jtfcod_reserva.getText() +"' AND usuarios_has_vuelos.vuelos_idvuelos=vuelos.idvuelos ";
+                                ResultSet rs22 = db.query(query11);
+                                if (rs22.first()) {
+                                    iduser=rs22.getString("usuarios_idusuarios");
+                                    idavion=rs22.getString("avion_idavion");
+                                    asientos_disponibles();
+                                }
                             }
                         } else {
                             JOptionPane.showMessageDialog(null, "No se encontro el codigo de reserva digitado");
                         }
-                        db.desconectar();
+                    db.desconectar();
                     } catch (Exception e) {
                         JOptionPane.showMessageDialog(null, "Error en la consulta");
-                    }
+                    }                    
                 }
             }
         });
-
+        
+        sep2 = new JSeparator(SwingConstants.HORIZONTAL);
+        sep2.setBounds(10, 115, 685, 1);
+        sep2.setForeground(new Color(220,225,220));
+        add(sep2);
+        
         jlbnombre = new JLabel("Nombre de Pasajero:");
         jlbnombre.setBounds(150, 130, 130, 20);
         add(jlbnombre);
@@ -170,64 +214,125 @@ public class check_in extends JPanel {
         jtfclase.setEnabled(false);
         add(jtfclase);
 
+        sep3 = new JSeparator(SwingConstants.HORIZONTAL);
+        sep3.setBounds(10, 365, 685, 1);
+        sep3.setForeground(new Color(220,220,220));
+        add(sep3);
+        
+        lbselasiento=new JLabel("Seleccione Asiento: ");
+        lbselasiento.setBounds(10, 385, 140, 30);
+        add(lbselasiento);
+        
+        Cbxasientos=new JComboBox();
+        Cbxasientos.setBounds(155, 387, 150, 25);
+        add(Cbxasientos);
+        
         checkin = new JCheckBox("Confirmar Reserva");
-        checkin.setBounds(260, 380, 150, 20);
+        checkin.setBounds(335, 385, 150, 30);
         add(checkin);
 
         jbtnaceptar = new JButton("Aceptar");
-        jbtnaceptar.setBounds(200, 430, 100, 20);
+        jbtnaceptar.setBounds(230, 445, 100, 30);
+        jbtnaceptar.setBackground(new Color(158,203,242));
+        jbtnaceptar.setBorderPainted(false);
+        jbtnaceptar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                jbtnaceptar.setBackground(new Color(200,200,200));
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                jbtnaceptar.setBackground(new Color(158,203,242));
+            }            
+        });
         add(jbtnaceptar);
         jbtnaceptar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-
+                lbloader.setVisible(true);
                 try {
                     if (checkin.isSelected() == false || "".equals(jtfnombre.getText()) || "".equals(jtfpasaporte.getText()) || "".equals(jtfcod_reserva.getText())) {
                         JOptionPane.showMessageDialog(null, "Favor validar campos, campos vacios");
                     } else {
                         db.conectar();
-                        String sqlupdate = "UPDATE usuarios_has_vuelos usuarios_has_vuelos \n"
-                                + "INNER JOIN usuarios usuarios\n"
-                                + "ON\n"
-                                + "usuarios.idusuarios = usuarios_has_vuelos.usuarios_idusuarios\n"
-                                + "\n"
-                                + "SET usuarios_has_vuelos.checkin=1, usuarios.nombres='"+jtfnombre.getText()+"', usuarios.pasaporte= '"+jtfpasaporte.getText()+"' WHERE suarios_has_vuelos.codigo" + jlbcod_reserva.getText() + "';";
+                        String sqlupdate = "UPDATE usuarios_has_vuelos SET usuarios_has_vuelos.checkin=1 WHERE usuarios_has_vuelos.codigo='" + jtfcod_reserva.getText() + "'";
                         db.queryUpdate(sqlupdate);
                         db.desconectar();
+                        
+                        String asientoselect=Cbxasientos.getSelectedItem().toString();
+                        String[] partes;
+                        partes=asientoselect.split("-");
+                        String idasientoinsert=partes[0];
+                        db.conectar();
+                        String sql890 = "UPDATE Asientos SET Estado=1,Usuario='"+iduser+"' WHERE idAsientos='"+idasientoinsert+"' AND avion_idavion='"+idavion+"'";
+                        db.queryUpdate(sql890);
+                        db.desconectar();
+                        
                         JOptionPane.showMessageDialog(null, "Check-In Realizado");
+                        PDF_checkin pdf=new PDF_checkin(jtfcod_reserva.getText());
+                        
+                        lbloader.setVisible(false);
                         jtfcod_reserva.setEnabled(true);
                         jtfcod_reserva.setText("");
                         jtfnombre.setText("");
                         jtfnombre.setEnabled(false);
-                        jlbpasaporte.setText("");
+                        jtfpasaporte.setText("");
                         jtfpasaporte.setEnabled(false);
                         jtforigen.setText("");
                         jtfhora_inicio.setText("");
-                        jlbdestino.setText("");
+                        jtfdestino.setText("");
                         jtfhora_fin.setText("");
                         jtfclase.setText("");
+                        Cbxasientos.removeAllItems();
+                        checkin.setSelected(false);
                     }
-
-                } catch (Exception e) {
+                } 
+                catch (Exception e) {
                 }
             }
         });
 
         jbtncancelar = new JButton("Limpiar");
-        jbtncancelar.setBounds(340, 430, 100, 20);
+        jbtncancelar.setBounds(350, 445, 100, 30);
+        jbtncancelar.setBackground(new Color(158,203,242));
+        jbtncancelar.setBorderPainted(false);
+        jbtncancelar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                jbtncancelar.setBackground(new Color(200,200,200));
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                jbtncancelar.setBackground(new Color(158,203,242));
+            }            
+        });
         add(jbtncancelar);
         jbtncancelar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 jtfcod_reserva.setEnabled(true);
                 jtfcod_reserva.setText("");
                 jtfnombre.setText("");
-                jlbpasaporte.setText("");
+                jtfpasaporte.setText("");
                 jtforigen.setText("");
                 jtfhora_inicio.setText("");
-                jlbdestino.setText("");
+                jtfdestino.setText("");
                 jtfhora_fin.setText("");
                 jtfclase.setText("");
             }
         });
-
+    }
+    
+    public void asientos_disponibles(){
+        try{
+            db.conectar();
+            String query22="SELECT CONCAT(Asientos.idAsientos,\"-\",Asientos.Nombre_Asiento) AS asiento FROM Asientos WHERE Asientos.Estado=0 AND Asientos.avion_idavion='"+idavion+"'";
+            ResultSet rs33 = db.query(query22);
+            while(rs33.next()){
+                Cbxasientos.addItem(rs33.getString("asiento"));
+            }
+            db.desconectar();
+        }
+        catch(Exception e){
+            System.out.println("Error en asientos disponibles . . ."+e);
+        }
     }
 }

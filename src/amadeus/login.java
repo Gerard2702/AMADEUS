@@ -227,14 +227,10 @@ public class login extends JFrame{
             db.conectar();
             String sql = "SELECT * FROM usuarios WHERE usuario='"+usuario+"' AND pass='"+cifra.md5_encode(pass)+"'";
             ResultSet rs=db.query(sql);            
-            if(rs.first()){
-                
-                caprol=rs.getString("idrol");
+            if(rs.first()){              
+                caprol=rs.getString("rol_idrol");
                 nombreusuario=rs.getString("nombre");
-                estadoUsuario=rs.getString("estado");
-                
-                JOptionPane.showMessageDialog(null, estadoUsuario);
-                
+                estadoUsuario=rs.getString("estado");             
                 if(caprol.equals("1")){                    
                     this.txtUser.setText("");
                     this.txtPass.setText("");
@@ -249,7 +245,7 @@ public class login extends JFrame{
                     this.txtPass.setText("");
                     db.desconectar();
                     /*Bloque de codigo para Abrir la ventana del Empleado*/
-                     this.setVisible(false);
+                    this.setVisible(false);
                     index_user user=new index_user(usuario,nombreusuario);                    
                     user.setVisible(true);
                 }

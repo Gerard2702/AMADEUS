@@ -28,8 +28,7 @@ public class nuevo_usuario extends JPanel{
     static final String PASS = "";
     
     //Nuevo usuario
-    private JLabel titulo;
-    
+    private JLabel titulo,lbloader;    
     private JLabel lblNombre;
     private JLabel lblCorreo;
     private JLabel lblUsuario;
@@ -38,7 +37,7 @@ public class nuevo_usuario extends JPanel{
     private JLabel lblPasaporte;
     private JLabel lblTarjetaCredito;
     private JLabel lblTipoUsuario;
-
+    private JSeparator sep;
     private validacion_nombre txtNombre;
     private validacion_correo txtCorreo;
     private validacion_usuario txtUsuario;
@@ -47,7 +46,7 @@ public class nuevo_usuario extends JPanel{
     private validacion_pasaporte txtPasaporte;
     private validacion_tarjeta_credito txtTarjetaCredito;
     private JComboBox txtTipoUsuario;
-
+    private ImageIcon iconloader=new ImageIcon(this.getClass().getResource("/config/icons/loader.gif"));
     private JButton btnRegistar;
     
     public nuevo_usuario(){
@@ -58,18 +57,32 @@ public class nuevo_usuario extends JPanel{
     }
     
     public void initComponent(){
-        titulo =new JLabel("Nuevo Usuario");
-        titulo.setBounds(10, 10, 150, 50);
+        Font titulo1 = new Font("Calibri", 1, 19);
+        
+        titulo = new JLabel("Nuevo Usuario");        
+        titulo.setBounds(10,10,300,50);
+        titulo.setFont(titulo1);
         add(titulo);
+        
+        lbloader=new JLabel("Cargando...");
+        lbloader.setIcon(iconloader);
+        lbloader.setBounds(585,15,100,27);
+        lbloader.setVisible(false);
+        add(lbloader);
+        
+        sep = new JSeparator(SwingConstants.HORIZONTAL);
+        sep.setBounds(10, 50, 685, 5);
+        sep.setForeground(new Color(220,220,220));
+        add(sep);  
         
         lblNombre = new JLabel("Nombre:");
         lblCorreo = new JLabel("Correo:");
-        lblUsuario = new JLabel("Usuario");
-        lblPassword = new JLabel("Contraseña");
-        lblTelefono = new JLabel("Telefono");
-        lblPasaporte = new JLabel("Pasaporte");
-        lblTarjetaCredito = new JLabel("Tarjeta de Credito");
-        lblTipoUsuario = new JLabel("Tipo de Usuario");
+        lblUsuario = new JLabel("Usuario:");
+        lblPassword = new JLabel("Contraseña:");
+        lblTelefono = new JLabel("Telefono:");
+        lblPasaporte = new JLabel("Pasaporte:");
+        lblTarjetaCredito = new JLabel("Tarjeta de Credito:");
+        lblTipoUsuario = new JLabel("Tipo de Usuario:");
 
         txtNombre = new validacion_nombre();
         txtCorreo = new validacion_correo();
@@ -81,8 +94,9 @@ public class nuevo_usuario extends JPanel{
         txtTipoUsuario = new JComboBox();
         txtTipoUsuario.addItem("Admnistrador");
         txtTipoUsuario.addItem("Empleado");
+        txtTipoUsuario.addItem("Cliente");
 
-        btnRegistar = new JButton("Guardar Cambios");
+        btnRegistar = new JButton("Guardar Usuario");
 
         lblNombre.setBounds(100, 100, 250, 30);
         lblCorreo.setBounds(100, 140, 250, 30);
@@ -102,7 +116,7 @@ public class nuevo_usuario extends JPanel{
         txtTarjetaCredito.setBounds(370, 340, 250, 30);
         txtTipoUsuario.setBounds(370, 380, 250, 30);
 
-        btnRegistar.setBounds(470, 420, 150, 30);
+        btnRegistar.setBounds(470, 435, 150, 30);
 
         Font fontLabel = new Font("Dialog", Font.BOLD, 15);
         lblNombre.setFont(fontLabel);
@@ -196,8 +210,10 @@ public class nuevo_usuario extends JPanel{
                     tipoUser = 1;
                 else if(tipoUsuario == "Empleado")
                     tipoUser = 2;
+                else if(tipoUsuario == "Cliente")
+                    tipoUser = 3;
 
-                String sql = "INSERT INTO usuarios (idrol, estado, nombre, correo, usuario, pass, telefono, pasaporte, tarjeta_credito) VALUES ('" + tipoUser + "', 'Activo', '" + nombre + "', '" + correo + "', '" + usuario + "', '" + password + "', '" + telefono + "', '" + pasaporte + "', '" + tarjetaCredito + "')";
+                String sql = "INSERT INTO usuarios (rol_idrol, estado, nombre, correo, usuario, pass, telefono, pasaporte, tarjeta_credito) VALUES ('" + tipoUser + "', '0', '" + nombre + "', '" + correo + "', '" + usuario + "', '" + password + "', '" + telefono + "', '" + pasaporte + "', '" + tarjetaCredito + "')";
                 if (stmt.executeUpdate(sql) > 0) {
                     JOptionPane.showMessageDialog(null, "Usuario Registrado correctamente.");
                     limpiarTextField();

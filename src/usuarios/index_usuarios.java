@@ -25,6 +25,7 @@ public class index_usuarios extends JFrame{
     private ImageIcon min1=new ImageIcon(this.getClass().getResource("/config/icons/min.png"));
     private ImageIcon min2=new ImageIcon(this.getClass().getResource("/config/icons/minhover.png"));
     private ImageIcon iconhead=new ImageIcon(this.getClass().getResource("/config/icons/avion_head.png"));
+    private ImageIcon iconuser=new ImageIcon(this.getClass().getResource("/config/icons/user_icon.png")); 
     
     public index_usuarios(String setuser,String setnombreusuario,Integer roluss){
         nombreuser=setnombreusuario;
@@ -76,8 +77,9 @@ public class index_usuarios extends JFrame{
         logo.setBounds(19, 10, 190, 55);
         menu.add(logo); 
         
-        btnUsuarios = new JButton("Todos los Usuarios");
+        btnUsuarios = new JButton("Usuarios Registrados");
         btnUsuarios.setBounds(14, 80, 200, 50);
+        btnUsuarios.setIcon(iconuser);
         btnUsuarios.setBackground(new Color(158,203,242));
         btnUsuarios.setBorderPainted(false);
         btnUsuarios.addMouseListener(new MouseAdapter() {
@@ -103,7 +105,8 @@ public class index_usuarios extends JFrame{
         });
         
         btnNuevoUsuario = new JButton("Nuevo Usuario");
-        btnNuevoUsuario.setBounds(14, 140, 200, 50);
+        btnNuevoUsuario.setBounds(14, 131, 200, 50);
+        btnNuevoUsuario.setIcon(iconuser);
         btnNuevoUsuario.setBackground(new Color(158,203,242));
         btnNuevoUsuario.setBorderPainted(false);
         btnNuevoUsuario.addMouseListener(new MouseAdapter() {

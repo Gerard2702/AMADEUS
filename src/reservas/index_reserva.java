@@ -23,8 +23,9 @@ public class index_reserva extends JFrame{
     private estado_vuelos estado;
     private crear_reserva reserva;
     private check_in checkin;
-    private JButton btnreserva,btncheckin,btnestadovuel,btnvuelosdispo;
-    private JLabel logo, pie,cerrar,minimizar,avionhead,separ1,separ2,separ3;
+    private ver_reservas vereserva;
+    private JButton btnreserva,btncheckin,btnestadovuel,btnvuelosdispo,btnvereservas;
+    private JLabel logo, pie,cerrar,minimizar,avionhead,separ1,separ2,separ3,separ4;
     private ImageIcon iconlogo=new ImageIcon(this.getClass().getResource("/config/icons/logo_modulos.png"));
     private ImageIcon iconpie=new ImageIcon(this.getClass().getResource("/config/icons/pie_modulo.png"));
     private ImageIcon cerrar1=new ImageIcon(this.getClass().getResource("/config/icons/cerrar.png"));
@@ -185,10 +186,37 @@ public class index_reserva extends JFrame{
             }
         });
         
+        separ4=new JLabel();
+        separ4.setBackground(new Color(220,220,220));
+        separ4.setBounds(14, 283, 200, 1);
+        menu.add(separ4);
+        
+        btnvereservas=new JButton("Ver reservas         ");
+        btnvereservas.setBounds(14, 284, 200, 50);
+        btnvereservas.setIcon(iconreserva);
+        btnvereservas.setBackground(new Color(158,203,242));
+        btnvereservas.setBorderPainted(false);
+        btnvereservas.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                btnvereservas.setBackground(new Color(200,200,200));
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                btnvereservas.setBackground(new Color(158,203,242));
+            }            
+        });       
+        menu.add(btnvereservas);
+        btnvereservas.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent evt){
+                verReserva_Component();
+            }
+        });
+        
         pie=new JLabel();
         pie.setIcon(iconpie);
         pie.setBounds(19, 500, 190, 25);
-        menu.add(pie);
+        menu.add(pie);        
         
         jframe.add(menu);    
         vuelosdisp_Component();
@@ -209,6 +237,10 @@ public class index_reserva extends JFrame{
         }
         if(checkin!=null){
             jframe.remove(checkin);
+            repaint();
+        }
+        if(vereserva!=null){
+            jframe.remove(vereserva);
             repaint();
         }
         vuelos=new vuelos_disponibles();
@@ -232,6 +264,10 @@ public class index_reserva extends JFrame{
             jframe.remove(checkin);
             repaint();
         }
+        if(vereserva!=null){
+            jframe.remove(vereserva);
+            repaint();
+        }
         estado=new estado_vuelos();
         jframe.add(estado);        
     }
@@ -251,6 +287,10 @@ public class index_reserva extends JFrame{
         }
         if(checkin!=null){
             jframe.remove(checkin);
+            repaint();
+        }
+        if(vereserva!=null){
+            jframe.remove(vereserva);
             repaint();
         }
         reserva=new crear_reserva();
@@ -274,8 +314,37 @@ public class index_reserva extends JFrame{
             jframe.remove(checkin);
             repaint();
         }
+        if(vereserva!=null){
+            jframe.remove(vereserva);
+            repaint();
+        }
         checkin=new check_in();
         jframe.add(checkin);
+    }
+    
+    public void verReserva_Component(){
+        if(vuelos!=null){
+            jframe.remove(vuelos);
+            repaint();
+        }
+        if(estado!=null){
+            jframe.remove(estado);
+            repaint();
+        }
+        if(reserva!=null){
+            jframe.remove(reserva);
+            repaint();
+        }
+        if(checkin!=null){
+            jframe.remove(checkin);
+            repaint();
+        }
+        if(vereserva!=null){
+            jframe.remove(vereserva);
+            repaint();
+        }
+        vereserva=new ver_reservas();
+        jframe.add(vereserva);
     }
     
     private void ventana_form(){

@@ -19,12 +19,13 @@ import java.util.logging.Logger;
  */
 public class agregar_avion extends JPanel
 {
-    private JLabel lbltitulo,lblasientos,lblmaletas,lblmodelo;
+    private JLabel lbltitulo,lblasientos,lblmaletas,lblmodelo,lbloader;
     private JLabel lblvalasientos,lblvalmaletaslblmaletas,lblvalmodelo;
     private JTextField txtasientos,txtmaletas;
     private JComboBox combomodelos;
     private JButton btnAceptar,btnLimpiar,btnAgregar;
     private JSeparator sep;
+    private ImageIcon iconloader=new ImageIcon(this.getClass().getResource("/config/icons/loader.gif"));
     database db = new database();
             
     public agregar_avion(){
@@ -43,6 +44,12 @@ public class agregar_avion extends JPanel
         lbltitulo.setFont(titulo);
         lbltitulo.setBounds(10,10,300,50);
         add(lbltitulo);
+        
+        lbloader=new JLabel("Cargando...");
+        lbloader.setIcon(iconloader);
+        lbloader.setBounds(585,15,100,27);
+        lbloader.setVisible(false);
+        add(lbloader);
         
         sep = new JSeparator(SwingConstants.HORIZONTAL);
         sep.setFont(label);
@@ -78,7 +85,7 @@ public class agregar_avion extends JPanel
         lblvalasientos.setForeground(Color.red);
         add(lblvalasientos);
         
-        lblmaletas = new JLabel("Numero de Maletas");
+        lblmaletas = new JLabel("Numero de Maletas:");
         lblmaletas.setFont(label);
         lblmaletas.setBounds(10, 150, 200, 25);
         add(lblmaletas);
@@ -178,7 +185,7 @@ public class agregar_avion extends JPanel
         
       
         btnAceptar = new JButton("Aceptar");
-        btnAceptar.setBounds(10, 275, 100, 25);
+        btnAceptar.setBounds(150, 285, 100, 25);
         btnAceptar.setBackground(new Color(158,203,242));        
         btnAceptar.setBorderPainted(false);
         btnAceptar.addMouseListener(new MouseAdapter() {
@@ -194,12 +201,13 @@ public class agregar_avion extends JPanel
         add(btnAceptar);
         btnAceptar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
+                lbloader.setVisible(true);
                 IngresarVuelo();
             }
         });
         
         btnLimpiar = new JButton("Limpiar");
-        btnLimpiar.setBounds(120, 275, 100, 25);
+        btnLimpiar.setBounds(265, 285, 100, 25);
         btnLimpiar.setBackground(new Color(158,203,242));        
         btnLimpiar.setBorderPainted(false);
         btnLimpiar.addMouseListener(new MouseAdapter() {
@@ -234,19 +242,22 @@ public class agregar_avion extends JPanel
         try{
             if(txtasientos.getText().trim().equals("")){
                 lblvalasientos.setText("Debe Asignar el numero de Asientos");
+                lbloader.setVisible(false);
             }else{lblvalasientos.setText("");}            
             if(txtmaletas.getText().trim().equals("")){
                 lblvalmaletaslblmaletas.setText("Debe Asignar el numero de maletas");
+                lbloader.setVisible(false);
             }else{lblvalmaletaslblmaletas.setText("");}
             if(combomodelos.getSelectedItem().equals("NO HAY MODELOS AGREGADOS")){
                 lblvalmodelo.setText("Debe Asignar un Modelo");
+                lbloader.setVisible(false);
             }else{lblvalmodelo.setText("");}
             if(!txtasientos.getText().trim().equals("")&&!txtmaletas.getText().trim().equals("")&&!combomodelos.getSelectedItem().equals("NO HAY MODELOS AGREGADOS"))
-            {
+            {               
                 int asientos = Integer.parseInt(txtasientos.getText());
                 int maletas = Integer.parseInt(txtmaletas.getText());
                 String modelo = combomodelos.getSelectedItem().toString();
-                try{
+                try{                    
                     db.conectar();
                     
                     String sqlid="SELECT * FROM modelo WHERE modelo='"+modelo+"';";
@@ -292,7 +303,8 @@ public class agregar_avion extends JPanel
                         db.queryUpdate(sqlasi3);
                     }                    
                     db.desconectar();
-                    JOptionPane.showMessageDialog(null,"REGISTRO EXITOSO");
+                    JOptionPane.showMessageDialog(null,"SE HA AGREGADO AVION CORRECTAMENTE");
+                    lbloader.setVisible(false);
                     txtasientos.setText("");
                     txtmaletas.setText("");
                     combomodelos.setSelectedIndex(0);

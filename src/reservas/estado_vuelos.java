@@ -191,8 +191,17 @@ public class estado_vuelos extends JPanel{
             String id=String.valueOf(jTable.getValueAt(row,0));
             try{
                 db.conectar();
+                
                 String sqlupdate="UPDATE vuelos SET estado_idestado=3 WHERE idvuelos='"+id+"';";
                 db.queryUpdate(sqlupdate);                                
+                
+                String sqlidavion="SELECT avion_idavion FROM vuelos WHERE idvuelos='"+id+"';";
+                ResultSet rs22 = db.query(sqlidavion);
+                if(rs22.first()){
+                    String idavion=rs22.getString("avion_idavion");
+                    String sqlupdate2="UPDATE Asientos SET Estado=0, Usuario=NULL WHERE avion_idavion='"+idavion+"'";
+                    db.queryUpdate(sqlupdate2);
+                }
                 db.desconectar();
                 JOptionPane.showMessageDialog(null, "Cambio de estado: Vuelo Finalizado");                
             }

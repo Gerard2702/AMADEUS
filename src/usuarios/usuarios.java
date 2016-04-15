@@ -21,11 +21,13 @@ public class usuarios extends JPanel {
     static final String PASS = "";
 
     //Todos los usuarios
-    private JLabel titulo;
+    private JLabel titulo,lbloader;
     private JButton btnEditarUsuario;
     private JScrollPane ScrollPane;
     private JTable Table;
-
+    private ImageIcon iconloader=new ImageIcon(this.getClass().getResource("/config/icons/loader.gif"));
+    private JSeparator sep;
+    
     //Editar usuario
     private JLabel lblNombre;
     private JLabel lblCorreo;
@@ -57,9 +59,23 @@ public class usuarios extends JPanel {
     }
 
     public void initComponent() {
-        titulo = new JLabel("Todos los Usuarios");
-        titulo.setBounds(10, 10, 150, 50);
+        Font titulo1 = new Font("Calibri", 1, 19);
+        
+        titulo = new JLabel("Usuarios Registrados");        
+        titulo.setBounds(10,10,300,50);
+        titulo.setFont(titulo1);
         add(titulo);
+        
+        lbloader=new JLabel("Cargando...");
+        lbloader.setIcon(iconloader);
+        lbloader.setBounds(585,15,100,27);
+        lbloader.setVisible(false);
+        add(lbloader);
+        
+        sep = new JSeparator(SwingConstants.HORIZONTAL);
+        sep.setBounds(10, 50, 685, 5);
+        sep.setForeground(new Color(220,220,220));
+        add(sep);  
 
         btnEditarUsuario = new JButton("Editar Usuario");
         btnEditarUsuario.setBounds(480, 60, 200, 40);
@@ -103,12 +119,12 @@ public class usuarios extends JPanel {
 
         lblNombre = new JLabel("Nombre:");
         lblCorreo = new JLabel("Correo:");
-        lblUsuario = new JLabel("Usuario");
-        lblPassword = new JLabel("Contraseña");
-        lblCPassword = new JLabel("Nueva Contraseña");
-        lblTelefono = new JLabel("Telefono");
-        lblPasaporte = new JLabel("Pasaporte");
-        lblTarjetaCredito = new JLabel("Tarjeta de Credito");
+        lblUsuario = new JLabel("Usuario:");
+        lblPassword = new JLabel("Contraseña:");
+        lblCPassword = new JLabel("Nueva Contraseña:");
+        lblTelefono = new JLabel("Telefono:");
+        lblPasaporte = new JLabel("Pasaporte:");
+        lblTarjetaCredito = new JLabel("Tarjeta de Credito:");
 
         txtNombre = new JTextField();
         txtCorreo = new validacion_correo();
@@ -211,14 +227,22 @@ public class usuarios extends JPanel {
         try {
             //Definir las columnas del modelo de tabla
             DefaultTableModel objDTM = new DefaultTableModel();
-            objDTM.setColumnIdentifiers(new Object[]{"Nombre", "Usuario", "Correo"});
+            objDTM.setColumnIdentifiers(new Object[]{"Nombre", "Usuario", "Correo","Telefono","Estado"});
 
             database conn = new database();
             conn.conectar();
-            ResultSet rs = conn.query("SELECT nombre, usuario, correo FROM usuarios");
+            ResultSet rs = conn.query("SELECT nombre, usuario, correo, estado,telefono FROM usuarios");
 
             while (rs.next()) {
-                objDTM.addRow(new Object[]{rs.getString("nombre"), rs.getString("usuario"), rs.getString("correo")});
+                String estado="";
+                String validar=rs.getString("estado");
+                if(validar.equals("0")){
+                    estado="Inactivo";
+                }
+                else{
+                    estado="Activo";
+                }
+                objDTM.addRow(new Object[]{rs.getString("nombre"), rs.getString("usuario"), rs.getString("correo"),rs.getString("telefono"),estado});
             }
 
             Table.setModel(objDTM);
@@ -245,7 +269,7 @@ public class usuarios extends JPanel {
             conn.desconectar();
 
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Erro al cargar los usuarios." + ex);
+            JOptionPane.showMessageDialog(null, "Error al cargar los usuarios." + ex);
         }
     }
 
@@ -299,8 +323,14 @@ public class usuarios extends JPanel {
                 String telefono = txtTelefono.getText();
                 String tarjetaCredito = txtTarjetaCredito.getText();
                 tarjetaCredito = cifra.md5_encode(tarjetaCredito);
-                String estado = (String) txtEstado.getSelectedItem();
-
+                String estadocombo = (String) txtEstado.getSelectedItem();
+                Integer estado=0;
+                if(estadocombo=="Activo"){
+                    estado=1;
+                }
+                if(estadocombo=="Inactivo"){
+                    estado=0;
+                }
                 String sql = "UPDATE usuarios SET estado = '" + estado + "' , correo = '" + correo + "', pass = '" + cpassword + "', telefono = '" + telefono + "', tarjeta_credito = '" + tarjetaCredito + "' WHERE nombre = '" + nombre + "'";
                 if (stmt.executeUpdate(sql) > 0) {
                     JOptionPane.showMessageDialog(null, "Datos modificados correctamente.");

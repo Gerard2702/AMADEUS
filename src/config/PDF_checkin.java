@@ -24,15 +24,15 @@ import javax.swing.*;
  *
  * @author Familia Aparicio
  */
-public class PDF_create {
+public class PDF_checkin {
     
     public String ruta,codigoreserva;    
-    private Image imagen; 
+    private Image imagen,barras; 
     database db = new database();
-    
-    public PDF_create(String codreserva){
+
+    public PDF_checkin(String codreserva){
         codigoreserva=codreserva;
-        ruta="Reserva_Vuelo.pdf";
+        ruta="Ticket_Electronico.pdf";
         try{
             createPdf();
         }
@@ -42,7 +42,47 @@ public class PDF_create {
     }
     
     public void createPdf() throws DocumentException, IOException {
-        String nombre="",salida="",llegada="",origen="",destino="",iduser="",idvuelo="",fecha="";
+        
+        String iduser="",idvuelo="",idclase="",idavion="",nombre="",origen="",destino="",fecha="",clase="",asiento="";
+        
+        try{
+            db.conectar();
+            String sql="SELECT usuarios_idusuarios,vuelos_idvuelos,clase_vuelo_idclase_vuelo FROM usuarios_has_vuelos WHERE codigo='"+codigoreserva+"'";
+            ResultSet rs = db.query(sql);
+            rs.first();
+            iduser=rs.getString("usuarios_idusuarios");
+            idvuelo=rs.getString("vuelos_idvuelos");
+            idclase=rs.getString("clase_vuelo_idclase_vuelo");
+            
+            String sql2="SELECT nombre FROM usuarios WHERE idusuarios='"+iduser+"'";
+            ResultSet rs2 = db.query(sql2);
+            rs2.first();
+            nombre=rs2.getString("nombre");
+            
+            String sql3="SELECT vuelos.avion_idavion,vuelos.fecha,ruta.origen,ruta.destino FROM vuelos,ruta WHERE vuelos.idvuelos='"+idvuelo+"' AND vuelos.ruta_idruta=ruta.idruta";
+            ResultSet rs3 = db.query(sql3);
+            rs3.first();
+            origen=rs3.getString("origen");
+            destino=rs3.getString("destino");
+            fecha=rs3.getString("fecha");
+            idavion=rs3.getString("avion_idavion");
+            
+            String sql4="SELECT clase FROM clase_vuelo WHERE idclase_vuelo='"+idclase+"'";
+            ResultSet rs4 = db.query(sql4);
+            rs4.first();
+            clase=rs4.getString("clase");
+            
+            String sql5="SELECT Nombre_Asiento FROM Asientos WHERE avion_idavion='"+idavion+"' AND Usuario='"+iduser+"'";
+            ResultSet rs5 = db.query(sql5);
+            if(rs5.first()) {                                
+                asiento=rs5.getString("Nombre_Asiento");
+            }          
+            db.desconectar();
+        }
+        catch(Exception e){
+            System.out.println("Error obteniendo informacion. . . "+e);
+        }
+        
         try{
             imagen= Image.getInstance(getClass().getResource("/config/icons/logo.png"));
             imagen.scaleAbsolute(100,28);
@@ -51,45 +91,17 @@ public class PDF_create {
             System.out.println("Error con imagen. . . "+e);
         }
         
-        try{
-            db.conectar();
-            String sql="SELECT usuarios_idusuarios,vuelos_idvuelos FROM usuarios_has_vuelos WHERE codigo='"+codigoreserva+"'";
-            ResultSet rs = db.query(sql);
-            rs.first();
-            iduser=rs.getString("usuarios_idusuarios");
-            idvuelo=rs.getString("vuelos_idvuelos");            
-            
-            String sql1="SELECT nombre FROM usuarios WHERE idusuarios='"+iduser+"'";
-            ResultSet rs1 = db.query(sql1);
-            rs1.first();
-            nombre=rs1.getString("nombre");
-
-            String sql2="SELECT vuelos.fecha,vuelos.hora_inicio,vuelos.hora_fin,ruta.origen,ruta.destino FROM vuelos,ruta WHERE vuelos.idvuelos='"+idvuelo+"' AND vuelos.ruta_idruta=ruta.idruta";
-            ResultSet rs2= db.query(sql2);
-            rs2.first();
-            salida=rs2.getString("hora_inicio");
-            llegada=rs2.getString("hora_fin");
-            origen=rs2.getString("origen");
-            destino=rs2.getString("destino");
-            fecha=rs2.getString("fecha");
-            db.desconectar();
-            
-        }
-        catch(Exception e){
-            System.out.println("Error obteniendo informacion. . . "+e);
-        }
         Document document = new Document(PageSize.LETTER);
-        document.setMargins(10, 10, 260, 290);
         PdfWriter.getInstance(document, new FileOutputStream(ruta));     
         document.open();
         
         PdfPTable table = new PdfPTable(2);
-        table.getDefaultCell().setBorder(PdfPCell.NO_BORDER);
+        table.getDefaultCell().setBorder(PdfPCell.NO_BORDER);        
         PdfPCell imagencell = new PdfPCell(imagen);
         imagencell.setFixedHeight(40);
         imagencell.setBorder(PdfPCell.NO_BORDER);
         table.addCell(imagencell);        
-        table.addCell(new Paragraph("RESERVA DE VUELO"));
+        table.addCell(new Paragraph("TICKET ELECTRONICO"));
         
         PdfPCell separacion = new PdfPCell();
         separacion.setBorder(com.itextpdf.text.Rectangle.BOTTOM);
@@ -97,7 +109,7 @@ public class PDF_create {
         table.addCell(separacion);
         
         table.addCell(" ");
-        table.addCell(" ");  
+        table.addCell(" ");     
         
         PdfPCell cellnombre = new PdfPCell(new Paragraph("Nombre: "+nombre));
         cellnombre.setBorder(PdfPCell.NO_BORDER);
@@ -105,30 +117,38 @@ public class PDF_create {
         table.addCell(cellnombre);
         
         table.addCell(" ");
-        table.addCell(" ");  
+        table.addCell(" ");        
         
-        table.addCell("Código de reserva: "+codigoreserva);
+        table.addCell("Clase: "+clase);
         table.addCell("Fecha: "+fecha);
         
         table.addCell(" ");
         table.addCell(" ");
         
-        table.addCell("Salida: "+salida);
-        table.addCell("Llegada: "+llegada);
-        
-        table.addCell(" ");
-        table.addCell(" ");
-        
-        table.addCell("Origen: "+origen);
+        table.addCell("Origen:"+origen);
         table.addCell("Destino: "+destino);
         
         table.addCell(" ");
         table.addCell(" ");
         
-        PdfPCell cellnota = new PdfPCell(new Paragraph("ATENCION: FALTA REALIZAR CHECK-IN 24 HORAS ANTES DEL VIAJE."));
-        cellnota.setBorder(PdfPCell.NO_BORDER);
-        cellnota.setColspan(2);
-        table.addCell(cellnota);
+        table.addCell("Asiento: "+asiento);
+        table.addCell("Código Reserva: "+codigoreserva);
+        
+        table.addCell(" ");
+        table.addCell(" ");
+        
+        try{
+            barras= Image.getInstance(getClass().getResource("/config/icons/barras.jpg"));
+            barras.scaleAbsolute(440,25);
+        }
+        catch(Exception e){
+            System.out.println("Error con imagen. . . "+e);
+        }
+        PdfPCell cellbarra = new PdfPCell(barras);
+        cellbarra.setBorder(PdfPCell.NO_BORDER);         
+        cellbarra.setColspan(2);
+        cellbarra.setFixedHeight(30);
+        table.addCell(cellbarra);
         
         document.add(table);
         
@@ -144,5 +164,4 @@ public class PDF_create {
             ex.printStackTrace();
         }
     }    
-    
 }

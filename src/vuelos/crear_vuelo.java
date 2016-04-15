@@ -26,13 +26,14 @@ import javax.swing.text.MaskFormatter;
  */
 public class crear_vuelo extends JPanel
 {
-    private JLabel hora, hora2, fecha, ruta, title, avion;
+    private JLabel hora, hora2, fecha, ruta, title, avion,lbloader;
     private JComboBox  cbxruta, cbxAvi;
     private JButton limpiar, crear;
     private JFormattedTextField txtFec, txtTime, txtTime2;
     private JLabel errorfec, errorhora1, errorhora2, campos;
     private JSeparator sep;
     private index_vuelo agregar;
+    private ImageIcon iconloader=new ImageIcon(this.getClass().getResource("/config/icons/loader.gif"));
     database db = new database();
     
     public crear_vuelo(){
@@ -52,6 +53,12 @@ public class crear_vuelo extends JPanel
         title.setBounds(10,10,300,50);
         title.setFont(titulo);
         add(title);
+        
+        lbloader=new JLabel("Cargando...");
+        lbloader.setIcon(iconloader);
+        lbloader.setBounds(585,15,100,27);
+        lbloader.setVisible(false);
+        add(lbloader);
         
         sep = new JSeparator(SwingConstants.HORIZONTAL);
         sep.setFont(label);
@@ -136,11 +143,11 @@ public class crear_vuelo extends JPanel
         try{
         cbxAvi.removeAllItems();
         db.conectar();
-        String sql="SELECT avion.codigo FROM avion WHERE idavion NOT IN (SELECT idavion FROM vuelos WHERE avion.idavion = vuelos.avion_idavion) ORDER BY idavion";
+        String sql="SELECT avion.codigo FROM avion WHERE idavion NOT IN (SELECT idavion FROM vuelos WHERE avion.idavion = vuelos.avion_idavion AND vuelos.estado_idestado<>3) ORDER BY idavion";
         ResultSet rs = db.query(sql);
         rs.last(); 
         if(rs.getRow()==0){
-            cbxAvi.addItem("NO HAY AVIONES AGREGADOS");
+            cbxAvi.addItem("NO HAY AVIONES DISPONIBLES");
         }
         else{
             rs.beforeFirst();
@@ -296,7 +303,7 @@ public class crear_vuelo extends JPanel
                  this.errorfec.setVisible(false);
                  this.errorhora1.setVisible(false);
                  this.errorhora2.setVisible(false);
-                 try{
+                 try{                    
                     db.conectar();
                     
                     String sqlidestino = "SELECT * FROM aeropuertos WHERE ciudad='"+rutadestino+"';";
@@ -324,13 +331,13 @@ public class crear_vuelo extends JPanel
                     this.txtTime2.setText("");
                     this.cbxAvi.setSelectedIndex(0);
                     this.cbxruta.setSelectedIndex(0);
-                    JOptionPane.showMessageDialog(null,"REGISTRO EXITOSO");
+                    JOptionPane.showMessageDialog(null,"CREACION DE VUELO CORRECTA");
                     this.cbxAvi.removeAllItems();
                     String sqlx="SELECT avion.codigo FROM avion WHERE idavion NOT IN (SELECT idavion FROM vuelos WHERE avion.idavion = vuelos.avion_idavion) ORDER BY idavion";
                     ResultSet rsx = db.query(sqlx);
                     rsx.last(); 
                     if(rsx.getRow()==0){
-                        cbxAvi.addItem("NO HAY AVIONES AGREGADOS");
+                        cbxAvi.addItem("NO HAY AVIONES DISPONIBLES");
                     }
                     else{
                         rsx.beforeFirst();

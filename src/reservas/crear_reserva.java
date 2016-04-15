@@ -256,7 +256,11 @@ public class crear_reserva extends JPanel{
                 db.conectar();
                 String sqlupdate="INSERT INTO usuarios_has_vuelos (usuarios_idusuarios,vuelos_idvuelos,clase_vuelo_idclase_vuelo,checkin,codigo) VALUES('"+idusuario+"','"+idvuelo+"','"+idclasevuelo+"','0','"+codigoreserva+"')";
                 db.queryUpdate(sqlupdate);                                
-                db.desconectar();                
+                db.desconectar(); 
+                db.conectar();
+                String sqlupdate2="UPDATE vuelos SET asientos_disponibles= asientos_disponibles- 1 WHERE idvuelos='"+idvuelo+"'";
+                db.queryUpdate(sqlupdate2);                                
+                db.desconectar(); 
                 JOptionPane.showMessageDialog(null, "Se ha creado la Resevacion");
                 PDF_create pdf=new PDF_create(codigoreserva);
                 limpiar_reserva();
@@ -348,7 +352,7 @@ public class crear_reserva extends JPanel{
                 String selectvuelo=cBxrutavuelo.getSelectedItem().toString();
                 partes=selectvuelo.split("-");                
                 db.conectar();
-                String sql="SELECT vuelos.idvuelos,vuelos.fecha,vuelos.hora_inicio,vuelos.hora_fin,vuelos.asientos_disponibles,CONCAT(ruta.origen,\"-\",ruta.destino) AS ruta FROM vuelos,ruta WHERE vuelos.ruta_idruta=ruta.idruta AND vuelos.fecha='"+busqfecha.getText()+"' AND vuelos.ruta_idruta='"+partes[0]+"'";
+                String sql="SELECT vuelos.idvuelos,vuelos.fecha,vuelos.hora_inicio,vuelos.hora_fin,vuelos.asientos_disponibles,CONCAT(ruta.origen,\"-\",ruta.destino) AS ruta FROM vuelos,ruta WHERE vuelos.ruta_idruta=ruta.idruta AND vuelos.fecha='"+busqfecha.getText()+"' AND vuelos.ruta_idruta='"+partes[0]+"' AND vuelos.asientos_disponibles <> 0";
                 ResultSet rs = db.query(sql);
                 rs.last();
                 int numrows = rs.getRow();
@@ -357,13 +361,13 @@ public class crear_reserva extends JPanel{
                 int i = 0;
                 while(rs.next()){
                     datos[i][0]=rs.getString("idvuelos");
-                    datos[i][1]=rs.getString("asientos_disponibles");
+                    datos[i][1]=rs.getString("ruta");                   
                     datos[i][2]=rs.getString("fecha");
                     datos[i][3]=rs.getString("hora_inicio");
                     datos[i][4]=rs.getString("hora_fin");                              
-                    datos[i][5]=rs.getString("ruta");          
+                    datos[i][5]=rs.getString("asientos_disponibles");
                     datos[i][6]=new JButton("Seleccionar");
-                    i++;
+                    i++;                    
                 }
                 db.desconectar();
                 jTvuelos.setModel(new DefaultTableModel(datos,colVuelo){
