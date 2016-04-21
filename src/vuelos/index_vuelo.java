@@ -35,6 +35,7 @@ public class index_vuelo extends JFrame
     private ImageIcon iconmodif=new ImageIcon(this.getClass().getResource("/config/icons/modificar_icon.png"));
     private ImageIcon iconavionestado=new ImageIcon(this.getClass().getResource("/config/icons/avion_estado_vuelo.png"));
     private ImageIcon icondel=new ImageIcon(this.getClass().getResource("/config/icons/icon_delete.png"));
+    private static Point mouseDownCompCoords;
     
     public index_vuelo(String setuser,String setnombreusuario,Integer roluss){
         nombreuser=setnombreusuario;
@@ -42,14 +43,37 @@ public class index_vuelo extends JFrame
         roluser=roluss;
         initComponent();        
         this.setSize(945,575);
-        this.setLocationRelativeTo(null);
-        this.setTitle("Amadeus - Vuelos");
+        this.setLocationRelativeTo(null);        
         setLayout(null);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.getContentPane().setBackground(new Color(75,75,75));
         this.setResizable(false);
         this.setIconImage(new ImageIcon(getClass().getResource("/config/icons/avion_icon.png")).getImage());
+        //MOVIMIENTO DE VENTANA
         this.setUndecorated(true);
+        this.setVisible(true);
+        this.addMouseListener(new MouseListener(){
+            public void mouseReleased(MouseEvent e) {
+                mouseDownCompCoords = null;
+            }
+            public void mousePressed(MouseEvent e) {
+                mouseDownCompCoords = e.getPoint();
+            }
+            public void mouseExited(MouseEvent e) {
+            }
+            public void mouseEntered(MouseEvent e) {
+            }
+            public void mouseClicked(MouseEvent e) {
+            }
+        });
+        this.addMouseMotionListener(new MouseMotionListener(){
+            public void mouseMoved(MouseEvent e) {
+            }
+            public void mouseDragged(MouseEvent e) {
+                Point currCoords = e.getLocationOnScreen();
+                setLocation(currCoords.x - mouseDownCompCoords.x, currCoords.y - mouseDownCompCoords.y);
+            }
+        });       
     }
     
     public void initComponent(){
@@ -81,7 +105,7 @@ public class index_vuelo extends JFrame
         logo.setBounds(19, 10, 190, 55);
         menu.add(logo); 
         
-        btncrearvuelo =new JButton("Crear Vuelo");        
+        btncrearvuelo =new JButton("Crear Vuelo              ");        
         btncrearvuelo.setIcon(iconavionestado);
         btncrearvuelo.setBounds(14, 80, 200, 50);
         btncrearvuelo.setBackground(new Color(158,203,242));        
@@ -135,7 +159,7 @@ public class index_vuelo extends JFrame
         separ3.setBounds(14, 180, 200, 1);
         menu.add(separ3);
         
-        btnagregaavion=new JButton("Agregar Avion");
+        btnagregaavion=new JButton("Agregar Avion         ");
         btnagregaavion.setBounds(14,182,200,50);
         btnagregaavion.setIcon(iconavionestado);
         btnagregaavion.setBackground(new Color(158,203,242));        
@@ -191,85 +215,109 @@ public class index_vuelo extends JFrame
     public void crearvuelo_Component(){
         if(crear!=null){
             jframe.remove(crear);
+            validate();
             repaint();
         }
         if(modificar!=null){
             jframe.remove(modificar);
+            validate();
             repaint();
         }
         if(agregar!=null){
             jframe.remove(agregar);
+            validate();
             repaint();
         }
         if(modificarav!=null){
             jframe.remove(modificarav);
+            validate();
             repaint();
         }
         crear=new crear_vuelo();
         jframe.add(crear);
+        validate();
+        repaint();
     }
     
     public void modificarvuelo_Component(){
         if(crear!=null){
             jframe.remove(crear);
+            validate();
             repaint();
         }
         if(modificar!=null){
             jframe.remove(modificar);
+            validate();
             repaint();
         }
         if(agregar!=null){
             jframe.remove(agregar);
+            validate();
             repaint();
         }
         if(modificarav!=null){
             jframe.remove(modificarav);
+            validate();
             repaint();
         }
         modificar=new modificar_vuelo();
-        jframe.add(modificar);        
+        jframe.add(modificar);
+        validate();
+        repaint();
     }
     
     public void agregaravion_Component(){
         if(crear!=null){
             jframe.remove(crear);
+            validate();
             repaint();
         }
         if(modificar!=null){
             jframe.remove(modificar);
+            validate();
             repaint();
         }
         if(agregar!=null){
             jframe.remove(agregar);
+            validate();
             repaint();
         }
         if(modificarav!=null){
             jframe.remove(modificarav);
+            validate();
             repaint();
         }
         agregar=new agregar_avion();
         jframe.add(agregar);
+        validate();
+        repaint();
     }
     
     public void modificaravion_Component(){
         if(crear!=null){
             jframe.remove(crear);
+            validate();
             repaint();
         }
         if(modificar!=null){
             jframe.remove(modificar);
+            validate();
             repaint();
         }
         if(agregar!=null){
             jframe.remove(agregar);
+            validate();
             repaint();
         }
         if(modificarav!=null){
             jframe.remove(modificarav);
+            validate();
             repaint();
         }
         modificarav=new modificar_avion();
-        jframe.add(modificarav);        
+        jframe.add(modificarav);
+        validate();
+        repaint();
     }
     
     private void ventana_form(){

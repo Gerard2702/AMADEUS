@@ -129,7 +129,8 @@ public class estado_vuelos extends JPanel{
             "Editar"
             };
             db.conectar();
-            String sql="SELECT vuelos.idvuelos,vuelos.fecha,vuelos.hora_inicio,vuelos.hora_fin, CONCAT(ruta.origen,\"-\",ruta.destino) AS ruta,avion.codigo,estado.estado FROM vuelos,ruta,avion,estado where vuelos.estado_idestado=estado.idestado AND vuelos.ruta_idruta=ruta.idruta AND vuelos.avion_idavion=avion.idavion ORDER BY idvuelos DESC";
+            //OBTENER LOS VUELOS QUE SE ENCUENTREN ALMACENADOS
+            String sql="CALL Reservas_PA0005()";
             ResultSet rs = db.query(sql);
             rs.last();
             int numrows = rs.getRow();
@@ -178,7 +179,8 @@ public class estado_vuelos extends JPanel{
             String id=String.valueOf(jTable.getValueAt(row,0));
             try{
                 db.conectar();
-                String sqlupdate="UPDATE vuelos SET estado_idestado=2 WHERE idvuelos='"+id+"';";
+                //ACTUALIZAR EL ESTADO DEL VUELO A EN RUTA
+                String sqlupdate="CALL Reservas_PA0006('2','"+id+"')";
                 db.queryUpdate(sqlupdate);                                
                 db.desconectar();
                 JOptionPane.showMessageDialog(null, "Cambio de estado: Vuelo En Ruta");                
@@ -191,15 +193,16 @@ public class estado_vuelos extends JPanel{
             String id=String.valueOf(jTable.getValueAt(row,0));
             try{
                 db.conectar();
-                
-                String sqlupdate="UPDATE vuelos SET estado_idestado=3 WHERE idvuelos='"+id+"';";
+                //ACTUALIZAR EL ESTADO DEL VUELO A FINALIZADO
+                String sqlupdate="CALL Reservas_PA0006('3','"+id+"')";
                 db.queryUpdate(sqlupdate);                                
-                
-                String sqlidavion="SELECT avion_idavion FROM vuelos WHERE idvuelos='"+id+"';";
+                //OBTENER EL CODIGO DEL AVION DEL VUELO QUE SE MODIFICA ESTADO
+                String sqlidavion="CALL Reservas_PA0007('"+id+"')";
                 ResultSet rs22 = db.query(sqlidavion);
                 if(rs22.first()){
                     String idavion=rs22.getString("avion_idavion");
-                    String sqlupdate2="UPDATE Asientos SET Estado=0, Usuario=NULL WHERE avion_idavion='"+idavion+"'";
+                    //LIBERAR TODOS LOS ASIENTOS DEL AVION DE ESTE VUELO
+                    String sqlupdate2="CALL Reservas_PA0008('"+idavion+"')";
                     db.queryUpdate(sqlupdate2);
                 }
                 db.desconectar();
@@ -214,7 +217,8 @@ public class estado_vuelos extends JPanel{
     private void setRutas(){
         try{
             db.conectar();
-            String sql="SELECT CONCAT(ruta.origen,\"-\",ruta.destino) AS ruta FROM ruta";
+            //OBTENER LAS RUTAS ALMACENADAS EN BD
+            String sql="CALL Reservas_PA0002()";
             ResultSet rs = db.query(sql);
             while(rs.next()){
                 ruta.addItem(rs.getString("ruta"));                 
@@ -232,7 +236,8 @@ public class estado_vuelos extends JPanel{
         String origen=orgdes[0];
         String destino= orgdes[1];
         db.conectar();
-        String sql1="SELECT idruta FROM ruta WHERE origen='"+origen+"' AND destino='"+destino+"'";
+        //OBTENER RUTA POR ORIGEN Y DESTINO
+        String sql1="CALL Reservas_PA0003('"+origen+"','"+destino+"')";
         ResultSet rs1 = db.query(sql1);
         rs1.first();
         int rutars = rs1.getInt("idruta");
@@ -248,7 +253,8 @@ public class estado_vuelos extends JPanel{
             "Editar"
         };        
             db.conectar();
-            String sql="SELECT vuelos.idvuelos,vuelos.fecha,vuelos.hora_inicio,vuelos.hora_fin, CONCAT(ruta.origen,\"-\",ruta.destino) AS ruta,avion.codigo,estado.estado FROM vuelos,ruta,avion,estado where vuelos.estado_idestado=estado.idestado AND vuelos.ruta_idruta=ruta.idruta AND vuelos.avion_idavion=avion.idavion AND vuelos.ruta_idruta="+rutars+" ORDER BY idvuelos DESC";
+            //OBTENER VUELOS QUE COINCIDEN CON EL PARAMETRO DE BUSQUEDA
+            String sql="CALL Reservas_PA0009('"+rutars+"')";
             ResultSet rs = db.query(sql);
             rs.last();
             int numrows = rs.getRow();

@@ -93,16 +93,18 @@ public class validacion_usuario extends JTextField {
         
         database conn = new database();
         conn.conectar();
-        ResultSet rs = conn.query("SELECT usuario FROM usuarios WHERE usuario = '" + usuario + "'");
+        //SQL VALIDACION DE NO EXISTENCIA DE USUARIO INGRESADO
+        ResultSet rs = conn.query("CALL Users_PA0005('" + usuario + "')");
         int count = 0;
         while (rs.next()) {
             count++;
         }
         if(count > 0){
+            conn.desconectar();
             return true;
         }else{
+            conn.desconectar();
             return false;
-        }
-        //conn.desconectar();
+        }        
     }
 }

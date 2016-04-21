@@ -187,7 +187,8 @@ public class crear_reserva extends JPanel{
                 JOptionPane.showMessageDialog(null, "Seleccionado vuelo con Id: "+idvuelo);
                 lbloader.setVisible(false);  
             }
-        });        
+        });
+        jTvuelos.getColumnModel().getColumn(0).setPreferredWidth(30);
         jScrollvuelos.setViewportView(jTvuelos);
         jScrollvuelos.setBounds(10, 275, 690, 120);
         add(jScrollvuelos);
@@ -254,11 +255,13 @@ public class crear_reserva extends JPanel{
             try{
                 lbloader.setVisible(true);
                 db.conectar();
-                String sqlupdate="INSERT INTO usuarios_has_vuelos (usuarios_idusuarios,vuelos_idvuelos,clase_vuelo_idclase_vuelo,checkin,codigo) VALUES('"+idusuario+"','"+idvuelo+"','"+idclasevuelo+"','0','"+codigoreserva+"')";
+                //ALMACENAR UNA NUEVA RESERVA EN BD
+                String sqlupdate="CALL Reservas_PA0012('"+idusuario+"','"+idvuelo+"','"+idclasevuelo+"','0','"+codigoreserva+"')";
                 db.queryUpdate(sqlupdate);                                
                 db.desconectar(); 
                 db.conectar();
-                String sqlupdate2="UPDATE vuelos SET asientos_disponibles= asientos_disponibles- 1 WHERE idvuelos='"+idvuelo+"'";
+                //DISMINUIR EL NUMERO DE ASIENTOS DISPONIBLES EN AVION DE VUELO
+                String sqlupdate2="CALL Reservas_PA0013('"+idvuelo+"')";
                 db.queryUpdate(sqlupdate2);                                
                 db.desconectar(); 
                 JOptionPane.showMessageDialog(null, "Se ha creado la Resevacion");
@@ -300,7 +303,8 @@ public class crear_reserva extends JPanel{
         if(!busquser.getText().equals("")){
             try{
                 db.conectar();
-                String sql="SELECT usuarios.idusuarios,usuarios.nombre,usuarios.correo,usuarios.telefono FROM usuarios WHERE usuarios.nombre LIKE '%"+busquser.getText()+"%' AND usuarios.rol_idrol=3";
+                //BUSCAR USUARIO A RESERVAR EN BD
+                String sql="CALL Reservas_PA0014('%"+busquser.getText()+"%')";
                 ResultSet rs = db.query(sql);
                 rs.last();
                 int numrows = rs.getRow();
@@ -352,7 +356,8 @@ public class crear_reserva extends JPanel{
                 String selectvuelo=cBxrutavuelo.getSelectedItem().toString();
                 partes=selectvuelo.split("-");                
                 db.conectar();
-                String sql="SELECT vuelos.idvuelos,vuelos.fecha,vuelos.hora_inicio,vuelos.hora_fin,vuelos.asientos_disponibles,CONCAT(ruta.origen,\"-\",ruta.destino) AS ruta FROM vuelos,ruta WHERE vuelos.ruta_idruta=ruta.idruta AND vuelos.fecha='"+busqfecha.getText()+"' AND vuelos.ruta_idruta='"+partes[0]+"' AND vuelos.asientos_disponibles <> 0";
+                //BUSCAR VUELOS POR RUTA PARA RESERVACION
+                String sql="CALL Reservas_PA0015('"+busqfecha.getText()+"','"+partes[0]+"')";
                 ResultSet rs = db.query(sql);
                 rs.last();
                 int numrows = rs.getRow();
@@ -382,13 +387,15 @@ public class crear_reserva extends JPanel{
                     return !(this.getColumnClass(column).equals(String.class));
                 }            
                 });
-
+                
                 jTvuelos.setDefaultRenderer(JButton.class, new TableCellRenderer() {
                     @Override
                     public Component getTableCellRendererComponent(JTable jtable, Object objeto, boolean estaSeleccionado, boolean tieneElFoco, int fila, int columna) {
                         return (Component) objeto;
                     }
-                });            
+                });    
+                
+                jTvuelos.getColumnModel().getColumn(0).setPreferredWidth(30);
             }
             catch(Exception e){
                 JOptionPane.showMessageDialog(null, "Error en busqueda de vuelo . . .");
@@ -402,7 +409,8 @@ public class crear_reserva extends JPanel{
     public void clases_disponibles(){
         try{
             db.conectar();
-            String sql="SELECT CONCAT(clase_vuelo.idclase_vuelo,\"-\",clase_vuelo.clase,\"-$\",clase_vuelo.precio) AS clase FROM clase_vuelo";
+            //CLASES DE PARA VIAJAR EN VUELO
+            String sql="CALL Reservas_PA0016()";
             ResultSet rs = db.query(sql);
             while(rs.next()){
                 cBxclasevuelo.addItem(rs.getString("clase"));                 
@@ -417,7 +425,8 @@ public class crear_reserva extends JPanel{
     public void rutas_disponibles(){
         try{
             db.conectar();
-            String sql="SELECT CONCAT(ruta.idruta,\"-\",ruta.origen,\"-\",ruta.destino) AS ruta FROM ruta";
+            //OBTENER LAS RUTAS DISPONIBLES PARA VUELO
+            String sql="CALL Reservas_PA0017()";
             ResultSet rs = db.query(sql);
             while(rs.next()){
                 cBxrutavuelo.addItem(rs.getString("ruta"));                 

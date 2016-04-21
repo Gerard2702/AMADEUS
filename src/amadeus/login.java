@@ -24,6 +24,7 @@ public class login extends JFrame{
     private ImageIcon min1=new ImageIcon(this.getClass().getResource("/config/icons/min.png"));
     private ImageIcon min2=new ImageIcon(this.getClass().getResource("/config/icons/minhover.png"));
     private ImageIcon iconhead=new ImageIcon(this.getClass().getResource("/config/icons/avion_head.png"));
+    private static Point mouseDownCompCoords;
     database db = new database();
     
     public login(){
@@ -35,7 +36,31 @@ public class login extends JFrame{
         this.getContentPane().setBackground(new Color(255,255,255));
         this.setResizable(false);
         this.setIconImage(new ImageIcon(getClass().getResource("/config/icons/avion_icon.png")).getImage());
+        //MOVIMIENTO DE VENTANA
         this.setUndecorated(true);
+        this.setVisible(true);
+        this.addMouseListener(new MouseListener(){
+            public void mouseReleased(MouseEvent e) {
+                mouseDownCompCoords = null;
+            }
+            public void mousePressed(MouseEvent e) {
+                mouseDownCompCoords = e.getPoint();
+            }
+            public void mouseExited(MouseEvent e) {
+            }
+            public void mouseEntered(MouseEvent e) {
+            }
+            public void mouseClicked(MouseEvent e) {
+            }
+        });
+        this.addMouseMotionListener(new MouseMotionListener(){
+            public void mouseMoved(MouseEvent e) {
+            }
+            public void mouseDragged(MouseEvent e) {
+                Point currCoords = e.getLocationOnScreen();
+                setLocation(currCoords.x - mouseDownCompCoords.x, currCoords.y - mouseDownCompCoords.y);
+            }
+        });
         UIManager UI=new UIManager();
         UI.put("OptionPane.background",Color.WHITE);
         UI.put("Panel.background",Color.WHITE);
@@ -225,7 +250,8 @@ public class login extends JFrame{
         try {
             md5 cifra = new md5();
             db.conectar();
-            String sql = "SELECT * FROM usuarios WHERE usuario='"+usuario+"' AND pass='"+cifra.md5_encode(pass)+"'";
+            //SQL PARA VERIFICACION DE ACCESO DE USUARIO A SISTEMA
+            String sql = "CALL Login_PA0001('"+usuario+"','"+cifra.md5_encode(pass)+"')";
             ResultSet rs=db.query(sql);            
             if(rs.first()){              
                 caprol=rs.getString("rol_idrol");

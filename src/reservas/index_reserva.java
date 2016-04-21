@@ -36,6 +36,7 @@ public class index_reserva extends JFrame{
     private ImageIcon iconcheckin=new ImageIcon(this.getClass().getResource("/config/icons/checkin_icon.png"));
     private ImageIcon iconavionestado=new ImageIcon(this.getClass().getResource("/config/icons/avion_estado_vuelo.png"));
     private ImageIcon iconreserva=new ImageIcon(this.getClass().getResource("/config/icons/reserva_icon.png"));
+    private static Point mouseDownCompCoords;
     
     public index_reserva(String setuser,String setnombreusuario,Integer roluss){
         nombreuser=setnombreusuario;
@@ -50,7 +51,31 @@ public class index_reserva extends JFrame{
         this.getContentPane().setBackground(new Color(75,75,75));
         this.setResizable(false);
         this.setIconImage(new ImageIcon(getClass().getResource("/config/icons/avion_icon.png")).getImage());
+        //MOVIMIENTO DE VENTANA
         this.setUndecorated(true);
+        this.setVisible(true);
+        this.addMouseListener(new MouseListener(){
+            public void mouseReleased(MouseEvent e) {
+                mouseDownCompCoords = null;
+            }
+            public void mousePressed(MouseEvent e) {
+                mouseDownCompCoords = e.getPoint();
+            }
+            public void mouseExited(MouseEvent e) {
+            }
+            public void mouseEntered(MouseEvent e) {
+            }
+            public void mouseClicked(MouseEvent e) {
+            }
+        });
+        this.addMouseMotionListener(new MouseMotionListener(){
+            public void mouseMoved(MouseEvent e) {
+            }
+            public void mouseDragged(MouseEvent e) {
+                Point currCoords = e.getLocationOnScreen();
+                setLocation(currCoords.x - mouseDownCompCoords.x, currCoords.y - mouseDownCompCoords.y);
+            }
+        });       
     }
     
     public void initComponent(){
@@ -225,126 +250,161 @@ public class index_reserva extends JFrame{
     public void vuelosdisp_Component(){
         if(vuelos!=null){
             jframe.remove(vuelos);
+            validate();
             repaint();
         }
         if(estado!=null){
             jframe.remove(estado);
+            validate();
             repaint();
         }
         if(reserva!=null){
             jframe.remove(reserva);
+            validate();
             repaint();
         }
         if(checkin!=null){
             jframe.remove(checkin);
+            validate();
             repaint();
         }
         if(vereserva!=null){
             jframe.remove(vereserva);
+            validate();
             repaint();
         }
         vuelos=new vuelos_disponibles();
         jframe.add(vuelos);
+        validate();
+        repaint();
     }
     
     public void estadovuelos_Component(){
         if(vuelos!=null){
             jframe.remove(vuelos);
+            validate();
             repaint();
         }
         if(estado!=null){
             jframe.remove(estado);
+            validate();
             repaint();
         }
         if(reserva!=null){
             jframe.remove(reserva);
+            validate();
             repaint();
         }
         if(checkin!=null){
             jframe.remove(checkin);
+            validate();
             repaint();
         }
         if(vereserva!=null){
             jframe.remove(vereserva);
+            validate();
             repaint();
         }
         estado=new estado_vuelos();
-        jframe.add(estado);        
+        jframe.add(estado);
+        validate();
+        repaint();        
     }
     
     public void crearreserva_Component(){
         if(vuelos!=null){
             jframe.remove(vuelos);
+            validate();
             repaint();
         }
         if(estado!=null){
             jframe.remove(estado);
+            validate();
             repaint();
         }
         if(reserva!=null){
             jframe.remove(reserva);
+            validate();
             repaint();
         }
         if(checkin!=null){
             jframe.remove(checkin);
+            validate();
             repaint();
         }
         if(vereserva!=null){
             jframe.remove(vereserva);
+            validate();
             repaint();
         }
         reserva=new crear_reserva();
         jframe.add(reserva);
+        validate();
+        repaint();
     }
     
     public void checkin_Component(){
         if(vuelos!=null){
             jframe.remove(vuelos);
+            validate();
             repaint();
         }
         if(estado!=null){
             jframe.remove(estado);
+            validate();
             repaint();
         }
         if(reserva!=null){
             jframe.remove(reserva);
+            validate();
             repaint();
         }
         if(checkin!=null){
             jframe.remove(checkin);
+            validate();
             repaint();
         }
         if(vereserva!=null){
             jframe.remove(vereserva);
+            validate();
             repaint();
         }
         checkin=new check_in();
         jframe.add(checkin);
+        validate();
+        repaint();
     }
     
     public void verReserva_Component(){
         if(vuelos!=null){
             jframe.remove(vuelos);
+            validate();
             repaint();
         }
         if(estado!=null){
             jframe.remove(estado);
+            validate();
             repaint();
         }
         if(reserva!=null){
             jframe.remove(reserva);
+            validate();
             repaint();
         }
         if(checkin!=null){
             jframe.remove(checkin);
+            validate();
             repaint();
         }
         if(vereserva!=null){
             jframe.remove(vereserva);
+            validate();
             repaint();
         }
         vereserva=new ver_reservas();
         jframe.add(vereserva);
+        validate();
+        repaint();
     }
     
     private void ventana_form(){

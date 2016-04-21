@@ -25,7 +25,8 @@ public class index_usuarios extends JFrame{
     private ImageIcon min1=new ImageIcon(this.getClass().getResource("/config/icons/min.png"));
     private ImageIcon min2=new ImageIcon(this.getClass().getResource("/config/icons/minhover.png"));
     private ImageIcon iconhead=new ImageIcon(this.getClass().getResource("/config/icons/avion_head.png"));
-    private ImageIcon iconuser=new ImageIcon(this.getClass().getResource("/config/icons/user_icon.png")); 
+    private ImageIcon iconuser=new ImageIcon(this.getClass().getResource("/config/icons/user_icon.png"));
+    private static Point mouseDownCompCoords;
     
     public index_usuarios(String setuser,String setnombreusuario,Integer roluss){
         nombreuser=setnombreusuario;
@@ -44,7 +45,31 @@ public class index_usuarios extends JFrame{
         this.getContentPane().setBackground(new Color(75,75,75));
         this.setResizable(false);
         this.setIconImage(new ImageIcon(getClass().getResource("/config/icons/avion_icon.png")).getImage());
+        //MOVIMIENTO DE VENTANA
         this.setUndecorated(true);
+        this.setVisible(true);
+        this.addMouseListener(new MouseListener(){
+            public void mouseReleased(MouseEvent e) {
+                mouseDownCompCoords = null;
+            }
+            public void mousePressed(MouseEvent e) {
+                mouseDownCompCoords = e.getPoint();
+            }
+            public void mouseExited(MouseEvent e) {
+            }
+            public void mouseEntered(MouseEvent e) {
+            }
+            public void mouseClicked(MouseEvent e) {
+            }
+        });
+        this.addMouseMotionListener(new MouseMotionListener(){
+            public void mouseMoved(MouseEvent e) {
+            }
+            public void mouseDragged(MouseEvent e) {
+                Point currCoords = e.getLocationOnScreen();
+                setLocation(currCoords.x - mouseDownCompCoords.x, currCoords.y - mouseDownCompCoords.y);
+            }
+        });       
     }
     
     public void initComponent() throws SQLException{
@@ -104,7 +129,7 @@ public class index_usuarios extends JFrame{
             }
         });
         
-        btnNuevoUsuario = new JButton("Nuevo Usuario");
+        btnNuevoUsuario = new JButton("Nuevo Usuario             ");
         btnNuevoUsuario.setBounds(14, 131, 200, 50);
         btnNuevoUsuario.setIcon(iconuser);
         btnNuevoUsuario.setBackground(new Color(158,203,242));
@@ -139,50 +164,36 @@ public class index_usuarios extends JFrame{
     public void usuarios_Component() throws SQLException{
         if(usuarios!=null){
             jframe.remove(usuarios);
+            validate();
             repaint();
         }
         if(nuevoUsuario!=null){
             jframe.remove(nuevoUsuario);
+            validate();
             repaint();
         }
         usuarios=new usuarios();
         jframe.add(usuarios);
+        validate();
+        repaint();
     }
     
     public void nuevo_usuario_Component(){
         if(usuarios!=null){
             jframe.remove(usuarios);
+            validate();
             repaint();
         }
         if(nuevoUsuario!=null){
             jframe.remove(nuevoUsuario);
+            validate();
             repaint();
         }
         nuevoUsuario=new nuevo_usuario();
-        jframe.add(nuevoUsuario);        
-    }
-    
-    public void crearreserva_Component(){
-        if(usuarios!=null){
-            jframe.remove(usuarios);
-            repaint();
-        }
-        if(nuevoUsuario!=null){
-            jframe.remove(nuevoUsuario);
-            repaint();
-        }
-    }
-    
-    public void checkin_Component(){
-        if(usuarios!=null){
-            jframe.remove(usuarios);
-            repaint();
-        }
-        if(nuevoUsuario!=null){
-            jframe.remove(nuevoUsuario);
-            repaint();
-        }
-    }
+        jframe.add(nuevoUsuario);
+        validate();
+        repaint();
+    }   
     
     private void ventana_form(){
         

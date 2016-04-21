@@ -11,15 +11,7 @@ import javax.swing.table.DefaultTableModel;
 import validaciones.*;
 
 public class usuarios extends JPanel {
-
-    // JDBC driver name and database URL
-    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://localhost/amadeus";
-
-    // Database credentials
-    static final String USER = "root";
-    static final String PASS = "";
-
+    
     //Todos los usuarios
     private JLabel titulo,lbloader;
     private JButton btnEditarUsuario;
@@ -49,6 +41,8 @@ public class usuarios extends JPanel {
     private JComboBox txtEstado;
 
     private JButton btnGuardarCambios;
+    
+    database conn = new database();
 
     public usuarios() throws SQLException {
         initComponent();
@@ -61,7 +55,7 @@ public class usuarios extends JPanel {
     public void initComponent() {
         Font titulo1 = new Font("Calibri", 1, 19);
         
-        titulo = new JLabel("Usuarios Registrados");        
+        titulo = new JLabel("USUARIOS REGISTRADOS");        
         titulo.setBounds(10,10,300,50);
         titulo.setFont(titulo1);
         add(titulo);
@@ -78,7 +72,7 @@ public class usuarios extends JPanel {
         add(sep);  
 
         btnEditarUsuario = new JButton("Editar Usuario");
-        btnEditarUsuario.setBounds(480, 60, 200, 40);
+        btnEditarUsuario.setBounds(490, 65, 200, 30);
         btnEditarUsuario.setBackground(new Color(158, 203, 242));
         btnEditarUsuario.setBorderPainted(false);
         btnEditarUsuario.addMouseListener(new MouseAdapter() {
@@ -105,9 +99,10 @@ public class usuarios extends JPanel {
 
         //Instancias de clase
         ScrollPane = new JScrollPane();
-        ScrollPane.setBounds(10, 110, 670, 400);
+        ScrollPane.setBounds(15, 110, 675, 415);
 
         Table = new JTable();
+        Table.setRowHeight(20);
         
         ScrollPane.setViewportView(Table);
 
@@ -120,8 +115,8 @@ public class usuarios extends JPanel {
         lblNombre = new JLabel("Nombre:");
         lblCorreo = new JLabel("Correo:");
         lblUsuario = new JLabel("Usuario:");
-        lblPassword = new JLabel("Contraseña:");
-        lblCPassword = new JLabel("Nueva Contraseña:");
+        lblPassword = new JLabel("Nueva Contraseña:");
+        lblCPassword = new JLabel("Confirmar Contraseña:");
         lblTelefono = new JLabel("Telefono:");
         lblPasaporte = new JLabel("Pasaporte:");
         lblTarjetaCredito = new JLabel("Tarjeta de Credito:");
@@ -160,16 +155,6 @@ public class usuarios extends JPanel {
         txtEstado.setBounds(370, 420, 250, 30);
 
         btnGuardarCambios.setBounds(470, 460, 150, 30);
-
-        Font fontLabel = new Font("Dialog", Font.BOLD, 15);
-        lblNombre.setFont(fontLabel);
-        lblCorreo.setFont(fontLabel);
-        lblUsuario.setFont(fontLabel);
-        lblPassword.setFont(fontLabel);
-        lblCPassword.setFont(fontLabel);
-        lblTelefono.setFont(fontLabel);
-        lblPasaporte.setFont(fontLabel);
-        lblTarjetaCredito.setFont(fontLabel);
 
         btnGuardarCambios.setBackground(new Color(158, 203, 242));
         btnGuardarCambios.setBorderPainted(false);
@@ -225,13 +210,14 @@ public class usuarios extends JPanel {
 
     private void cargarUsuarios() throws SQLException {
         try {
+            
             //Definir las columnas del modelo de tabla
             DefaultTableModel objDTM = new DefaultTableModel();
             objDTM.setColumnIdentifiers(new Object[]{"Nombre", "Usuario", "Correo","Telefono","Estado"});
-
-            database conn = new database();
+            
             conn.conectar();
-            ResultSet rs = conn.query("SELECT nombre, usuario, correo, estado,telefono FROM usuarios");
+            //OBTENER TODOS LOS DATOS QUE SE ENCUENTRAN DE USUARIOS
+            ResultSet rs = conn.query("CALL Users_PA0001()");
 
             while (rs.next()) {
                 String estado="";
@@ -249,15 +235,15 @@ public class usuarios extends JPanel {
             conn.desconectar();
 
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Erro al cargar los usuarios.");
+            JOptionPane.showMessageDialog(null, "Error al cargar los usuarios. . .");
         }
     }
 
     private void cargarUsuarioSeleccionado(String usuario_selecto) throws SQLException {
-        try {
-            database conn = new database();
+        try {            
             conn.conectar();
-            ResultSet rs = conn.query("SELECT nombre, correo, usuario, pass, telefono, pasaporte, tarjeta_credito FROM usuarios WHERE usuario = '" + usuario_selecto + "'");
+            //OBTENER VALORES DE USUARIO SELECCIONADO PARA MODIFICAR
+            ResultSet rs = conn.query("CALL Users_PA0002('" + usuario_selecto + "')");
 
             while (rs.next()) {
                 txtNombre.setText(rs.getString("nombre"));
@@ -267,9 +253,10 @@ public class usuarios extends JPanel {
                 txtPasaporte.setText(rs.getString("pasaporte"));
             }
             conn.desconectar();
-
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Error al cargar los usuarios." + ex);
+        } 
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error al cargar los usuarios. . .");
+            conn.desconectar();
         }
     }
 
@@ -288,8 +275,6 @@ public class usuarios extends JPanel {
     }
 
     private void btnGuardarCambiosActionPerformed(ActionEvent evt) throws SQLException {
-        Connection conn = null;
-        Statement stmt = null;
         
         md5 cifra = new md5();
         
@@ -299,66 +284,46 @@ public class usuarios extends JPanel {
         
         char[] arrayCPassword = txtCPassword.getPassword();
         String cpassword = new String(arrayCPassword);
-        cpassword = cifra.md5_encode(cpassword);
+        cpassword = cifra.md5_encode(cpassword);   
         
-        database conn1 = new database();
-        conn1.conectar();
-        ResultSet rs1 = conn1.query("SELECT pass FROM usuarios WHERE pass = '" + password + "' AND usuario = '" + txtUsuario.getText() + "'");
-        int rowCount = 0;
-
-        while (rs1.next()) {
-            rowCount++;
-        }
-        conn1.desconectar();
-        
-        if(password.length() > 0 & cpassword.length() > 0 & rowCount > 0 & txtCorreo.valido() & txtTelefono.valido() & txtTarjetaCredito.valido()){ //Si se cumplen todas las validaciones
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-                conn = DriverManager.getConnection(DB_URL, USER, PASS);
-                stmt = conn.createStatement();
-
-                String nombre = txtNombre.getText();
-                String correo = txtCorreo.getText();
-                
-                String telefono = txtTelefono.getText();
-                String tarjetaCredito = txtTarjetaCredito.getText();
-                tarjetaCredito = cifra.md5_encode(tarjetaCredito);
-                String estadocombo = (String) txtEstado.getSelectedItem();
-                Integer estado=0;
-                if(estadocombo=="Activo"){
-                    estado=1;
-                }
-                if(estadocombo=="Inactivo"){
-                    estado=0;
-                }
-                String sql = "UPDATE usuarios SET estado = '" + estado + "' , correo = '" + correo + "', pass = '" + cpassword + "', telefono = '" + telefono + "', tarjeta_credito = '" + tarjetaCredito + "' WHERE nombre = '" + nombre + "'";
-                if (stmt.executeUpdate(sql) > 0) {
-                    JOptionPane.showMessageDialog(null, "Datos modificados correctamente.");
-                }
-            } catch (SQLException se) {
-                se.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
+        if(password.length() > 0 & cpassword.length() > 0 & txtCorreo.valido() & txtTelefono.valido() & txtTarjetaCredito.valido()){ //Si se cumplen todas las validaciones
+            if (password.equals(cpassword)) {
                 try {
-                    if (stmt != null) {
-                        conn.close();
+                    String nombre = txtNombre.getText();
+                    String correo = txtCorreo.getText();
+                    String usuario= txtUsuario.getText();
+                    String telefono = txtTelefono.getText();
+                    String tarjetaCredito = txtTarjetaCredito.getText();
+                    tarjetaCredito = cifra.md5_encode(tarjetaCredito);
+                    String estadocombo = (String) txtEstado.getSelectedItem();
+                    Integer estado = 0;
+                    if (estadocombo == "Activo") {
+                        estado = 1;
                     }
-                } catch (SQLException se) {
-                }
-                try {
-                    if (conn != null) {
-                        conn.close();
+                    if (estadocombo == "Inactivo") {
+                        estado = 0;
                     }
-                } catch (SQLException se) {
-                    se.printStackTrace();
+                    conn.conectar();
+                    //SQL MODIFICACION DE DATOS DE USUARIO ALMACENADO
+                    String sql = "CALL Users_PA0003('" + estado + "','" + correo + "','" + cpassword + "','" + telefono + "','" + tarjetaCredito + "','" + usuario + "')";
+                    conn.queryUpdate(sql);
+                    conn.desconectar();
+                    JOptionPane.showMessageDialog(null, "Usuario modificado corectamente");
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Error al editar usuario. . .");
+                    conn.desconectar();
                 }
+                this.removeAll();
+                initComponent();
+                cargarUsuarios();
+                validate();
+                repaint();
+            } 
+            else {
+                JOptionPane.showMessageDialog(null, "Contraseñas no coinciden. . .");
             }
-            this.removeAll();
-            initComponent();
-            cargarUsuarios();
-            repaint();
-        }else{
+        }
+        else{
             String mensaje = "CAMPOS INVALIDOS";
             if(!txtCorreo.valido())
                 mensaje += "\n-Campo 'Nombre' invalido.";
@@ -367,11 +332,8 @@ public class usuarios extends JPanel {
             if(!txtTelefono.valido())
                 mensaje += "\n-Campo 'Telefono' invalido.";
             if(!txtTarjetaCredito.valido())
-                mensaje += "\n-Campo 'Tarjeta' invalido.";
-            if(rowCount <= 0)
-                mensaje += "\n-Campo 'Contraseña' incorrecto.";
+                mensaje += "\n-Campo 'Tarjeta' invalido.";            
             JOptionPane.showMessageDialog(null, mensaje);
-        }
-        
+        }        
     }
 }

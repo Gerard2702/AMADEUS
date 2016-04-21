@@ -109,7 +109,8 @@ public class ver_reservas extends JPanel{
         
          try{
             db.conectar();
-            String sql="SELECT vuelos.fecha,usuarios_has_vuelos.codigo,usuarios.nombre,clase_vuelo.clase,CONCAT(ruta.origen,\"-\",ruta.destino) AS ruta,vuelos.hora_inicio,vuelos.hora_fin FROM usuarios_has_vuelos,usuarios,clase_vuelo,ruta,vuelos WHERE usuarios_has_vuelos.vuelos_idvuelos='"+idvuelo+"' AND usuarios_has_vuelos.usuarios_idusuarios=usuarios.idusuarios AND usuarios_has_vuelos.clase_vuelo_idclase_vuelo=clase_vuelo.idclase_vuelo AND usuarios_has_vuelos.vuelos_idvuelos=vuelos.idvuelos AND vuelos.ruta_idruta=ruta.idruta AND vuelos.estado_idestado=1";
+            //OBTENER RESERVAS CON ESTADO DISPONIBLES POR VUELO
+            String sql="CALL Reservas_PA0010('"+idvuelo+"')";
             ResultSet rs = db.query(sql);
             rs.last();
             int numrows = rs.getRow();
@@ -137,7 +138,8 @@ public class ver_reservas extends JPanel{
     public void mostrar_vuelos(){
         try{
             db.conectar();
-            String sql="SELECT CONCAT(vuelos.idvuelos,\"-\",ruta.origen,\" \",ruta.destino) AS vuelo FROM vuelos,ruta WHERE vuelos.estado_idestado=1 AND vuelos.ruta_idruta=ruta.idruta";
+            //OBTENER RUTAS DE VUELOS DISPONIBLES PARA VER RESERVAS
+            String sql="CALL Reservas_PA0011()";
             ResultSet rs = db.query(sql);            
             while(rs.next()){
                 cBxvuelos.addItem(rs.getString("vuelo"));

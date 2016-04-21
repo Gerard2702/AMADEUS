@@ -169,7 +169,8 @@ public class modificar_vuelo extends JPanel
         try{
             db.conectar();
             int idvuelo2 = Integer.parseInt(idvuelo);
-            String sql = "SELECT * FROM vuelos WHERE idvuelos='"+idvuelo2+"';";
+            //OBTENER LOS VUELOS ALMACENADOS EN CUALQUIER ESTADO
+            String sql = "CALL Vuelos_PA0007('"+idvuelo2+"')";
             ResultSet sd = db.query(sql);
             sd.first();            
             String fecha = sd.getString("fecha");
@@ -177,11 +178,13 @@ public class modificar_vuelo extends JPanel
             int idruta = sd.getInt("ruta_idruta"); 
             String hora1 = sd.getString("hora_inicio");
             String hora2 = sd.getString("hora_fin");
-            String sql2 = "SELECT * FROM ruta INNER JOIN aeropuertos WHERE ruta.idruta='"+idruta+"' AND aeropuertos.idaeropuertos=ruta.destino;";
+            //OBTENER VALORES DE RUTAS PARA VUELOS
+            String sql2 = "CALL Vuelos_PA0008('"+idruta+"')";
             ResultSet sd2 = db.query(sql2);
             sd2.first();
             String destino = sd2.getString("ciudad");
-            String sql3 = "SELECT * FROM avion WHERE idavion='"+idavion+"';";
+            //OBTENER TODOS LOS DATOS DE AVION
+            String sql3 = "CALL Vuelos_PA0009('"+idavion+"')";
             ResultSet sd3 = db.query(sql3);
             sd3.first();
             String codavion = sd3.getString("codigo");
@@ -191,7 +194,8 @@ public class modificar_vuelo extends JPanel
             cbxAvion.addItem(codavion);
             cbxAvion.setSelectedIndex(0);
             int indiceruta = 0, rutafinal = 0;
-            String sql4="SELECT avion.codigo FROM avion WHERE idavion NOT IN (SELECT idavion FROM vuelos WHERE avion.idavion = vuelos.avion_idavion) ORDER BY idavion";
+            //OBTENER AVIONES DISPONIBLES PARA VUELOS
+            String sql4="CALL Vuelos_PA0001()";
             ResultSet rs = db.query(sql4);
             rs.last(); 
             if(rs.getRow()==0){
@@ -204,7 +208,8 @@ public class modificar_vuelo extends JPanel
                      cbxAvion.addItem(idavion2);
                 }
             }
-            String sql5="SELECT * FROM aeropuertos";
+            //OBTENER TODOS LOS VALORES DE DESTINO DE VUELOS
+            String sql5="CALL Vuelos_PA0010()";
             ResultSet rs2 = db.query(sql5);
             rs2.last(); 
             if(rs2.getRow()==0){
@@ -257,7 +262,8 @@ public class modificar_vuelo extends JPanel
         };
         
         db.conectar();
-        String sql="SELECT *FROM vuelos where estado_idestado=1;";
+        //OBTENER TODOS LOS VUELOS EN ESTADO DISPONIBLE
+        String sql="CALL Vuelos_PA0011()";
         ResultSet rs = db.query(sql);
         rs.last();
         int numrows = rs.getRow();
@@ -266,14 +272,16 @@ public class modificar_vuelo extends JPanel
         int i = 0;
         while(rs.next()){
             datos[i][0]=rs.getString("idvuelos");
-            String sqldes="SELECT aeropuertos.ciudad FROM vuelos INNER JOIN ruta ON vuelos.ruta_idruta=ruta.idruta INNER JOIN aeropuertos ON aeropuertos.idaeropuertos=ruta.destino WHERE vuelos.idvuelos='"+rs.getString("idvuelos")+"'";
+            //OBTENER VALOR DE LA CIUDAD DEL AEROPUERTO
+            String sqldes="CALL Vuelos_PA0012('"+rs.getString("idvuelos")+"')";
             ResultSet rsdes=db.query(sqldes);
             rsdes.first();
             datos[i][1]=rsdes.getString("ciudad");
             datos[i][2]=rs.getString("fecha");
             datos[i][3]=rs.getString("hora_inicio");
             datos[i][4]=rs.getString("hora_fin");
-            String sqlavion= "SELECT avion.codigo FROM vuelos INNER JOIN avion ON vuelos.avion_idavion = avion.idavion WHERE vuelos.idvuelos='"+rs.getString("idvuelos")+"'";
+            //OBTENER EL CODIGO DEL AVION DEL VUELO
+            String sqlavion= "CALL Vuelos_PA0013('"+rs.getString("idvuelos")+"')";
             ResultSet rsavion = db.query(sqlavion);
             rsavion.first();
             datos[i][5]=rsavion.getString("codigo");
@@ -326,7 +334,8 @@ public class modificar_vuelo extends JPanel
                         int dialogResult = JOptionPane.showConfirmDialog (null, "¿Esta seguro que desea Eliminar el vuelo "+sb.toString()+" ?","Mensaje",JOptionPane.YES_NO_OPTION);
                         if(dialogResult == JOptionPane.YES_OPTION){
                             db.conectar();
-                            String sqldelete="DELETE FROM vuelos WHERE idvuelos='"+sb.toString()+"'";
+                            //ELIMINAR VALOR DE VUELO DE BD
+                            String sqldelete="CALL Vuelos_PA0014('"+sb.toString()+"')";
                             db.queryUpdate(sqldelete);
                             db.desconectar();
                             jScrollPane1.remove(jTable);
@@ -337,12 +346,11 @@ public class modificar_vuelo extends JPanel
                         }           
                        }
                        catch(Exception ex){
-                           JOptionPane.showMessageDialog(null,"Error al eliminar el vuelo"+ex);
+                           JOptionPane.showMessageDialog(null,"Error al eliminar Vuelo: Tiene Reservaciones");
                        }
                        
                    }
-                   if(columna==6){
-                    //JOptionPane.showMessageDialog(null, "Seleccionada la fila " + fila +"Columna "+columna + sb.toString());
+                   if(columna==6){                    
                     int dialogResult = JOptionPane.showConfirmDialog (null, "¿Esta seguro que desea Modificar el vuelo "+sb.toString()+" ?","Mensaje",JOptionPane.YES_NO_OPTION);
                         if(dialogResult == JOptionPane.YES_OPTION){
                             removeAll();
@@ -395,26 +403,26 @@ public class modificar_vuelo extends JPanel
         {
             try{
                     db.conectar();
-                    
-                    String sqlidestino = "SELECT * FROM aeropuertos WHERE ciudad='"+rutadestino+"';";
+                    //OBTENER TODOS LOS DESTINOS O CIUDADES PARA VUELOS
+                    String sqlidestino = "CALL Vuelos_PA0015('"+rutadestino+"')";
                     ResultSet iddesti = db.query(sqlidestino);
                     iddesti.first();                    
                     String idru = iddesti.getString("idaeropuertos");                    
-                    
-                    String sqlid="SELECT * FROM ruta WHERE origen='"+rutaorigen+"' AND destino='"+idru+"';";
+                    //OBTENER VALORES DE RUTA DE VUELOS
+                    String sqlid="CALL Vuelos_PA0016('"+rutaorigen+"','"+idru+"')";
                     ResultSet rsid = db.query(sqlid);
                     rsid.first();
                     int idruta = rsid.getInt("idruta");
-                    
-                    String sqlmale ="SELECT * FROM avion WHERE codigo='"+avion+"';";
+                    //OBTENER VALORES DE AVION POR EL CODIGO
+                    String sqlmale ="CALL Vuelos_PA0017('"+avion+"')";
                     ResultSet mal = db.query(sqlmale);
                     mal.first();
                     String maletasdis = mal.getString("maletas");
                     String asientosdis = mal.getString("asientos");
                     int idmod = mal.getInt("modelo_idmodelo");
                     int idavion = mal.getInt("idavion");                    
-                    
-                    String sqlupdate="UPDATE vuelos SET hora_inicio='"+horainicio+"', hora_fin='"+horafin+"',fecha='"+fecha+"',asientos_disponibles='"+asientosdis+"',maletas_disponibles='"+maletasdis+"',avion_idavion='"+idavion+"',avion_modelo_idmodelo='"+idmod+"',ruta_idruta='"+idruta+"'WHERE idvuelos='"+idvl+"';";
+                    //SQL PARA MODIFICAR EL VUELO EN BD
+                    String sqlupdate="CALL Vuelos_PA0018('"+horainicio+"','"+horafin+"','"+fecha+"','"+asientosdis+"','"+maletasdis+"','"+idavion+"','"+idmod+"','"+idruta+"','"+idvl+"')";
                     db.queryUpdate(sqlupdate);
                     JOptionPane.showMessageDialog(null,"MODIFICACIÓN EXITOSA");                    
                     db.desconectar();

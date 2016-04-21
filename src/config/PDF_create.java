@@ -53,18 +53,19 @@ public class PDF_create {
         
         try{
             db.conectar();
-            String sql="SELECT usuarios_idusuarios,vuelos_idvuelos FROM usuarios_has_vuelos WHERE codigo='"+codigoreserva+"'";
+            //SQL PARA OBTENER DATOS DE USUARIO DE LA RESERVA GENERADA
+            String sql="CALL PDF_PA0001('"+codigoreserva+"')";
             ResultSet rs = db.query(sql);
             rs.first();
             iduser=rs.getString("usuarios_idusuarios");
             idvuelo=rs.getString("vuelos_idvuelos");            
-            
-            String sql1="SELECT nombre FROM usuarios WHERE idusuarios='"+iduser+"'";
+            //SQL PARA OBTENER DATOS DE USUARIO DE LA RESERVA GENERADA
+            String sql1="CALL PDF_PA0002('"+iduser+"')";
             ResultSet rs1 = db.query(sql1);
             rs1.first();
             nombre=rs1.getString("nombre");
-
-            String sql2="SELECT vuelos.fecha,vuelos.hora_inicio,vuelos.hora_fin,ruta.origen,ruta.destino FROM vuelos,ruta WHERE vuelos.idvuelos='"+idvuelo+"' AND vuelos.ruta_idruta=ruta.idruta";
+            //SQL PARA OBTENER DATOS DE USUARIO DE LA RESERVA GENERADA
+            String sql2="CALL PDF_PA0003('"+idvuelo+"')";
             ResultSet rs2= db.query(sql2);
             rs2.first();
             salida=rs2.getString("hora_inicio");

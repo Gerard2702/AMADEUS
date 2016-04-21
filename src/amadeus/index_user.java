@@ -9,6 +9,11 @@ import java.awt.event.*;
 import javax.swing.*;
 import reservas.index_reserva;
 import vuelos.index_vuelo;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import javax.swing.JFrame;
 /**
  *
  * @author Familia Aparicio
@@ -28,6 +33,7 @@ public class index_user extends JFrame{
     private ImageIcon min2=new ImageIcon(this.getClass().getResource("/config/icons/minhover.png"));
     private ImageIcon iconhead=new ImageIcon(this.getClass().getResource("/config/icons/avion_head.png"));
     private ImageIcon iconloader=new ImageIcon(this.getClass().getResource("/config/icons/loader.gif"));
+    private static Point mouseDownCompCoords;
     /**
      * @param args the command line arguments
      */
@@ -35,7 +41,7 @@ public class index_user extends JFrame{
         nombreuser=setnombreusuario;
         nombreuserin=setuser;
         initComponent();        
-        this.setSize(430,350);
+        this.setSize(430,360);
         this.setLocationRelativeTo(null);
         this.setTitle("Amadeus empleado");
         setLayout(null);
@@ -43,13 +49,37 @@ public class index_user extends JFrame{
         this.getContentPane().setBackground(new Color(75,75,75));
         this.setResizable(false);
         this.setIconImage(new ImageIcon(getClass().getResource("/config/icons/avion_icon.png")).getImage());
-        this.setUndecorated(true);        
+        //MOVIMIENTO DE VENTANA
+        this.setUndecorated(true);
+        this.setVisible(true);
+        this.addMouseListener(new MouseListener(){
+            public void mouseReleased(MouseEvent e) {
+                mouseDownCompCoords = null;
+            }
+            public void mousePressed(MouseEvent e) {
+                mouseDownCompCoords = e.getPoint();
+            }
+            public void mouseExited(MouseEvent e) {
+            }
+            public void mouseEntered(MouseEvent e) {
+            }
+            public void mouseClicked(MouseEvent e) {
+            }
+        });
+        this.addMouseMotionListener(new MouseMotionListener(){
+            public void mouseMoved(MouseEvent e) {
+            }
+            public void mouseDragged(MouseEvent e) {
+                Point currCoords = e.getLocationOnScreen();
+                setLocation(currCoords.x - mouseDownCompCoords.x, currCoords.y - mouseDownCompCoords.y);
+            }
+        });
     }
     
     public void initComponent(){
         
-        jframe.setBounds(0,0,430,350);
-        jframe.setBorder(BorderFactory.createLineBorder(new Color(220,220,220), 1));
+        jframe.setBounds(0,0,430,360);
+        jframe.setBorder(BorderFactory.createLineBorder(new Color(190,190,190), 1));
         jframe.setLayout(null);
         jframe.setBackground(new Color(255,255,255)); 
         
@@ -57,7 +87,7 @@ public class index_user extends JFrame{
         
         indexadmin=new JPanel();
         indexadmin.setBackground(new Color(255,255,255));
-        indexadmin.setBounds(5, 30, 420, 340);
+        indexadmin.setBounds(5, 30, 420, 320);
         indexadmin.setLayout(null);
         
         imglogo=new JLabel();
@@ -133,7 +163,7 @@ public class index_user extends JFrame{
     public void modulo_vuelos(){
         //INSTANCIAR CLASE DE MODULO DE VUELOS
         lbloader.setVisible(true);
-        index_vuelo vuelo = new index_vuelo(nombreuserin, nombreuser, 1);
+        index_vuelo vuelo = new index_vuelo(nombreuserin, nombreuser, 2);
         lbloader.setVisible(false);
         this.setVisible(false);
         vuelo.setVisible(true);

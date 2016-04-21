@@ -77,18 +77,16 @@ public class modificar_avion extends JPanel{
 
         try{ 
             
-            String[] columnas = new String[]{
-            "#",
+        String[] columnas = new String[]{
+            "No",
             "Codigo",
             "Asientos",
             "Maletas",
             "Modelo",
-            "Estado",
-            "Ruta Aerea"
-            };
+            "Estado"
+        };
 
         final Class[] tiposColumnas = new Class[]{
-            String.class,
             String.class,
             String.class,
             String.class,
@@ -98,38 +96,28 @@ public class modificar_avion extends JPanel{
         };
         
         db.conectar();
-        String sql="SELECT avion.codigo,avion.asientos,avion.maletas,modelo.modelo,estado.estado,ruta.origen,ruta.destino FROM avion LEFT JOIN vuelos ON vuelos.avion_idavion=avion.idavion LEFT JOIN estado ON estado.idestado=vuelos.estado_idestado LEFT JOIN ruta ON ruta.idruta=vuelos.ruta_idruta LEFT JOIN modelo ON modelo.idmodelo=avion.idavion;";
+        //OBTENER LOS AVIONES ALMACENADOS EN BD
+        String sql="CALL Vuelos_PA0025()";
         ResultSet rs = db.query(sql);
         rs.last();
         int numrows = rs.getRow();
-        Object [][]datos = new Object[numrows][7];
+        Object [][]datos = new Object[numrows][6];
         rs.beforeFirst();
         int i = 0;
+        String estado; 
         while(rs.next()){
-            datos[i][0]=i;
-            /*String sqldes="SELECT aeropuertos.ciudad FROM vuelos INNER JOIN ruta ON vuelos.ruta_idruta=ruta.idruta INNER JOIN aeropuertos ON aeropuertos.idaeropuertos=ruta.destino WHERE vuelos.idvuelos='"+rs.getString("idvuelos")+"'";
-            ResultSet rsdes=db.query(sqldes);
-            rsdes.first();*/
+            datos[i][0]=i+1;           
             datos[i][1]=rs.getString("codigo");
             datos[i][2]=rs.getString("asientos");
             datos[i][3]=rs.getString("maletas");
             datos[i][4]=rs.getString("modelo");
-            /*String sqlavion= "SELECT avion.codigo FROM vuelos INNER JOIN avion ON vuelos.avion_idavion = avion.idavion WHERE vuelos.idvuelos='"+rs.getString("idvuelos")+"'";
-            ResultSet rsavion = db.query(sqlavion);
-            rsavion.first();*/
-            if(rs.getString("estado")==null){
+            estado=rs.getString("estado");
+            if(estado==null){
                 datos[i][5]="Disponible";
             }
-            else{
-                datos[i][5]=rs.getString("estado");
-            }
-            if(rs.getString("origen")==null){
-                datos[i][6]="No Asignada";
-            }
-            else{
-                datos[i][6]= rs.getString("origen")+" - "+rs.getString("destino");
-            }
-            
+            else{                
+                datos[i][5]="Ocupado";
+            }           
             i++;
         }
         db.desconectar();
@@ -149,24 +137,10 @@ public class modificar_avion extends JPanel{
                 return !(this.getColumnClass(column).equals(String.class));
             }
             
-        });
-
-
-
-      
-        
-        jTable.getColumnModel().getColumn(0).setPreferredWidth(15);
-        jTable.getColumnModel().getColumn(1).setPreferredWidth(100);
-        jTable.getColumnModel().getColumn(2).setPreferredWidth(75);
-        jTable.getColumnModel().getColumn(3).setPreferredWidth(75);
-        jTable.getColumnModel().getColumn(3).setPreferredWidth(75);
-        jTable.getColumnModel().getColumn(4).setPreferredWidth(75);
-        jTable.getColumnModel().getColumn(5).setPreferredWidth(80);
-        jTable.getColumnModel().getColumn(6).setPreferredWidth(80);
-                
+        });               
         }
         catch(Exception e){
-           JOptionPane.showMessageDialog(null, "Seleccionada la fila "+ e); 
+           JOptionPane.showMessageDialog(null, "ERROR OBTENIENDO INFORMACION DE AVIONES. . ."); 
         }            
     }
           

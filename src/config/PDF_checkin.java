@@ -47,32 +47,33 @@ public class PDF_checkin {
         
         try{
             db.conectar();
-            String sql="SELECT usuarios_idusuarios,vuelos_idvuelos,clase_vuelo_idclase_vuelo FROM usuarios_has_vuelos WHERE codigo='"+codigoreserva+"'";
+            //OBTENER DATOS DE USUARIO PARA GENERAR TICKET ELECTRONICO
+            String sql="CALL PDF_PA0004('"+codigoreserva+"')";
             ResultSet rs = db.query(sql);
             rs.first();
             iduser=rs.getString("usuarios_idusuarios");
             idvuelo=rs.getString("vuelos_idvuelos");
             idclase=rs.getString("clase_vuelo_idclase_vuelo");
-            
-            String sql2="SELECT nombre FROM usuarios WHERE idusuarios='"+iduser+"'";
+            //OBTENER DATOS DE USUARIO PARA GENERAR TICKET ELECTRONICO
+            String sql2="CALL PDF_PA0005('"+iduser+"')";
             ResultSet rs2 = db.query(sql2);
             rs2.first();
             nombre=rs2.getString("nombre");
-            
-            String sql3="SELECT vuelos.avion_idavion,vuelos.fecha,ruta.origen,ruta.destino FROM vuelos,ruta WHERE vuelos.idvuelos='"+idvuelo+"' AND vuelos.ruta_idruta=ruta.idruta";
+            //OBTENER DATOS DE USUARIO PARA GENERAR TICKET ELECTRONICO
+            String sql3="CALL PDF_PA0006('"+idvuelo+"')";
             ResultSet rs3 = db.query(sql3);
             rs3.first();
             origen=rs3.getString("origen");
             destino=rs3.getString("destino");
             fecha=rs3.getString("fecha");
             idavion=rs3.getString("avion_idavion");
-            
-            String sql4="SELECT clase FROM clase_vuelo WHERE idclase_vuelo='"+idclase+"'";
+            //OBTENER DATOS DE USUARIO PARA GENERAR TICKET ELECTRONICO
+            String sql4="CALL PDF_PA0007('"+idclase+"')";
             ResultSet rs4 = db.query(sql4);
             rs4.first();
             clase=rs4.getString("clase");
-            
-            String sql5="SELECT Nombre_Asiento FROM Asientos WHERE avion_idavion='"+idavion+"' AND Usuario='"+iduser+"'";
+            //OBTENER DATOS DE USUARIO PARA GENERAR TICKET ELECTRONICO
+            String sql5="CALL PDF_PA0008('"+idavion+"','"+iduser+"')";
             ResultSet rs5 = db.query(sql5);
             if(rs5.first()) {                                
                 asiento=rs5.getString("Nombre_Asiento");

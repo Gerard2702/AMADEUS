@@ -11,21 +11,12 @@ import config.*;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static usuarios.usuarios.DB_URL;
 import validaciones.*;
 /**
  *
  * @author Familia Aparicio
  */
 public class nuevo_usuario extends JPanel{
-    
-    // JDBC driver name and database URL
-    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://localhost/amadeus";
-    
-    // Database credentials
-    static final String USER = "root";
-    static final String PASS = "";
     
     //Nuevo usuario
     private JLabel titulo,lbloader;    
@@ -49,6 +40,8 @@ public class nuevo_usuario extends JPanel{
     private ImageIcon iconloader=new ImageIcon(this.getClass().getResource("/config/icons/loader.gif"));
     private JButton btnRegistar;
     
+    database conn = new database();
+    
     public nuevo_usuario(){
         initComponent();
         setLayout(null);
@@ -59,7 +52,7 @@ public class nuevo_usuario extends JPanel{
     public void initComponent(){
         Font titulo1 = new Font("Calibri", 1, 19);
         
-        titulo = new JLabel("Nuevo Usuario");        
+        titulo = new JLabel("NUEVO USUARIO");        
         titulo.setBounds(10,10,300,50);
         titulo.setFont(titulo1);
         add(titulo);
@@ -116,17 +109,7 @@ public class nuevo_usuario extends JPanel{
         txtTarjetaCredito.setBounds(370, 340, 250, 30);
         txtTipoUsuario.setBounds(370, 380, 250, 30);
 
-        btnRegistar.setBounds(470, 435, 150, 30);
-
-        Font fontLabel = new Font("Dialog", Font.BOLD, 15);
-        lblNombre.setFont(fontLabel);
-        lblCorreo.setFont(fontLabel);
-        lblUsuario.setFont(fontLabel);
-        lblPassword.setFont(fontLabel);
-        lblTelefono.setFont(fontLabel);
-        lblPasaporte.setFont(fontLabel);
-        lblTarjetaCredito.setFont(fontLabel);
-        lblTipoUsuario.setFont(fontLabel);
+        btnRegistar.setBounds(470, 435, 150, 30);        
 
         btnRegistar.setBackground(new Color(158, 203, 242));
         btnRegistar.setBorderPainted(false);
@@ -183,16 +166,11 @@ public class nuevo_usuario extends JPanel{
     }
     
     private void btnRegistrarActionPerformed(ActionEvent evt) throws SQLException {
-        Connection conn = null;
-        Statement stmt = null;
-        
+         
         char[] arrayPassword = txtPassword.getPassword(); 
         String password = new String(arrayPassword);
         if(password.length() > 0 & txtNombre.valido()  & txtCorreo.valido() & txtUsuario.valido() & txtPasaporte.valido() & txtTelefono.valido() & txtTarjetaCredito.valido()){ //Si se cumplen todas las validaciones
             try {
-                Class.forName("com.mysql.jdbc.Driver");
-                conn = DriverManager.getConnection(DB_URL, USER, PASS);
-                stmt = conn.createStatement();
                 
                 md5 cifra = new md5();
 
@@ -212,33 +190,20 @@ public class nuevo_usuario extends JPanel{
                     tipoUser = 2;
                 else if(tipoUsuario == "Cliente")
                     tipoUser = 3;
-
-                String sql = "INSERT INTO usuarios (rol_idrol, estado, nombre, correo, usuario, pass, telefono, pasaporte, tarjeta_credito) VALUES ('" + tipoUser + "', '0', '" + nombre + "', '" + correo + "', '" + usuario + "', '" + password + "', '" + telefono + "', '" + pasaporte + "', '" + tarjetaCredito + "')";
-                if (stmt.executeUpdate(sql) > 0) {
-                    JOptionPane.showMessageDialog(null, "Usuario Registrado correctamente.");
-                    limpiarTextField();
-                }
                 
-            } catch (SQLException se) {
-                se.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (stmt != null) {
-                        conn.close();
-                    }
-                } catch (SQLException se) {
-                }
-                try {
-                    if (conn != null) {
-                        conn.close();
-                    }
-                } catch (SQLException se) {
-                    se.printStackTrace();
-                }
-            }
-        }else{
+                conn.conectar();
+                //SQL PARA INGRESAR NUEVO USUARIO A BD
+                String sql = "CALL Users_PA0004('" + tipoUser + "','" + nombre + "','" + correo + "','" + usuario + "','" + password + "','" + telefono + "','" + pasaporte + "','" + tarjetaCredito + "')";                
+                JOptionPane.showMessageDialog(null, "Usuario Registrado correctamente.");
+                conn.queryUpdate(sql);
+                conn.desconectar();
+                limpiar_ingreso();
+            } 
+            catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Error al almacenar usuario. . .");
+            } 
+        }
+        else{
             String mensaje = "CAMPOS INVALIDOS";
             if(!txtNombre.valido())
                 mensaje += "\n-Campo 'Nombre' invalido.";
@@ -260,5 +225,15 @@ public class nuevo_usuario extends JPanel{
                 mensaje += "\n-Campo 'Usuario' ya existe, ingrese un 'Usuario' diferente.";
             JOptionPane.showMessageDialog(null, mensaje);
         }     
+    }
+    
+    private void limpiar_ingreso(){
+        txtNombre.setText("");
+        txtCorreo.setText("");
+        txtUsuario.setText("");
+        txtPassword.setText("");
+        txtTelefono.setText("");
+        txtPasaporte.setText("");
+        txtTarjetaCredito.setText("");
     }
 }

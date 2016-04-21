@@ -92,13 +92,8 @@ public class check_in extends JPanel {
                 } else {
                     try {
                         db.conectar();
-                        String sql = "SELECT usuarios_has_vuelos.checkin, usuarios.nombre, usuarios.pasaporte, vuelos.hora_inicio, vuelos.hora_fin, ruta.origen, ruta.destino, clase_vuelo.clase\n"
-                                + "FROM usuarios usuarios\n"
-                                + "INNER JOIN usuarios_has_vuelos usuarios_has_vuelos ON usuarios.idusuarios = usuarios_has_vuelos.usuarios_idusuarios\n"
-                                + "INNER JOIN vuelos vuelos ON usuarios_has_vuelos.vuelos_idvuelos = vuelos.idvuelos\n"
-                                + "INNER JOIN clase_vuelo clase_vuelo ON clase_vuelo.idclase_vuelo = usuarios_has_vuelos.clase_vuelo_idclase_vuelo\n"
-                                + "INNER JOIN ruta ruta ON vuelos.ruta_idruta = ruta.idruta\n"
-                                + "WHERE usuarios_has_vuelos.codigo = '" + jtfcod_reserva.getText() + "';";
+                        //OBTENER LOS DATOS DE USUARIO POR EL CODIGO DE RESERVACION DE VUELO
+                        String sql = "CALL Reservas_PA0018('"+jtfcod_reserva.getText()+"')";
                         ResultSet rs = db.query(sql);
                         if (rs.first()) {
                             if (Integer.parseInt(rs.getString("usuarios_has_vuelos.checkin")) == 1) {
@@ -115,8 +110,8 @@ public class check_in extends JPanel {
                                 jtfdestino.setText(rs.getString("ruta.destino"));
                                 jtfhora_fin.setText(rs.getString("vuelos.hora_fin"));
                                 jtfclase.setText(rs.getString("clase_vuelo.clase"));
-                                
-                                String query11="SELECT vuelos.avion_idavion, usuarios_has_vuelos.usuarios_idusuarios FROM vuelos,usuarios_has_vuelos WHERE usuarios_has_vuelos.codigo='"+ jtfcod_reserva.getText() +"' AND usuarios_has_vuelos.vuelos_idvuelos=vuelos.idvuelos ";
+                                //OBTENER VALORES DE AVION Y USUARIO PARA CHECKIN
+                                String query11="CALL Reservas_PA0019('"+jtfcod_reserva.getText()+"')";
                                 ResultSet rs22 = db.query(query11);
                                 if (rs22.first()) {
                                     iduser=rs22.getString("usuarios_idusuarios");
@@ -254,7 +249,8 @@ public class check_in extends JPanel {
                         JOptionPane.showMessageDialog(null, "Favor validar campos, campos vacios");
                     } else {
                         db.conectar();
-                        String sqlupdate = "UPDATE usuarios_has_vuelos SET usuarios_has_vuelos.checkin=1 WHERE usuarios_has_vuelos.codigo='" + jtfcod_reserva.getText() + "'";
+                        //CAMBIAR ESTADO A CHECKIN EN BD
+                        String sqlupdate = "CALL Reservas_PA0020('"+jtfcod_reserva.getText()+"')";
                         db.queryUpdate(sqlupdate);
                         db.desconectar();
                         
@@ -263,7 +259,8 @@ public class check_in extends JPanel {
                         partes=asientoselect.split("-");
                         String idasientoinsert=partes[0];
                         db.conectar();
-                        String sql890 = "UPDATE Asientos SET Estado=1,Usuario='"+iduser+"' WHERE idAsientos='"+idasientoinsert+"' AND avion_idavion='"+idavion+"'";
+                        //RESERVAR EL ASIENTO DE USUARIO
+                        String sql890 = "CALL Reservas_PA0021('"+iduser+"','"+idasientoinsert+"','"+idavion+"')";
                         db.queryUpdate(sql890);
                         db.desconectar();
                         
@@ -324,7 +321,8 @@ public class check_in extends JPanel {
     public void asientos_disponibles(){
         try{
             db.conectar();
-            String query22="SELECT CONCAT(Asientos.idAsientos,\"-\",Asientos.Nombre_Asiento) AS asiento FROM Asientos WHERE Asientos.Estado=0 AND Asientos.avion_idavion='"+idavion+"'";
+            //OBTENER LOS ASIENTOS DISPONIBLES PARA CLIENTE
+            String query22="CALL Reservas_PA0022('"+idavion+"')";
             ResultSet rs33 = db.query(query22);
             while(rs33.next()){
                 Cbxasientos.addItem(rs33.getString("asiento"));

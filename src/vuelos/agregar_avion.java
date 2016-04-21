@@ -129,7 +129,8 @@ public class agregar_avion extends JPanel
         combomodelos.setBounds(175, 200, 300, 25);  
         try{
         db.conectar();
-        String sql="SELECT * FROM modelo";
+        //OBTENER TODOS LOS MODELOS DE AVION DISPONIBLES
+        String sql="CALL Vuelos_PA0019()";
         ResultSet rs = db.query(sql);
         rs.last(); 
         if(rs.getRow()==0){
@@ -150,7 +151,7 @@ public class agregar_avion extends JPanel
         add(combomodelos);
         
         btnAgregar = new JButton("Agregar Nuevo");
-        btnAgregar.setBounds(350, 230, 125, 20);
+        btnAgregar.setBounds(350, 235, 125, 25);
         btnAgregar.setBackground(new Color(158,203,242));        
         btnAgregar.setBorderPainted(false);
         btnAgregar.addMouseListener(new MouseAdapter() {
@@ -172,7 +173,8 @@ public class agregar_avion extends JPanel
                     if(modelo.trim().equals("")){}
                     else{
                     db.conectar();
-                    String sql="INSERT INTO modelo (modelo) VALUES('"+modelo+"')";
+                    //INGRESAR NUEVO MODELO DE AVION A LA BD
+                    String sql="CALL Vuelos_PA0020('"+modelo+"')";
                     db.queryUpdate(sql);
                     db.desconectar();
                     combomodelos.addItem(modelo);
@@ -259,24 +261,24 @@ public class agregar_avion extends JPanel
                 String modelo = combomodelos.getSelectedItem().toString();
                 try{                    
                     db.conectar();
-                    
-                    String sqlid="SELECT * FROM modelo WHERE modelo='"+modelo+"';";
+                    //OBTENER LOS MODELOS DE AVION DE BD
+                    String sqlid="CALL Vuelos_PA0021('"+modelo+"')";
                     ResultSet rsid = db.query(sqlid);
                     rsid.first();
                     String idmodelo = rsid.getString("idmodelo");
-                    
-                    String sqlcod="SELECT * FROM avion ORDER BY idavion";
+                    //OBTENER TODOS LOS AVIONES DE LA BD
+                    String sqlcod="CALL Vuelos_PA0022()";
                     ResultSet rscod= db.query(sqlcod);
                     rscod.last();
                     int idlast;
                     if(rscod.getRow()==0){idlast=0;}
-                    else{ idlast = Integer.parseInt(rscod.getString("idavion"));}
-                    
+                    else{ idlast = Integer.parseInt(rscod.getString("idavion"));}                    
                     String codigo = "AM-ARL-"+(idlast+1);
-                    String sqlinsert="INSERT INTO avion (codigo,asientos,maletas,modelo_idmodelo) VALUES ('"+codigo+"','"+asientos+"','"+maletas+"','"+idmodelo+"')";
+                    //SQL PARA INSERTAR UN NUEVO AVION A BD
+                    String sqlinsert="CALL Vuelos_PA0023('"+codigo+"','"+asientos+"','"+maletas+"','"+idmodelo+"')";
                     db.queryUpdate(sqlinsert);
-                    
-                    String sqlcodf="SELECT * FROM avion ORDER BY idavion";
+                    //OBTENER TODOS LOS AVIONES DE LA BD
+                    String sqlcodf="CALL Vuelos_PA0022()";
                     ResultSet rscodf= db.query(sqlcodf);
                     rscodf.last();
                     int idavi = rscodf.getInt("idavion");                    
@@ -287,19 +289,22 @@ public class agregar_avion extends JPanel
                     for(int i=0; i < turista; i++)
                     {
 			nomb = "TR-"+(i+1);
-                        String sqlasi1 = "INSERT INTO asientos (nombre_asiento, estado, avion_idavion) VALUES ('"+nomb+"','"+0+"','"+idavi+"')";
+                        //INGRESAR ASIENTOS DE CLASE TURISTA
+                        String sqlasi1 = "CALL Vuelos_PA0024('"+nomb+"','"+0+"','"+idavi+"')";
                         db.queryUpdate(sqlasi1);
                     }
                     for(int j=0; j < bussines; j++)
                     {
 			nomb = "BS-"+(j+1);
-                        String sqlasi2 = "INSERT INTO asientos (nombre_asiento, estado, avion_idavion) VALUES ('"+nomb+"','"+0+"','"+idavi+"')";
+                        //INGRESAR ASIENTOS DE CLASE EJECUTIVA
+                        String sqlasi2 = "CALL Vuelos_PA0024('"+nomb+"','"+0+"','"+idavi+"')";
                         db.queryUpdate(sqlasi2);
                     }
                     for(int k=0; k < firtclass; k++)
                     {
 			nomb = "FC-"+(k+1);
-                        String sqlasi3 = "INSERT INTO asientos (nombre_asiento, estado, avion_idavion) VALUES ('"+nomb+"','"+0+"','"+idavi+"')";
+                        //INGRESAR ASIENTOS DE PRIMERA CLASE
+                        String sqlasi3 = "CALL Vuelos_PA0024('"+nomb+"','"+0+"','"+idavi+"')";
                         db.queryUpdate(sqlasi3);
                     }                    
                     db.desconectar();
@@ -324,4 +329,3 @@ public class agregar_avion extends JPanel
     }
     
 }
-

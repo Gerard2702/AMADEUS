@@ -108,7 +108,8 @@ public class vuelos_disponibles extends JPanel{
             "Estado"
             };
             db.conectar();
-            String sql="SELECT vuelos.idvuelos,vuelos.fecha,vuelos.hora_inicio,vuelos.hora_fin, CONCAT(ruta.origen,\"-\",ruta.destino) AS ruta,avion.codigo,estado.estado FROM vuelos,ruta,avion,estado where estado_idestado=1 AND vuelos.estado_idestado=estado.idestado AND vuelos.ruta_idruta=ruta.idruta AND vuelos.avion_idavion=avion.idavion";
+            //OBTENER LOS VUELOS DISPONIBLES YA CREADOS EN BD
+            String sql="CALL Reservas_PA0001()";
             ResultSet rs = db.query(sql);
             rs.last();
             int numrows = rs.getRow();
@@ -136,7 +137,8 @@ public class vuelos_disponibles extends JPanel{
     private void setRutas(){
         try{
             db.conectar();
-            String sql="SELECT CONCAT(ruta.origen,\"-\",ruta.destino) AS ruta FROM ruta";
+            //OBTENER LAS RUTAS ALMACENADAS EN BD
+            String sql="CALL Reservas_PA0002()";
             ResultSet rs = db.query(sql);
             while(rs.next()){
                 ruta.addItem(rs.getString("ruta"));                 
@@ -152,12 +154,13 @@ public class vuelos_disponibles extends JPanel{
         try {
             DefaultTableModel modelo=(DefaultTableModel) jTable.getModel();
             int filas=jTable.getRowCount();
-            for (int i = 0;i<filas; i++) {
-                modelo.removeRow(i);
+            if(filas>0){
+                for (int i = 0;i<filas; i++) {
+                    modelo.removeRow(i);
+                }
             }
         } 
-        catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al limpiar la tabla.");
+        catch (Exception e) {            
         }
     }
     
@@ -167,7 +170,8 @@ public class vuelos_disponibles extends JPanel{
         String origen=orgdes[0];
         String destino= orgdes[1];
         db.conectar();
-        String sql1="SELECT idruta FROM ruta WHERE origen='"+origen+"' AND destino='"+destino+"'";
+        //OBTENER RUTA POR ORIGEN Y DESTINO
+        String sql1="CALL Reservas_PA0003('"+origen+"','"+destino+"')";
         ResultSet rs1 = db.query(sql1);
         rs1.first();
         int rutars = rs1.getInt("idruta");
@@ -183,7 +187,8 @@ public class vuelos_disponibles extends JPanel{
             "Estado"
             };
             db.conectar();
-            String sql="SELECT vuelos.idvuelos,vuelos.fecha,vuelos.hora_inicio,vuelos.hora_fin, CONCAT(ruta.origen,\"-\",ruta.destino) AS ruta,avion.codigo,estado.estado FROM vuelos,ruta,avion,estado where estado_idestado=1 AND vuelos.estado_idestado=estado.idestado AND vuelos.ruta_idruta=ruta.idruta AND vuelos.avion_idavion=avion.idavion AND vuelos.ruta_idruta="+rutars;
+            //OBTENER VUELOS QUE COINCIDEN CON EL PARAMETRO DE BUSQUEDA
+            String sql="CALL Reservas_PA0004('"+rutars+"')";
             ResultSet rs = db.query(sql);
             rs.last();
             int numrows = rs.getRow();

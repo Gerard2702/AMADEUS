@@ -1,0 +1,6 @@
+/* ARCHIVO DE CONFIGURACION BD DE AMADEUS UDB */
+host=localhost:3306
+db=amadeus
+user=root
+pass=
+/*FIN ARCHIVO DE CONFIGURACION */

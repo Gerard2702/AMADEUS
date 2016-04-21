@@ -141,22 +141,22 @@ public class crear_vuelo extends JPanel
         cbxAvi = new JComboBox();
         cbxAvi.setBounds(280,250,250,25);
         try{
-        cbxAvi.removeAllItems();
+        cbxAvi.removeAllItems();        
         db.conectar();
-        String sql="SELECT avion.codigo FROM avion WHERE idavion NOT IN (SELECT idavion FROM vuelos WHERE avion.idavion = vuelos.avion_idavion AND vuelos.estado_idestado<>3) ORDER BY idavion";
+        //SQL RECUPERAR AVIONES QUE NO ESTEN EN UN VUELO DISPONIBLE PARA NUEVO
+        String sql="CALL Vuelos_PA0001()";
         ResultSet rs = db.query(sql);
         rs.last(); 
         if(rs.getRow()==0){
-            cbxAvi.addItem("NO HAY AVIONES DISPONIBLES");
+            cbxAvi.addItem("NO HAY AVIONES DISPONIBLES");            
         }
         else{
             rs.beforeFirst();
             while(rs.next()){
             String idavion=rs.getString("codigo");
-            cbxAvi.addItem(idavion);
+            cbxAvi.addItem(idavion);            
             }
-        }
-        
+        }        
         db.desconectar();
         }catch (SQLException ex) {
             Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
@@ -171,9 +171,10 @@ public class crear_vuelo extends JPanel
         cbxruta = new JComboBox();
         cbxruta.setBounds(280,300,250,25);
         try{
-        cbxruta.removeAll();
+        cbxruta.removeAllItems();        
         db.conectar();
-        String sql="SELECT * FROM aeropuertos";
+        //OBTENER LOS DESTINOS PARA CREAR VUELO
+        String sql="CALL Vuelos_PA0002()";
         ResultSet rs = db.query(sql);
         rs.last(); 
         if(rs.getRow()==0){
@@ -305,26 +306,26 @@ public class crear_vuelo extends JPanel
                  this.errorhora2.setVisible(false);
                  try{                    
                     db.conectar();
-                    
-                    String sqlidestino = "SELECT * FROM aeropuertos WHERE ciudad='"+rutadestino+"';";
+                    //RECUPERACION DE VALORES DE AEROPUERTO PARA NUEVO VUELO
+                    String sqlidestino = "CALL Vuelos_PA0003('"+rutadestino+"')";
                     ResultSet iddesti = db.query(sqlidestino);
                     iddesti.first();                    
                     String idru = iddesti.getString("idaeropuertos");                    
-                    
-                    String sqlid="SELECT * FROM ruta WHERE origen='"+rutaorigen+"' AND destino='"+idru+"';";
+                    //OBTENER CODIGO DE RUTA PARA NUEVO VUELO
+                    String sqlid="CALL Vuelos_PA0004('"+rutaorigen+"','"+idru+"')";
                     ResultSet rsid = db.query(sqlid);
                     rsid.first();
                     int idruta = rsid.getInt("idruta");
-                    
-                    String sqlmale ="SELECT * FROM avion WHERE codigo='"+avion+"';";
+                    //OBTENER TODOS LOS DATOS DEL AVION PARA EL VUELO
+                    String sqlmale ="CALL Vuelos_PA0005('"+avion+"')";
                     ResultSet mal = db.query(sqlmale);
                     mal.first();
                     String maletasdis = mal.getString("maletas");
                     String asientosdis = mal.getString("asientos");
                     int idmod = mal.getInt("modelo_idmodelo");
                     int idavion = mal.getInt("idavion");                    
-                    
-                    String sqlinsert="INSERT INTO vuelos (hora_inicio,hora_fin,fecha,asientos_disponibles,maletas_disponibles,avion_idavion,ruta_idruta,estado_idestado,avion_modelo_idmodelo) VALUES ('"+horainicio+"','"+horafin+"','"+fecha+"','"+asientosdis+"','"+maletasdis+"','"+idavion+"','"+idruta+"','"+idestado+"','"+idmod+"')";
+                    //SQL PARA EL INGRESO DE UN NUEVO VUELO A BD
+                    String sqlinsert="CALL Vuelos_PA0006('"+horainicio+"','"+horafin+"','"+fecha+"','"+asientosdis+"','"+maletasdis+"','"+idavion+"','"+idruta+"','"+idestado+"','"+idmod+"')";
                     db.queryUpdate(sqlinsert);
                     this.txtFec.setText(""); 
                     this.txtTime.setText("");
@@ -333,7 +334,8 @@ public class crear_vuelo extends JPanel
                     this.cbxruta.setSelectedIndex(0);
                     JOptionPane.showMessageDialog(null,"CREACION DE VUELO CORRECTA");
                     this.cbxAvi.removeAllItems();
-                    String sqlx="SELECT avion.codigo FROM avion WHERE idavion NOT IN (SELECT idavion FROM vuelos WHERE avion.idavion = vuelos.avion_idavion) ORDER BY idavion";
+                    //SQL RECUPERAR AVIONES QUE NO ESTEN EN UN VUELO DISPONIBLE PARA NUEVO
+                    String sqlx="CALL Vuelos_PA0001()";
                     ResultSet rsx = db.query(sqlx);
                     rsx.last(); 
                     if(rsx.getRow()==0){
